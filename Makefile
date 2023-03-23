@@ -23,25 +23,23 @@ GREEN_TEXT= \033[0;32m
 ./libft/libft.a :
 	@echo "$(WHITE_TEXT)Archiving Libft..."
 	@make -C ./libft
-	@echo "$(GREEN_TEXT)	Success : Libft Archived Successfully" 
-	@echo "$(NC_TEXT)"
+
 
 $(NAME) : ./libft/libft.a $(OBJ_FILES)
 	@echo "$(WHITE_TEXT)Compiling Binary..."
-	@echo "$^"
 	@$(CC) $(FLAGS) $(INCLUDES) $^ -o $(NAME)
 	@echo "$(GREEN_TEXT)	Success : $(NAME) Compiled Successfully"
 	@echo "$(WHITE_TEXT)Finished"
 	@echo "$(NC_TEXT)"
 
 clean :
-	@echo "$(RED_TEXT)Cleaning Object Files"
+	@echo "$(RED_TEXT)Cleaning $(NAME) Object Files"
 	@rm -rf	$(OBJ_FILES) 
 	@make -C ./libft clean
 	@echo "$(NC_TEXT)"
 
 fclean : clean
-	@echo "$(RED_TEXT)Cleaning Binaries"
+	@echo "$(RED_TEXT)Cleaning $(NAME) Binaries"
 	@rm -rf $(NAME)
 	@make -C ./libft fclean
 	@echo "$(NC_TEXT)"
