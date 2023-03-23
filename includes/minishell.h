@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/03/23 16:03:39 by bamrouch         ###   ########.fr       */
+/*   Created: 2023/03/23 15:28:26 by bamrouch          #+#    #+#             */
+/*   Updated: 2023/03/23 15:33:39 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef MINISHELL_H
+# define MINISHELL_H
+# include "ft_garbage_collector.h"
+# include "mini_parsing.h"
+# include "mini_execution.h"
 
-int main(int argc, char *argv[], char *envp[])
-{
-    /* code */
-    return 0;
-}
+#endif

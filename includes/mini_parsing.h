@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/03/23 16:03:39 by bamrouch         ###   ########.fr       */
+/*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
+/*   Updated: 2023/03/23 15:37:31 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef MINI_PARSING_H
+#include <readline/readline.h>
+#include <readline/history.h>
 
-int main(int argc, char *argv[], char *envp[])
-{
-    /* code */
-    return 0;
-}
+
+
+#endif
