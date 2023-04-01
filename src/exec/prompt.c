@@ -1,29 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_execution.h                                   :+:      :+:    :+:   */
+/*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/01 22:17:19 by maboulkh         ###   ########.fr       */
+/*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
+/*   Updated: 2023/04/01 22:22:46 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINI_EXECUTION_H
-# define MINI_EXECUTION_H
-# include "minishell.h"
+#include "minishell.h"
 
-// # ifndef t_bool
-// #  define t_bool
+char	*create_prompt(t_boolean is_root)
+{
+	char	*prompt;
+	char	*name;
+	char	*identifier;
 
-// typedef enum e_bool
-// {
-// 	FALSE = 0,
-// 	TRUE = 1
-// }				t_bool;
-// # endif // t_bool
-
-char	*create_prompt(t_boolean is_root);
-
-#endif // MINI_EXECUTIONG_H
+	name = "minishell";
+	if (is_root)
+		identifier = "# ";
+	else
+		identifier = "$ ";
+	prompt = ft_strjoin(name, identifier);
+	if (!prompt)
+		exit(1);
+	return (prompt);
+}

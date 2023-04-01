@@ -2,6 +2,8 @@ SRC_FILES = ${wildcard ./src/**/*.c} ${wildcard ./src/*.c}
 
 INCLUDES = -I./includes -I./libft/includes
 
+READLINE = -lreadline
+
 CC = cc
 
 OBJ_FILES = ${SRC_FILES:%.c=%.o}
@@ -27,10 +29,15 @@ GREEN_TEXT= \033[0;32m
 
 $(NAME) : ./libft/libft.a $(OBJ_FILES)
 	@echo "$(WHITE_TEXT)Compiling Binary..."
-	@$(CC) $(FLAGS) $(INCLUDES) $^ -o $(NAME)
+	@$(CC) $(FLAGS) $(INCLUDES) ${READLINE} $^ -o $(NAME)
 	@echo "$(GREEN_TEXT)	Success : $(NAME) Compiled Successfully"
 	@echo "$(WHITE_TEXT)Finished"
 	@echo "$(NC_TEXT)"
+
+dev : fclean devflag $(NAME)
+
+devflag :
+	$(eval FLAGS := -Wall -Wextra -fsanitize=address $(INCLUDES))
 
 clean :
 	@echo "$(RED_TEXT)Cleaning $(NAME) Object Files"
