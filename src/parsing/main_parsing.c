@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   main_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/23 15:28:26 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/02 21:53:13 by bamrouch         ###   ########.fr       */
+/*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
+/*   Updated: 2023/04/02 22:02:46 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-# include "ft_garbage_collector.h"
-# include "mini_parsing.h"
-# include "mini_execution.h"
+#include "minishell.h"
 
+void    main_parsing(char *input, )
+{
+    
+}
 
-
-#endif

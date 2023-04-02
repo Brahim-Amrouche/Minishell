@@ -1,4 +1,4 @@
-SRC_FILES = ${wildcard ./src/**/*.c} ${wildcard ./src/*.c}
+SRC_FILES = ${wildcard ./src/**/*.c} ${wildcard ./src/*.c} ${wildcard ./src/**/**/*.c}
 
 INCLUDES = -I./includes -I./libft/includes
 
