@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:47:22 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/03 01:47:31 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/03 02:58:03 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	mem_merge(uint64_t scope, uint64_t merge_scope)
 	ft_free(scope, FALSE);
 }
 
-t_mem_param m_info(uint64_t scope, void *reference, uint64_t dest_scope)
+t_mem_param m_info(void *mem, uint64_t scope, void *reference, uint64_t dest_scope)
 {
-    return (t_mem_param) {NULL, scope, reference, dest_scope};
+    return (t_mem_param) {mem, scope, reference, dest_scope};
 }
