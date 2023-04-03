@@ -3,40 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtok.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 20:12:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/03 02:37:13 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/03 05:46:08 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	char *mini_str_chr(char *str, t_boolean (*checker)(char c))
+static	char	*mini_str_chr(char *str, t_boolean (*checker)(char c))
 {
 	if (!str)
-		return NULL;
+		return (NULL);
 	while (*str)
 	{
 		if (checker(*str))
-			return str;
+			return (str);
 		str++;
 	}
-	if(checker(*str))
-		return str;
-	return NULL;
+	if (checker(*str))
+		return (str);
+	return (NULL);
 }
 
 char	*ft_strtok(char *str, t_boolean (*checker)(char c))
 {
-	static char *input;
+	static char	*input;
 	char		*token;
 
-	if(str)
+	if (str)
 		input = str;
 	if (!input)
-		return NULL;
-	while(*input && checker(*input))
+		return (NULL);
+	while (*input && checker(*input))
 		input++;
 	token = input;
 	input = mini_str_chr(input, checker);
@@ -45,6 +45,5 @@ char	*ft_strtok(char *str, t_boolean (*checker)(char c))
 		*input = '\0';
 		input++;
 	}
-	return token;
+	return (token);
 }
-  

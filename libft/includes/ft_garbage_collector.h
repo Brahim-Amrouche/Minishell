@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_garbage_collector.h                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:19:27 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/03 03:00:18 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/03 05:41:11 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void				mem_cut_node(t_list *memory_scope, t_list *to_cut_node);
 t_list				**memory_root(void);
 void				mem_free_scope(void *scope_lst);
 void				mem_purge_memory(void);
-t_mem_param			m_info(void *mem, uint64_t scope, void *reference, uint64_t dest_scope);
+t_mem_param			m_info(void *mem, uint64_t scope, void *reference,
+						uint64_t dest_scope);
 
 // mem management functions;
 // t_mem_param	mem_pass_params(uint64_t scope, ...);

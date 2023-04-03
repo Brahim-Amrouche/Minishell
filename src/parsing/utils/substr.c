@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   substr.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:18:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/02 21:35:32 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/03 05:47:04 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*protected_substr(char const *s, unsigned int start, size_t len)
 	if (len >= s_len - start)
 		len = s_len - start;
 	res = (char *)ft_malloc((len + 1) * sizeof(char),
-							(t_mem_param){NULL, 2, NULL, 0});
+			(t_mem_param){NULL, 2, NULL, 0});
 	if (!res)
 		return (NULL);
 	i = 0;
