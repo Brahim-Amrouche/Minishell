@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:19:27 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/03/23 15:06:15 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/03 01:46:35 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void				mem_cut_node(t_list *memory_scope, t_list *to_cut_node);
 t_list				**memory_root(void);
 void				mem_free_scope(void *scope_lst);
 void				mem_purge_memory(void);
+t_mem_param			m_info(uint64_t scope, void *reference, uint64_t dest_scope);
 
 // mem management functions;
 // t_mem_param	mem_pass_params(uint64_t scope, ...);
