@@ -6,12 +6,11 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 20:12:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/04 06:13:48 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/04 06:25:19 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 t_boolean ft_is_space(char c)
 {
@@ -67,11 +66,11 @@ static	size_t mini_str_chr(char *str, t_boolean (*checker)(char *))
 
 char	*ft_strtok(char *str, t_boolean (*checker)(char *))
 {
-	static char *input;
+	static char	*input;
 	char		*token;
 	size_t		token_pos;
 
-	if(str)
+	if (str)
 		input = str;
 	if (!input)
 		return NULL;
@@ -90,6 +89,5 @@ char	*ft_strtok(char *str, t_boolean (*checker)(char *))
 		token = input;
 		input = NULL;
 	}
-	return token;
+	return (token);
 }
-  

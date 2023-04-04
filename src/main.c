@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/03 21:25:34 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/04 06:21:04 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void) argc;
 	(void) argv;
+
+
 	while (TRUE)
 	{
 		ft_bzero(&minishell, sizeof(t_minishell));
@@ -28,9 +30,7 @@ int	main(int argc, char *argv[], char *envp[])
 		// here comes the parsing
 		main_parsing(cmd, &minishell);
 		// here comes execution
-		
-		// ft_print_memory();
-		
+		exec_cmd(cmd);
 		ft_free(1, FALSE);
 	}
 	return 0;

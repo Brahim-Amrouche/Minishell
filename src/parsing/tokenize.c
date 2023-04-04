@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 01:43:13 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/04 06:12:19 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/04 06:22:31 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,3 +73,4 @@ void    tokenize_input(char *input, t_minishell *mini)
         tokens_list = tokens_list->next;
     }
 }
+

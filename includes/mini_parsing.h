@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/04 06:03:20 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/04 06:25:04 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,18 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-
 typedef enum bash_tokens
 {
-    single_quote = '\'',
-    double_quote = '"',
-    dollar_sign = '$',
-    input_redirect = '<',
-    output_redirect = '>',
-    pipe_token  = '|',
-    bash_or = '|',
-    bash_and = '&',
-    wildcard  = '*'
-}   t_bash_tokens;
+	single_quote = '\'',
+	double_quote = '"',
+	dollar_sign = '$',
+	input_redirect = '<',
+	output_redirect = '>',
+	pipe_token = '|',
+	bash_or = '|',
+	bash_and = '&',
+	wildcard = '*'
+}	t_bash_tokens;
 
 typedef struct s_tokenizer
 {
@@ -39,9 +38,9 @@ typedef struct s_tokenizer
 
 typedef struct s_minishell
 {
-    char **tokens;
-    char **envp;
-}   t_minishell;
+	char	**tokens;
+	char	**envp;
+}	t_minishell;
 
 void			main_parsing(char *cmd, t_minishell *mini);
 void			tokenize_input(char *input, t_minishell *mini);
