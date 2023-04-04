@@ -6,13 +6,13 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 20:34:38 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/02 21:31:29 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/03 19:45:00 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#define SPLIT_SCOPE 2
+#define SPLIT_SCOPE 1
 
 static char	**ft_malloc_splits(char *s, t_boolean (*sep_checker)(char))
 {
