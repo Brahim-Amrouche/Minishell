@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/04 06:25:04 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/05 00:28:50 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,15 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-typedef enum bash_tokens
+# define ECHO "echo"
+# define CD  "cd"
+# define PWD  "pwd"
+# define EXPORT  "export"
+# define UNSET  "unset"
+# define ENV  "env"
+# define BASH_EXIT  "exit"
+
+typedef enum e_bash_tokens
 {
 	single_quote = '\'',
 	double_quote = '"',
@@ -38,12 +46,15 @@ typedef struct s_tokenizer
 
 typedef struct s_minishell
 {
-	char	**tokens;
+	t_list	*tokens;
 	char	**envp;
 }	t_minishell;
 
 void			main_parsing(char *cmd, t_minishell *mini);
 void			tokenize_input(char *input, t_minishell *mini);
+void			parse_tokens(t_minishell *mini);
+char			*find_env_var(char **envp, char *needle);
+void			get_var(t_list *token_node, t_minishell *mini);
 
 
 
@@ -51,6 +62,8 @@ void			tokenize_input(char *input, t_minishell *mini);
 char	        *ft_strtok(char *str, t_boolean (*checker)(char *));
 char			*protected_substr(char const *s, unsigned int start, size_t len);
 char			**ft_split_multi_sep(char *s, t_boolean (*sep_checker)(char));
+char			*pro_strjoin(char const *s1, char const *s2);
+char			*replace_value_in_token(char *token, size_t  pre, size_t post, char *env_val);
 t_list			*pro_lstnew(void *content);
 t_tokenizer     forced_token(t_boolean read, ...);
 t_boolean		ft_is_space(char c);

@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 20:12:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/04 06:25:19 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/04 23:38:39 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ static	size_t mini_str_chr(char *str, t_boolean (*checker)(char *))
 	return i;
 }
 
-
 char	*ft_strtok(char *str, t_boolean (*checker)(char *))
 {
 	static char	*input;
@@ -80,13 +79,17 @@ char	*ft_strtok(char *str, t_boolean (*checker)(char *))
 	if (*(input + token_pos))
 	{
 		token = protected_substr(input, 0, token_pos);
+		if (!token)
+			exit_minishell(ENOMEM, "could't malloc token node", TRUE);
 		input += token_pos;
 		if (!*input)
 			input = NULL;
 	}
 	else
 	{
-		token = input;
+		token = protected_substr(input, 0, ft_strlen(input));
+		if (!token)
+			exit_minishell(ENOMEM, "could't malloc token node", TRUE);
 		input = NULL;
 	}
 	return (token);

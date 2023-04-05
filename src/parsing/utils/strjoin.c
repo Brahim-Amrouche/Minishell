@@ -1,42 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   substr.c                                           :+:      :+:    :+:   */
+/*   strjoin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/02 13:18:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/05 00:54:13 by bamrouch         ###   ########.fr       */
+/*   Created: 2023/04/04 23:41:36 by bamrouch          #+#    #+#             */
+/*   Updated: 2023/04/05 01:44:39 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+# include "minishell.h"
 
-# define SUBSTR_SCOPE 1
+# define STRJOIN_SCOPE 1
 
-char	*protected_substr(char const *s, unsigned int start, size_t len)
+char	*pro_strjoin(char const *s1, char const *s2)
 {
-	size_t	s_len;
-	size_t	i;
+	size_t	total_len;
+	size_t	s1_len;
 	char	*res;
 
-	if (!s)
+	if (!s1 && !s2)
 		return (NULL);
-	s_len = ft_strlen(s);
-	if (start >= s_len)
-		len = 0;
-	if (len >= s_len - start)
-		len = s_len - start;
-	res = ft_malloc((len + 1) * sizeof(char), 
-							m_info(NULL, SUBSTR_SCOPE, NULL, 0));
+	if (!s1)
+		s1 = "";
+	if (!s2)
+		s2 = "";
+	s1_len = ft_strlen(s1) + 1;
+	total_len = s1_len + ft_strlen(s2);
+	res = ft_malloc(total_len * sizeof(char), m_info(NULL, STRJOIN_SCOPE, NULL, 0));
 	if (!res)
 		return (NULL);
-	i = 0;
-	while (i < len && start + i < s_len)
-	{
-		res[i] = s[start + i];
-		i++;
-	}
-	res[i] = 0;
+	res[0] = 0;
+	ft_strlcat(res, s1, s1_len);
+	ft_strlcat(res, s2, total_len);
 	return (res);
 }

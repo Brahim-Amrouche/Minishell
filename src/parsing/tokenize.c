@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 01:43:13 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/04 06:22:31 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/05 00:44:04 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,16 @@ void    tokenize_input(char *input, t_minishell *mini)
     while (token)
     {
         token_node = pro_lstnew(token);
+        if (!token_node)
+            exit_minishell(ENOMEM, "couldn't malloc token_node", TRUE);
         ft_lstadd_back(&tokens_list, token_node);
         token = ft_strtok(NULL, check_for_tokens);
     }
-    while (tokens_list)
-    {
-        printf("all tokens === |%s|\n",(char *)tokens_list->content);
-        tokens_list = tokens_list->next;
-    }
+    mini->tokens = tokens_list;
+    // while (tokens_list)
+    // {
+    //     printf("tokens ==> |%s|\n", (char *)tokens_list->content);
+    //     tokens_list = tokens_list->next;
+    // }
 }
 

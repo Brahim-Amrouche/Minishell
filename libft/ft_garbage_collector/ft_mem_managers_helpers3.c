@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mem_managers_helpers3.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 16:47:22 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/03 05:37:56 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/04 21:30:59 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_garbage_collector.h"
+#include "ft_garbage_collector.h"
 
 void	ft_free_node(uint64_t scope, void *del_mem)
 {

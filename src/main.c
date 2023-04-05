@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/04 06:21:04 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/04 23:21:38 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,11 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void) argc;
 	(void) argv;
-
-
 	while (TRUE)
 	{
 		ft_bzero(&minishell, sizeof(t_minishell));
 		minishell.envp = envp;
-		cmd = readline("minishell$");
+		cmd = readline("minishell$ ");
 		ft_malloc(1, m_info(cmd , 1, NULL, 0));
 		// here comes the parsing
 		main_parsing(cmd, &minishell);
