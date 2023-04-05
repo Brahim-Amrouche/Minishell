@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/04 23:21:38 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/05 08:06:10 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char *argv[], char *envp[])
 		// here comes the parsing
 		main_parsing(cmd, &minishell);
 		// here comes execution
-		exec_cmd(cmd);
+		exec_cmd(&minishell, cmd);
 		ft_free(1, FALSE);
 	}
 	return 0;

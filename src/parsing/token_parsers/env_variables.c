@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 22:28:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/05 01:54:24 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/05 08:38:28 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void    get_var(t_list *token_node, t_minishell *mini)
             ft_free_node(1, env_val);
             token = token_node->content;
 		}
-        printf("paths |%s|\n", token);
+        // printf("paths |%s|\n", token);
         i++;
     }
 }

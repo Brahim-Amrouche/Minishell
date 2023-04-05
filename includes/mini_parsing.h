@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/05 00:28:50 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/05 08:21:10 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINI_PARSING_H
 # include <readline/readline.h>
 # include <readline/history.h>
+#include "minishell.h"
 
 # define ECHO "echo"
 # define CD  "cd"
@@ -48,6 +49,7 @@ typedef struct s_minishell
 {
 	t_list	*tokens;
 	char	**envp;
+	int		cmd_status;
 }	t_minishell;
 
 void			main_parsing(char *cmd, t_minishell *mini);

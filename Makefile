@@ -34,6 +34,15 @@ $(NAME) : ./libft/libft.a $(OBJ_FILES)
 	@echo "$(WHITE_TEXT)Finished"
 	@echo "$(NC_TEXT)"
 
+TEST_OBJ = tests/test
+
+test : 
+	gcc tests/test.c -o tests/test
+	./tests/test
+
+ctest :
+	@cd tests && rm -rf	std1 std2 bash1 bash2 test
+
 dev : fclean devflag $(NAME)
 
 devflag :
