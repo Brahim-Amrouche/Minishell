@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 22:28:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/05 14:45:43 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/05 15:20:17 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,33 @@ char    *find_env_var(char **envp, char *needle)
     return NULL;
 }
 
+static  char *replace_env_var(t_list *token_node, t_minishell *mini, size_t *i, size_t j)
+{
+    char	*env_name;
+	char	*env_val;
+    char    *token;
+
+    token = token_node->content;
+    env_name = protected_substr(token, (*i) + 1, j);
+	if (!env_name)
+		exit_minishell(ENOMEM, "could't malloc env_name", TRUE);
+    env_val = find_env_var(mini->envp, env_name);
+	ft_free_node(1, env_name);
+    token_node->content = replace_value_in_token(token, *i, (*i) + j + 1, env_val);
+    *i += ft_strlen(env_val) - 1; 
+    ft_free_node(1, token);
+    ft_free_node(1, env_val); 
+    return token_node->content;
+}
 
 void    get_var(t_list *token_node, t_minishell *mini)
 {
     size_t	i;
     size_t  j;
-    char	*env_name;
-	char	*env_val;
     char    *token;
-    size_t  x;
 
     i = 0;
     token = token_node->content;
-    x = 0;
     while (*(token + i))
     {
         if (*(token + i) == dollar_sign && *(token + i + 1) &&
@@ -62,18 +76,8 @@ void    get_var(t_list *token_node, t_minishell *mini)
                 }
                 j++;
             }
-            env_name = protected_substr(token, i + 1, j);
-			if (!env_name)
-				exit_minishell(ENOMEM, "could't malloc env_name", TRUE);
-            env_val = find_env_var(mini->envp, env_name);
-			ft_free_node(1, env_name);
-            token_node->content = replace_value_in_token(token, i, i + j + 1, env_val);
-            i += ft_strlen(env_val) - 1; 
-            ft_free_node(1, token);
-            ft_free_node(1, env_val);
-            token = token_node->content;
+            token = replace_env_var(token_node, mini, &i, j);
 		}
-        printf("token is %s\n", token);
         i++;
     }
 }
