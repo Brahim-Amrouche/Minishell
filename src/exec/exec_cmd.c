@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/07 18:39:26 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/07 21:14:47 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,29 @@ static int	echo(t_minishell *minishell, char *cmd)
 	return (0);
 }
 
+char *get_env_var(char *name, char **env)
+{
+	int	var_len;
+
+	var_len = ft_strlen(name);
+	while (env)
+	{
+		if (!ft_strncmp(*env, name, var_len) && name[var_len] == '=')
+			return (*env[var_len + 1]);
+		env++;
+	}
+	return (NULL);
+}
+
 static int	change_dir(t_list *token)
 {
 	char	*path;
 
 	path = NULL;
 	if (token->next)
-	path = token->next->content;
-	if (!path)
-		path = "/";
+		path = token->next->content;
+	if (path && !*path)
+	path = ft_strdup("/Users/maboulkh");
 	else if (path && *path != '/')
 	path = ft_strjoin("./", path);
 	else
