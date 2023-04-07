@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binaries.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:25:39 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/07 03:39:10 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/07 18:29:17 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,29 @@ static char	**parse_path(char *envp[])
 	return (paths);
 }
 
+static t_boolean cmd_is_builtin(char *cmd)
+{
+	char	*builtin_list[8];
+	int		i;
+
+	i = 0;
+	builtin_list[0] = ECHO;
+	builtin_list[1] = CD;
+	builtin_list[2] = PWD;
+	builtin_list[3] = EXPORT;
+	builtin_list[4] = UNSET;
+	builtin_list[5] = ENV;
+	builtin_list[6] = BASH_EXIT;
+	builtin_list[7] = NULL;
+	while (builtin_list[i])
+	{
+		if (!ft_strncmp(cmd, builtin_list[i], ft_strlen(builtin_list[i])))
+			return (TRUE);
+		i++;
+	}
+	return (FALSE);
+}
+
 void	binary_parser(t_list *token_node, t_minishell *mini)
 {
 	char *token;
@@ -88,8 +111,11 @@ void	binary_parser(t_list *token_node, t_minishell *mini)
 
 	token = token_node->content;
 	paths = parse_path(mini->envp);
+	if (cmd_is_builtin(token))
+		return ;
 	token_node->content = cmd_is_exect(token, paths);
 	if (!token_node->content)
-		exit_minishell(-1, "this is not an error just that you gave a wrong binary path", TRUE);
+		print_msg(2, "this is not an error just that you gave a wrong binary path");
+		// exit_minishell(-1, "this is not an error just that you gave a wrong binary path", TRUE);
 }
 
