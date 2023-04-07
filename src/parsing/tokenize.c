@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 01:43:13 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/05 14:29:22 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/07 04:47:23 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,18 @@ static t_boolean check_for_tokens(char *c)
     else if (*c == input_redirect || *c == output_redirect)
     {
         forced_token(FALSE, (t_tokenizer){0, TRUE, FALSE, 1});
-        if (*(c + 1) && (*(c + 1) == input_redirect || *(c + 1) == output_redirect ))
+        if (input_heredoc(c) || output_append(c))
             forced_token(FALSE, (t_tokenizer){0, TRUE, FALSE, 2});
         return TRUE;
     }
     else if (*c == pipe_token)
     {
         forced_token(FALSE, (t_tokenizer){0, FALSE, TRUE, 1});
-        if (*(c + 1) && *(c + 1) == pipe_token)
+        if (or_token(c))
             forced_token(FALSE, (t_tokenizer) {0, FALSE, TRUE, 2});
         return TRUE;
     }
-    else if (*c == bash_and && *(c + 1) && *(c + 1) == bash_and)
+    else if (and_token(c))
     {
         forced_token(FALSE, (t_tokenizer) {0, FALSE, TRUE, 2});
         return TRUE;

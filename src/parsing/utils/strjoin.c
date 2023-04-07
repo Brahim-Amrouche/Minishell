@@ -6,13 +6,13 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 23:41:36 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/05 01:44:39 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/07 03:06:59 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
 
-# define STRJOIN_SCOPE 1
+
 
 char	*pro_strjoin(char const *s1, char const *s2)
 {

@@ -6,13 +6,11 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:18:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/05 00:54:13 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/07 03:18:31 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-# define SUBSTR_SCOPE 1
 
 char	*protected_substr(char const *s, unsigned int start, size_t len)
 {

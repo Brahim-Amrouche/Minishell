@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:50:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/05 15:38:06 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/07 04:05:36 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,19 @@
 void    parse_tokens(t_minishell *mini)
 {
     t_list		*tokens_list;
-    t_boolean	is_bin;
+    t_boolean	next_is_bin;
     
     tokens_list = mini->tokens;
-	is_bin = TRUE;
+	next_is_bin = TRUE;
     while (tokens_list && *(char *)tokens_list->content)
     {   
         get_var(tokens_list, mini);
-		if (is_bin)
-			
+        
+		if (next_is_bin)
+        {
+			binary_parser(tokens_list, mini);
+            next_is_bin = FALSE;
+        }
         tokens_list = tokens_list->next;
     }
 }
