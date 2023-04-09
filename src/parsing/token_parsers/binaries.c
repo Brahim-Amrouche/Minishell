@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binaries.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:25:39 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/07 18:29:17 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/09 00:05:56 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,28 +81,7 @@ static char	**parse_path(char *envp[])
 	return (paths);
 }
 
-static t_boolean cmd_is_builtin(char *cmd)
-{
-	char	*builtin_list[8];
-	int		i;
 
-	i = 0;
-	builtin_list[0] = ECHO;
-	builtin_list[1] = CD;
-	builtin_list[2] = PWD;
-	builtin_list[3] = EXPORT;
-	builtin_list[4] = UNSET;
-	builtin_list[5] = ENV;
-	builtin_list[6] = BASH_EXIT;
-	builtin_list[7] = NULL;
-	while (builtin_list[i])
-	{
-		if (!ft_strncmp(cmd, builtin_list[i], ft_strlen(builtin_list[i])))
-			return (TRUE);
-		i++;
-	}
-	return (FALSE);
-}
 
 void	binary_parser(t_list *token_node, t_minishell *mini)
 {
