@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 04:01:57 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/09 18:35:56 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,11 @@ void			get_var(t_list *token_node, t_minishell *mini);
 char			*find_env_var(char **envp, char *needle);
 
 //	binaries.c
-void			binary_parser(t_list *token_node, t_minishell *mini);
+t_boolean		cmd_is_builtin(char *cmd);
+void			binary_parser(t_list *token_node, t_minishell *mini, t_exec_node *exec_node);
+
+// redirections.c
+void			redirection_parser(t_list *token_node, t_exec_node *exec_node);
 
 
 
@@ -131,5 +135,9 @@ t_boolean		or_token(char *c);
 t_boolean		and_token(char *c);
 t_boolean		input_heredoc(char *c);
 t_boolean		output_append(char *c);
+
+// array_utils.c
+void    add_element_to_array(void **old_array, void *new_elem, size_t data_size);
+size_t  array_size(void *array, size_t data_size);
 
 #endif

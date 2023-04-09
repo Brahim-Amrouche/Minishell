@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:25:39 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 00:05:56 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/09 18:39:17 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,20 +81,48 @@ static char	**parse_path(char *envp[])
 	return (paths);
 }
 
+t_boolean cmd_is_builtin(char *cmd)
+{
+	char    *builtin_list[8];
+	size_t  cmd_len;
+	size_t  i;
 
+	i = 0;
+	builtin_list[0] = ECHO;
+	builtin_list[1] = CD;
+	builtin_list[2] = PWD;
+	builtin_list[3] = EXPORT;
+	builtin_list[4] = UNSET;
+	builtin_list[5] = ENV;
+	builtin_list[6] = BASH_EXIT;
+	builtin_list[7] = NULL;
+	cmd_len = ft_strlen(cmd);
+	while (builtin_list[i])
+	{
+		if (!ft_strncmp(cmd, builtin_list[i], cmd_len))
+			return (TRUE);
+		i++;
+	}
+	return (FALSE);
+}
 
-void	binary_parser(t_list *token_node, t_minishell *mini)
+void	binary_parser(t_list *token_node, t_minishell *mini, t_exec_node *exec_node)
 {
 	char *token;
 	char **paths;
+	char **cmd_holder;
 
 	token = token_node->content;
 	paths = parse_path(mini->envp);
+	cmd_holder = exec_node->cmd;
 	if (cmd_is_builtin(token))
-		return ;
-	token_node->content = cmd_is_exect(token, paths);
+		;
+	else
+		token_node->content = cmd_is_exect(token, paths);
 	if (!token_node->content)
 		print_msg(2, "this is not an error just that you gave a wrong binary path");
 		// exit_minishell(-1, "this is not an error just that you gave a wrong binary path", TRUE);
+	add_element_to_array(&cmd_holder, token_node->content, sizeof(char *));
+	exec_node->cmd = token_node->content;
 }
 

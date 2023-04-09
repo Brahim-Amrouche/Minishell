@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 04:30:17 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 05:55:37 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/09 17:18:48 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ size_t  array_size(void *array, size_t data_size)
 		i = 0;
 		while (((char *)array)[(len * data_size) + i] == 0 && i < data_size)
 			i++;
-		if ( i  == data_size)
+		if (i  == data_size)
 			break;
 		len++;
    }
@@ -33,7 +33,7 @@ size_t  array_size(void *array, size_t data_size)
 }
 
 // should be a null pointed arr
-void    *add_element_to_array(void **old_array, void *new_elem, size_t data_size)
+void    add_element_to_array(void **old_array, void *new_elem, size_t data_size)
 {
     size_t  cpy_mem_size;
 	size_t	array_len;
