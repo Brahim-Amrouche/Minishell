@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 02:56:45 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/09 03:02:45 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,11 @@
 # define STRJOIN_SCOPE 1
 # define SUBSTR_SCOPE 1
 
-# define EXEC_NODE 1
-# define PIPE_NODE 2
-# define LOGICAL_AND_NODE 3
-# define LOGICAL_OR_NODE 4
-
-
+typedef	enum s_logical_operators
+{
+	LOGICAL_OR ,
+	LOGICAL_AND,
+}	t_logical_operators;
 
 typedef struct s_redirections
 {
@@ -50,22 +49,10 @@ typedef struct	s_exec_node
 
 typedef struct	s_operations
 {
-	t_exec_node		*operations;
+	t_exec_node			**nodes;
+	t_logical_operators *operations;
 } t_operations;
 
-
-
-typedef struct	s_pipe_node
-{
-	g
-
-}	t_pipe_node;
-
-typedef struct s_cmd_node
-{
-	int		type;
-	void	*node;
-} t_cmd_node;
 
 typedef enum e_bash_tokens
 {
