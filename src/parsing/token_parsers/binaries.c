@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:25:39 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 18:39:17 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/09 22:02:33 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static char	**parse_path(char *envp[])
 	char	*res;
 	char	**paths;
 
-	res = find_env_var(envp, "PATH");
+	res = find_env_var(envp, "PATH", FALSE);
 	if (!res)
 		paths = ft_split_multi_sep("", path_sep);
 	else
@@ -120,9 +120,13 @@ void	binary_parser(t_list *token_node, t_minishell *mini, t_exec_node *exec_node
 	else
 		token_node->content = cmd_is_exect(token, paths);
 	if (!token_node->content)
+	{
 		print_msg(2, "this is not an error just that you gave a wrong binary path");
 		// exit_minishell(-1, "this is not an error just that you gave a wrong binary path", TRUE);
-	add_element_to_array(&cmd_holder, token_node->content, sizeof(char *));
-	exec_node->cmd = token_node->content;
+		return;
+	}
+	cmd_holder = (char **) add_element_to_array((void **)cmd_holder, token, sizeof(char *));
+	exec_node->cmd = cmd_holder;
+	printf("%s \n",(exec_node->cmd)[0]);
 }
 

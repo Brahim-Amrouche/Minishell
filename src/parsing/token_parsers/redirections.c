@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:13:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 18:12:18 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/09 20:38:13 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static t_redirections *parse_into_t_redirection(char *token, size_t token_skip, 
         exit_minishell(-1, "couldn't mallloc input redirection", TRUE);
 	input_redi->file = get_redirection_path(token, token_skip > 1);
     input_redi->mode = mode;
-	add_element_to_array(&redirections, input_redi, sizeof(t_redirections));
+	add_element_to_array((void **) &redirections, input_redi, sizeof(t_redirections));
     return redirections;
 }
 
@@ -68,7 +68,7 @@ void    redirection_parser(t_list *token_node, t_exec_node *exec_node)
     token_specifier = *token;
     while(token[i] == token_specifier)
         i++;
-    if(token > 1)
+    if(i > 1)
         exit_minishell(-1, "see here you are acting smart ass >.<", TRUE);
     if(input_heredoc(token))
         exec_node->input = parse_into_t_redirection(token, 2, exec_node->input, O_TRUNC | O_CREAT | O_WRONLY | O_SYMLINK);

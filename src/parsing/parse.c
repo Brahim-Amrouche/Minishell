@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:50:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 18:37:14 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/09 20:43:24 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ void    parse_tokens(t_minishell *mini)
 {
     t_list		*tokens_list;
     t_boolean	next_is_bin;
-	t_list		*operations_list;
-	t_list		*pipes_list;
+	// t_list		*operations_list;
+	// t_list		*pipes_list;
 	t_exec_node	*cmd_holder;
 	
     tokens_list = mini->tokens;
@@ -33,6 +33,7 @@ void    parse_tokens(t_minishell *mini)
 				exit_minishell(ENOMEM, "couldn't malloc cmd_holder", TRUE);
 			ft_bzero(cmd_holder, sizeof(t_exec_node));
 			binary_parser(tokens_list, mini, cmd_holder);
+			printf("this is the cmd |%s|\n", *(cmd_holder->cmd));
 			next_is_bin = FALSE;
         }
 		else if (((char *)tokens_list->content)[0] == input_redirect 
