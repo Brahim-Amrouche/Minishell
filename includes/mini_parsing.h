@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 03:02:45 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/09 04:01:57 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef struct	s_exec_node
 
 typedef struct	s_operations
 {
-	t_exec_node			**nodes;
+	t_exec_node			**op_cmds;
 	t_logical_operators *operations;
 } t_operations;
 
@@ -77,8 +77,9 @@ typedef struct s_tokenizer
 
 typedef struct s_minishell
 {
-	t_list	*tokens;
-	char	**envp;
+	t_list			*tokens;
+	char			**envp;
+	t_operations	*parsed_cmds;	
 	int		cmd_status;
 }	t_minishell;
 
