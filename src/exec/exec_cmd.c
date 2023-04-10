@@ -6,13 +6,13 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/09 07:18:35 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/10 07:37:37 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *get_env_var(char *name, char **env)
+char **get_env_var(char *name, char **env)
 {
 	int	var_len;
 
@@ -20,7 +20,7 @@ char *get_env_var(char *name, char **env)
 	while (env)
 	{
 		if (!ft_strncmp(*env, name, var_len) && name[var_len] == '=')
-			return (env[var_len + 1]);
+			return (env);
 		env++;
 	}
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/09 07:33:15 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/10 07:37:47 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	**add_elem_to_arr(char **arr, char *new_elem);
 
 int exec_cmd(t_minishell *minishell, char *cmd);
 
-char *get_env_var(char *name, char **env);
+char **get_env_var(char *name, char **env);
 
 int change_dir(t_list *token);
 int echo(t_minishell *minishell, t_list *token);
