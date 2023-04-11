@@ -6,99 +6,40 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/11 00:45:09 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/11 01:43:13 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	get_dir(void)
+char **get_env_var(char *name, char **env)
 {
-	char	cwd[1024];
+	int	var_len;
 
-	if (getcwd(cwd, 1024) == NULL)
+	var_len = ft_strlen(name);
+	while (env)
 	{
-		exit_minishell(1, "cwd buffer is not enough", TRUE);
+		if (!ft_strncmp(*env, name, var_len) && name[var_len] == '=')
+			return (env);
+		env++;
 	}
-	else
-		printf("%s\n", cwd);
-	return (0);
+	return (NULL);
 }
 
-static int	echo(t_minishell *minishell, char *cmd)
-{
-	t_boolean new_line;
-
-	new_line = TRUE;
-	// psudo parsing -----------
-	cmd = cmd + 5;
-	if (!ft_strncmp("-n ", cmd, 3))
-	{
-		new_line = FALSE;
-		cmd = cmd + 3;
-	}
-	// psudo parsing -----------
-	if (!ft_strncmp("$?", cmd, 2))
-		printf("%d", minishell->cmd_status);
-	else
-		printf("%s", cmd);
-	if (new_line)
-		printf("\n");
-	return (0);
-}
-
-
-// char *get_env_var(char *name, char **env)
-// {
-// 	int	var_len;
-
-// 	var_len = ft_strlen(name);
-// 	while (env)
-// 	{
-// 		if (!ft_strncmp(*env, name, var_len) && name[var_len] == '=')
-// 			return (env[var_len + 1]);
-// 		env++;
-// 	}
-// 	return (NULL);
-// }
-
-static int	change_dir(t_list *token)
-{
-	char	*path;
-
-	path = NULL;
-	if (token->next)
-		path = token->next->content;
-	if (path && !*path)
-	path = ft_strdup("/Users/maboulkh");
-	else if (path && *path != '/')
-	path = ft_strjoin("./", path);
-	else
-		path = ft_strdup(path);
-	if (access(path, F_OK) != 0)
-		print_msg(2, "minishell: cd: $: No such file or directory", path);
-	else if (access(path, X_OK) != 0)
-		print_msg(2, "minishell: cd: $/: Permission denied", path);
-	if (access(path, X_OK) != 0)
-	{
-		free(path);
-		return (1);
-	}
-	chdir(path);
-	free(path);
-	return (0);
-}
 
 int	exec_cmd(t_minishell *minishell, char *cmd)
 {
 	t_list *token;
+	t_list *temp;
 
 	token = minishell->tokens;
-	// while (tokens)
-    // {
-        // printf("tokens ==> |%s|\n", (char *)token->content);
-    //     tokens = tokens->next;
-    // }
+
+	temp = token;
+	while (temp)
+	{
+        printf("tokens ==> |%s|\n", (char *)temp->content);
+        temp = temp->next;
+    }
 	if (!cmd)
 		exit_minishell(-1, NULL, TRUE);
 	else if (!cmd)
@@ -107,6 +48,8 @@ int	exec_cmd(t_minishell *minishell, char *cmd)
 		minishell->cmd_status = change_dir(token);
 	else if (!ft_strncmp(PWD, cmd, ft_strlen(PWD)))
 		minishell->cmd_status = get_dir();
+	else if (!ft_strncmp(ENV, cmd, ft_strlen(ENV)))
+		minishell->cmd_status = env(minishell);
 	else if (!ft_strncmp(ECHO, cmd, ft_strlen(ECHO)))
 		minishell->cmd_status = echo(minishell, cmd);
 	else if (!ft_strncmp(BASH_EXIT, cmd, ft_strlen(BASH_EXIT)))
