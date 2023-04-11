@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:50:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 20:43:24 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/11 01:35:35 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ void    parse_tokens(t_minishell *mini)
 	// t_list		*operations_list;
 	// t_list		*pipes_list;
 	t_exec_node	*cmd_holder;
-	
+
     tokens_list = mini->tokens;
 	next_is_bin = TRUE;
-    while (tokens_list && *(char *)tokens_list->content)
+	while (tokens_list && *(char *)tokens_list->content)
     {   
         get_var(tokens_list, mini);
 		if (next_is_bin)
@@ -33,7 +33,7 @@ void    parse_tokens(t_minishell *mini)
 				exit_minishell(ENOMEM, "couldn't malloc cmd_holder", TRUE);
 			ft_bzero(cmd_holder, sizeof(t_exec_node));
 			binary_parser(tokens_list, mini, cmd_holder);
-			printf("this is the cmd |%s|\n", *(cmd_holder->cmd));
+			// printf("this is the cmd |%s|\n", *(cmd_holder->cmd));
 			next_is_bin = FALSE;
         }
 		else if (((char *)tokens_list->content)[0] == input_redirect 
@@ -41,4 +41,9 @@ void    parse_tokens(t_minishell *mini)
 			redirection_parser(tokens_list, cmd_holder);
         tokens_list = tokens_list->next;
     }
+	while (*cmd_holder->cmd)
+	{
+		printf("cmd_holder |%s|\n", *(cmd_holder->cmd));
+		cmd_holder->cmd++;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/09 20:32:48 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/11 00:45:09 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	exec_cmd(t_minishell *minishell, char *cmd)
 	token = minishell->tokens;
 	// while (tokens)
     // {
-        printf("tokens ==> |%s|\n", (char *)token->content);
+        // printf("tokens ==> |%s|\n", (char *)token->content);
     //     tokens = tokens->next;
     // }
 	if (!cmd)

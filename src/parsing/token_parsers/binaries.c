@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:25:39 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 22:02:33 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/11 01:04:44 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,8 @@ void	binary_parser(t_list *token_node, t_minishell *mini, t_exec_node *exec_node
 		// exit_minishell(-1, "this is not an error just that you gave a wrong binary path", TRUE);
 		return;
 	}
-	cmd_holder = (char **) add_element_to_array((void **)cmd_holder, token, sizeof(char *));
+	cmd_holder = add_element_to_array(cmd_holder, &token_node->content, sizeof(char *));
+	// printf("the cmd after path search  %s\n", token_node->content);
 	exec_node->cmd = cmd_holder;
-	printf("%s \n",(exec_node->cmd)[0]);
 }
 
