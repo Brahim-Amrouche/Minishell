@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/11 01:43:13 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/11 02:07:52 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,9 @@ int	exec_cmd(t_minishell *minishell, char *cmd)
 	else if (!ft_strncmp(ENV, cmd, ft_strlen(ENV)))
 		minishell->cmd_status = env(minishell);
 	else if (!ft_strncmp(ECHO, cmd, ft_strlen(ECHO)))
-		minishell->cmd_status = echo(minishell, cmd);
+		minishell->cmd_status = echo(minishell, token);
+	else if (!ft_strncmp(EXPORT, cmd, ft_strlen(EXPORT)))
+		minishell->cmd_status = export(minishell, token);
 	else if (!ft_strncmp(BASH_EXIT, cmd, ft_strlen(BASH_EXIT)))
 		exit_minishell(-1, NULL, TRUE);
 	return (minishell->cmd_status);
