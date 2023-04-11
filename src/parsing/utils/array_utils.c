@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 04:30:17 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/11 01:34:50 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/11 01:38:02 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,16 @@ size_t	array_size(void *array, size_t data_size)
 	if (!array)
 		return (len);
     i = 0;
+    temp = array;
     while (TRUE && i < data_size)
 	{
-	    temp = ((char *) array) + ((len * data_size));
 		i = 0;
 		while (i < data_size && *(temp + i) == 0)
 			i++;
 		if (i == data_size)
 			continue; 
 		len++;
+	    temp = skip_bytes(temp, data_size);
 	}
 	return (len);
 }
