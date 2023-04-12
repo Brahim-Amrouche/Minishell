@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/11 02:07:52 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/11 07:52:09 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,14 @@ char **get_env_var(char *name, char **env)
 {
 	int	var_len;
 
+	if (!name || *env)
+		return (NULL);
 	var_len = ft_strlen(name);
-	while (env)
+	while (*env)
 	{
-		if (!ft_strncmp(*env, name, var_len) && name[var_len] == '=')
+		printf("no sigfault in sight at |%s|\n", *env);
+		// if (!ft_strncmp(*env, name, var_len) && (*env)[var_len] == '=')
+		if (!ft_strncmp(*env, name, var_len))
 			return (env);
 		env++;
 	}
@@ -53,7 +57,7 @@ int	exec_cmd(t_minishell *minishell, char *cmd)
 	else if (!ft_strncmp(ECHO, cmd, ft_strlen(ECHO)))
 		minishell->cmd_status = echo(minishell, token);
 	else if (!ft_strncmp(EXPORT, cmd, ft_strlen(EXPORT)))
-		minishell->cmd_status = export(minishell, token);
+		minishell->cmd_status = export(minishell, token->next);
 	else if (!ft_strncmp(BASH_EXIT, cmd, ft_strlen(BASH_EXIT)))
 		exit_minishell(-1, NULL, TRUE);
 	return (minishell->cmd_status);
