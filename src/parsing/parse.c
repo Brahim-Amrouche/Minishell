@@ -6,63 +6,113 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:50:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/11 04:29:41 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/12 04:52:25 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
 
+static t_boolean	handle_new_cmd_parsing(t_list *tokens_list, t_minishell *mini)
+{
+	if (mini->parser_helper.next_is_bin)
+	{
+		mini->parser_helper.cmd_holder = ft_malloc(sizeof(t_exec_node), m_info(NULL, 1, NULL, 0));
+		if(!mini->parser_helper.cmd_holder)
+			exit_minishell(ENOMEM, "couldn't malloc cmd_holder", TRUE);
+		ft_bzero(mini->parser_helper.cmd_holder, sizeof(t_exec_node));
+		binary_parser(tokens_list, mini, mini->parser_helper.cmd_holder);
+		mini->parser_helper.next_is_bin = FALSE;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static t_boolean	handle_redirections_parsing(t_list *tokens_list, t_minishell *mini)
+{
+	if (((char *)tokens_list->content)[0] == input_redirect 
+		|| ((char *) tokens_list->content)[0] == output_redirect)
+	{
+		redirection_parser(tokens_list, mini->parser_helper.cmd_holder);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static t_boolean	handle_logical_ops_parsing(t_list *tokens_list, t_minishell *mini)
+{
+	if (or_token(tokens_list->content) || and_token(tokens_list->content))
+	{
+		mini->parser_helper.pipes_list = add_element_to_array(mini->parser_helper.pipes_list, mini->parser_helper.cmd_holder, sizeof(t_exec_node));
+		mini->parsed_cmds.op_cmds = add_element_to_array(mini->parsed_cmds.op_cmds, &mini->parser_helper.pipes_list, sizeof(t_exec_node *));
+		if (or_token(tokens_list->content))
+			mini->parser_helper.cmd_operator = LOGICAL_OR;
+		else
+			mini->parser_helper.cmd_operator = LOGICAL_AND;
+		mini->parsed_cmds.operations = add_element_to_array(mini->parsed_cmds.operations, &mini->parser_helper, sizeof(t_logical_operators));
+		mini->parser_helper.pipes_list = NULL;
+		mini->parser_helper.next_is_bin = TRUE;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static t_boolean	handle_pipe_parsing(t_list *tokens_list, t_minishell *mini)
+{
+	if (*(char *)tokens_list->content == pipe_token)
+	{
+		mini->parser_helper.pipes_list = add_element_to_array(mini->parser_helper.pipes_list, mini->parser_helper.cmd_holder, sizeof(t_exec_node));
+		mini->parser_helper.next_is_bin = TRUE;
+		return TRUE;
+	}
+	return FALSE;
+}
 
 void    parse_tokens(t_minishell *mini)
 {
     t_list		*tokens_list;
-    t_boolean	next_is_bin;
-	t_exec_node	*pipes_list;
-	t_exec_node	*cmd_holder;
-	t_logical_operators	cmd_operator;
 
+	ft_bzero(&mini->parser_helper, sizeof(t_parser_helpers));
+	ft_bzero(&mini->parsed_cmds, sizeof(t_operations));
     tokens_list = mini->tokens;
-	next_is_bin = TRUE;
-	pipes_list = NULL;
+ 	mini->parser_helper.next_is_bin = TRUE;
 	while (tokens_list && *(char *)tokens_list->content)
     {   
-        get_var(tokens_list, mini);
-		if (next_is_bin)
-        {
-			cmd_holder = ft_malloc(sizeof(t_exec_node), m_info(NULL, 1, NULL, 0));
-			if(!cmd_holder)
-				exit_minishell(ENOMEM, "couldn't malloc cmd_holder", TRUE);
-			ft_bzero(cmd_holder, sizeof(t_exec_node));
-			binary_parser(tokens_list, mini, cmd_holder);
-			next_is_bin = FALSE;
-        }
-		else if (((char *)tokens_list->content)[0] == input_redirect 
-			|| ((char *) tokens_list->content)[0] == output_redirect)
-			redirection_parser(tokens_list, cmd_holder);
-		else if (or_token(tokens_list->content) || and_token(tokens_list->content))
-		{
-			mini->parsed_cmds->op_cmds = add_element_to_array(mini->parsed_cmds->op_cmds, &pipes_list, sizeof(t_exec_node *));
-			if (or_token(tokens_list->content))
-				cmd_operator = LOGICAL_OR;
-			else
-				cmd_operator = LOGICAL_AND;
-			mini->parsed_cmds->operations = add_element_to_array(mini->parsed_cmds->operations, &cmd_operator, sizeof(t_logical_operators));
-			pipes_list = NULL;
-			next_is_bin = TRUE;
-		}
-		else if (*(char *)tokens_list->content == pipe_token)
-		{
-			pipes_list = add_element_to_array(pipes_list, cmd_holder, sizeof(t_exec_node));
-			next_is_bin = TRUE;
-		}
+		quotes_parser(tokens_list, mini);
+		if (handle_new_cmd_parsing(tokens_list, mini))
+			;
+		else if (handle_redirections_parsing(tokens_list, mini))
+			;
+		else if (handle_logical_ops_parsing(tokens_list, mini))
+			;
+		else if (handle_pipe_parsing(tokens_list, mini))
+			;
 		else
-			cmd_holder->cmd = add_element_to_array(cmd_holder->cmd, &tokens_list->content, sizeof(char *));
+			mini->parser_helper.cmd_holder->cmd = add_element_to_array(mini->parser_helper.cmd_holder->cmd, &tokens_list->content, sizeof(char *));
+		if (!tokens_list->next)
+		{
+			mini->parser_helper.pipes_list = add_element_to_array(mini->parser_helper.pipes_list, mini->parser_helper.cmd_holder, sizeof(t_exec_node));
+			mini->parsed_cmds.op_cmds = add_element_to_array(mini->parsed_cmds.op_cmds, &mini->parser_helper.pipes_list , sizeof(t_exec_node *));
+		}
 		tokens_list = tokens_list->next;
     }
-	// printf("|%s| \n", cmd_holder->input->file);
-	// while (*cmd_holder->cmd)
-	// {
-	// 	printf("cmd_holder |%s|\n", *(cmd_holder->cmd));
-	// 	cmd_holder->cmd++;
-	// }
+	t_exec_node **oper_cmds = mini->parsed_cmds.op_cmds;
+	t_exec_node *pipe_list;
+	char		**cmd;
+	while(*oper_cmds)
+	{
+		printf("new operation \n");
+		pipe_list = *oper_cmds;
+		while(pipe_list && pipe_list->cmd) // this is a technical issue for now and to disscuss
+		{
+			printf("new pipe args\n");
+			cmd = pipe_list->cmd;
+			while (*cmd)
+			{
+				printf("args |%s|\n", *cmd);
+				cmd++;
+			}
+			pipe_list++;
+		}
+		oper_cmds++;
+	}
 }

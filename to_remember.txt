@@ -2,4 +2,4 @@
 To check 
 cat " $PATH"
 normalise cmd (upercase or lower case or mix doesn t matter)
-ft_strncmp crushes if one arg is null
+< "" would it work ?
