@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 22:28:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/12 04:05:53 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/15 15:29:14 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char    *find_env_var(char **envp, char *needle, t_boolean get_og)
     size_t	needle_len;
 	char	*env_val;
     
-    if(!needle)
+    if(!needle || !envp)
         return NULL;
     needle_len = ft_strlen(needle);
     while (*envp)

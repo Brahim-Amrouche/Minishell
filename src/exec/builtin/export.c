@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:11 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/11 07:55:09 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/15 06:10:41 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ static t_boolean check_export_token(char *token)
 {
 	if (!token)
 		return (FALSE);
-	if (*token != '-' && !ft_isalpha(*token++))
+	if (*token != '_' && !ft_isalpha(*token++))
 		return (FALSE);
-	while (*token && (ft_isalnum(*token) || *token != '-'))
+	while (*token && (ft_isalnum(*token) || *token == '_'))
 		token++;
 	if (!*token || *token == '=')
 		return (TRUE);
@@ -98,14 +98,10 @@ int	export(t_minishell *minishell, t_list *token)
 	char		*var_name;
 	size_t		var_len;
 	char		**existing_var;
-	// int			i;
 
 	if (!token)
 	{
 		print_export_data(export_data);
-		// i = 0;
-		// while (export_data && export_data[i])
-		// 	printf("declare -x  %s\n", export_data[i++]);
 		return (0);
 	}
 	var_len = 0;

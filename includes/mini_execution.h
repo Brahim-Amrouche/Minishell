@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/11 04:02:06 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/15 06:51:12 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,15 @@
 # include "minishell.h"
 
 
+
+# ifndef O_SYMLINK
+# define O_SYMLINK 0
+# endif // O_SYMLINK
+
 #define ENV_SCOPE 69
 
 char	**copy_envp(char **envp);
+char	**export_envp(t_minishell *minishell, char **envp);
 char	**add_elem_to_arr(char **arr, char *new_elem);
 
 // # ifndef t_bool
@@ -43,5 +49,6 @@ int echo(t_minishell *minishell, t_list *token);
 int env(t_minishell *minishell);
 int get_dir(void);
 int export(t_minishell *minishell, t_list *token);
+int unset(t_minishell *minishell, t_list *token);
 
 #endif // MINI_EXECUTIONG_H

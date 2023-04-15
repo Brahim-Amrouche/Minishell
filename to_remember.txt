@@ -2,4 +2,12 @@
 To check 
 cat " $PATH"
 normalise cmd (upercase or lower case or mix doesn t matter)
-< ""   (would it work ?)
+
+< "" would it work ?
+sigfault on empty line
+can u plz protect this
+____________________________________________
+file : "src/parsing/token_parsers/env_variables.c"
+function : char    *find_env_var(char **envp, char *needle, t_boolean get_og)  
+line 20:     if(!needle)  =>  if(!needle || !envp)
+____________________________________________ dealt with
