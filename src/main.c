@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/12 02:04:39 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/15 05:51:50 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ int	main(int argc, char *argv[], char *envp[])
 	(void) argc;
 	(void) argv;
 	ft_bzero(&minishell, sizeof(t_minishell));
-	minishell.envp = copy_envp(envp);
+	minishell.envp = export_envp(&minishell, envp);
+	printf("var name is |%s|*******************\n", *(minishell.envp));
+
 	while (TRUE)
 	{
 		cmd = readline("minishell$ ");
@@ -32,7 +34,7 @@ int	main(int argc, char *argv[], char *envp[])
 		main_parsing(cmd, &minishell);
 		// here comes execution
 		exec_cmd(&minishell, cmd);
-		ft_free(1, FALSE);
+		// ft_free(1, FALSE);
 	}
 	return 0;
 }

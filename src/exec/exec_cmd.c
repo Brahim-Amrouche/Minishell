@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/11 07:52:09 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/15 05:32:39 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,11 @@ char **get_env_var(char *name, char **env)
 {
 	int	var_len;
 
-	if (!name || *env)
+	if (!name || !env || !*env)
 		return (NULL);
 	var_len = ft_strlen(name);
 	while (*env)
 	{
-		printf("no sigfault in sight at |%s|\n", *env);
 		// if (!ft_strncmp(*env, name, var_len) && (*env)[var_len] == '=')
 		if (!ft_strncmp(*env, name, var_len))
 			return (env);
