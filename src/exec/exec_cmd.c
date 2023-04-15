@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/15 05:32:39 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/15 06:52:26 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int	exec_cmd(t_minishell *minishell, char *cmd)
 		minishell->cmd_status = echo(minishell, token);
 	else if (!ft_strncmp(EXPORT, cmd, ft_strlen(EXPORT)))
 		minishell->cmd_status = export(minishell, token->next);
+	else if (!ft_strncmp(UNSET, cmd, ft_strlen(UNSET)))
+		minishell->cmd_status = unset(minishell, token->next);
 	else if (!ft_strncmp(BASH_EXIT, cmd, ft_strlen(BASH_EXIT)))
 		exit_minishell(-1, NULL, TRUE);
 	return (minishell->cmd_status);

@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/15 05:00:54 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/15 06:51:12 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,6 @@ int echo(t_minishell *minishell, t_list *token);
 int env(t_minishell *minishell);
 int get_dir(void);
 int export(t_minishell *minishell, t_list *token);
+int unset(t_minishell *minishell, t_list *token);
 
 #endif // MINI_EXECUTIONG_H
