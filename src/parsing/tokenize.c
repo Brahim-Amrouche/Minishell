@@ -6,11 +6,12 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 01:43:13 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/09 02:55:09 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/13 20:15:50 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
+
 
 static t_boolean check_for_tokens(char *c)
 {
@@ -58,7 +59,6 @@ void    tokenize_input(char *input, t_minishell *mini)
     t_list	*token_node;
     char	*token;
 
-    (void) mini;
     tokens_list = NULL;
     token = ft_strtok(input, check_for_tokens);
     while (token)
