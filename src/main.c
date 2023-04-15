@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/15 05:51:50 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/15 06:13:36 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ int	main(int argc, char *argv[], char *envp[])
 	(void) argv;
 	ft_bzero(&minishell, sizeof(t_minishell));
 	minishell.envp = export_envp(&minishell, envp);
-	printf("var name is |%s|*******************\n", *(minishell.envp));
-
 	while (TRUE)
 	{
 		cmd = readline("minishell$ ");
