@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:50:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/15 15:24:12 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/15 21:04:41 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,39 +93,39 @@ void    parse_tokens(t_minishell *mini)
 		quotes_parser(tokens_list, mini);
 		if (handle_redirections_parsing(tokens_list, mini))
 			;
-		else if (handle_new_cmd_parsing(tokens_list, mini))
-			;
 		else if (handle_logical_ops_parsing(tokens_list, mini))
 			;
 		else if (handle_pipe_parsing(tokens_list, mini))
 			;
+		else if (handle_new_cmd_parsing(tokens_list, mini))
+			;
 		else
 			mini->parser_helper.cmd_holder->cmd = add_element_to_array(mini->parser_helper.cmd_holder->cmd, &tokens_list->content, sizeof(char *));
-		if (!tokens_list->next)
+		if (!tokens_list->next && mini->parser_helper.cmd_holder)
 		{
 			mini->parser_helper.pipes_list = add_element_to_array(mini->parser_helper.pipes_list, mini->parser_helper.cmd_holder, sizeof(t_exec_node));
 			mini->parsed_cmds.op_cmds = add_element_to_array(mini->parsed_cmds.op_cmds, &mini->parser_helper.pipes_list , sizeof(t_exec_node *));
 		}
 		tokens_list = tokens_list->next;
     }
-	t_exec_node **oper_cmds = mini->parsed_cmds.op_cmds;
-	t_exec_node *pipe_list;
-	char		**cmd;
-	while(*oper_cmds)
-	{
-		printf("new operation \n");
-		pipe_list = *oper_cmds;
-		while(pipe_list->cmd) // this is a technical issue for now and to disscuss
-		{
-			printf("new pipe args\n");
-			cmd = pipe_list->cmd;
-			while (*cmd)
-			{
-				printf("args |%s|\n", *cmd);
-				cmd++;
-			}
-			pipe_list++;
-		}
-		oper_cmds++;
-	}
+	// t_exec_node **oper_cmds = mini->parsed_cmds.op_cmds;
+	// t_exec_node *pipe_list;
+	// char		**cmd;
+	// while(*oper_cmds)
+	// {
+	// 	printf("new operation \n");
+	// 	pipe_list = *oper_cmds;
+	// 	while(pipe_list->cmd) // this is a technical issue for now and to disscuss
+	// 	{
+	// 		printf("new pipe args\n");
+	// 		cmd = pipe_list->cmd;
+	// 		while (*cmd)
+	// 		{
+	// 			printf("args |%s|\n", *cmd);
+	// 			cmd++;
+	// 		}
+	// 		pipe_list++;
+	// 	}
+	// 	oper_cmds++;
+	// }
 }

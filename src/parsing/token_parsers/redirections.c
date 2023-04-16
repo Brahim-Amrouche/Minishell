@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:13:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/11 02:47:25 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/16 20:14:41 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 # define SIMPLE_SEP 1
 # define DOUBLE_SEP 2
-
 
 static  char *get_redirection_path(char *token, t_boolean multiple_char_token)
 {
