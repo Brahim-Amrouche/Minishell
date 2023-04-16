@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:20 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/15 06:58:49 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/16 08:26:10 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ int unset(t_minishell *minishell, t_list *token)
 	if (!token)
 		return (0);
 	to_be_unset = get_env_var(token->content, minishell->envp);
-	if (!to_be_unset)
-		unset(minishell, token->next);
-	minishell->envp = rm_elem_from_arr(minishell->envp, to_be_unset);
+	if (to_be_unset)
+		minishell->envp = rm_elem_from_arr(minishell->envp, to_be_unset);
+	// what about export_data
 	unset(minishell, token->next);
 	return (0);
 }

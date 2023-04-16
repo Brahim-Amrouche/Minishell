@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/15 06:52:26 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/16 08:01:22 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 char **get_env_var(char *name, char **env)
 {
-	int	var_len;
+	int	len;
 
 	if (!name || !env || !*env)
 		return (NULL);
-	var_len = ft_strlen(name);
+	len = ft_strlen(name);
 	while (*env)
 	{
-		// if (!ft_strncmp(*env, name, var_len) && (*env)[var_len] == '=')
-		if (!ft_strncmp(*env, name, var_len))
+		// if (!ft_strncmp(*env, name, len) && (*env)[len] == '=')
+		if (!ft_strncmp(*env, name, len) && ((*env)[len] == '=' || !(*env)[len]))
 			return (env);
 		env++;
 	}
