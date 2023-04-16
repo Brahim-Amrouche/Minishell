@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:11 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/16 09:08:32 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/16 20:26:17 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,11 @@ static char **replace_elem(char **arr, char *new_elem, char *var_name)
 	char **old_elem;
 
 	old_elem = get_env_var(var_name, arr);
-	if (old_elem)
-		printf("var name is |%s|\n", *old_elem);
 	if (!new_elem)
 		return (arr);
 	if (!old_elem)
 		return (add_elem_to_arr(arr, new_elem));
-	ft_free_node(ENV_SCOPE, *old_elem);
+	// ft_free_node(ENV_SCOPE, *old_elem);
 	*old_elem = new_elem;
 	return (arr);
 }
