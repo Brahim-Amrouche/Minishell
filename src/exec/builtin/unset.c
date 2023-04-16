@@ -6,13 +6,13 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:20 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/16 08:26:10 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/16 21:10:05 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char **rm_elem_from_arr(char **arr, char **elem)
+char **rm_elem_from_arr(char **arr, char **elem)
 {
 	char	**new_arr;
 	size_t	size;
@@ -41,12 +41,17 @@ static char **rm_elem_from_arr(char **arr, char **elem)
 int unset(t_minishell *minishell, t_list *token)
 {
 	char **to_be_unset;
+	char ***export_data;
 
 	if (!token)
 		return (0);
 	to_be_unset = get_env_var(token->content, minishell->envp);
 	if (to_be_unset)
 		minishell->envp = rm_elem_from_arr(minishell->envp, to_be_unset);
+	export_data = fetch_export_data();
+	to_be_unset = get_env_var(token->content, *export_data);
+	if (to_be_unset)
+		*export_data = rm_elem_from_arr(*export_data, to_be_unset);
 	// what about export_data
 	unset(minishell, token->next);
 	return (0);
