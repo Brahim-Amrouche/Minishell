@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/15 06:51:12 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/16 09:17:41 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,20 @@
 # endif // O_SYMLINK
 
 #define ENV_SCOPE 69
+
+
+typedef struct s_env_var
+{
+	char *key;
+	char *value;
+}	t_env;
+
+
+typedef enum e_export_type { ERROR = 0,
+							 DECLARE = 1,
+							 ASSIGN = 2,
+							 APPEND = 3,
+} t_export;
 
 char	**copy_envp(char **envp);
 char	**export_envp(t_minishell *minishell, char **envp);

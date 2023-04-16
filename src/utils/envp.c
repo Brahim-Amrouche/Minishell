@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:27:22 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/15 06:14:29 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/16 06:01:30 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char **add_elem_to_arr(char **arr, char *new_elem)
 	size_t	size;
 	size_t	i;
 
+	if (!new_elem)
+		return (arr);
 	size = 0;
 	while (arr && arr[size])
 		size++;
