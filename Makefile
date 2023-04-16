@@ -63,5 +63,3 @@ fclean : clean
 re : fclean all
 
 .PHONY : clean fclean re all
-
-OBJ_FILES = ${SRC_FILES:%.c=%.o} 

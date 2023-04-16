@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 22:28:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/15 15:29:14 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/15 20:41:05 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,12 @@ void    get_var(t_list *token_node, t_minishell *mini)
     token = token_node->content;
     while (*(token + i))
     {
-        if (*(token + i) == dollar_sign && *(token + i + 1) &&
-            !ft_is_space(*(token + i + 1)))
+        j = i + 1;
+        if (*(token + i) == dollar_sign && *(token + j) && !ft_is_space(*(token + j)))
         {
-            j = 1;
-            while (*(token + i + j))
+            while (*(token + j))
             {
-                if (*(token + i + j) == dollar_sign || ft_is_space(*(token + i + j)))
+                if (*(token + j) == dollar_sign || ft_is_space(*(token + j)))
                 {
                     j--;
                     break;
