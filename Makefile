@@ -27,7 +27,7 @@ GREEN_TEXT= \033[0;32m
 	@make -C ./libft
 
 
-$(NAME) : ./libft/libft.a $(OBJ_FILES)
+$(NAME) : $(OBJ_FILES) ./libft/libft.a
 	@echo "$(WHITE_TEXT)Compiling Binary..."
 	@$(CC) $(FLAGS) $(INCLUDES) ${READLINE} $^ -o $(NAME)
 	@echo "$(GREEN_TEXT)	Success : $(NAME) Compiled Successfully"
