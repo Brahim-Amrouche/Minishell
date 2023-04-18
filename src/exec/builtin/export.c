@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:11 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/16 21:46:19 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/18 07:22:35 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,31 +43,48 @@ static t_export check_export_type(char *token)
 	return (ERROR);
 }
 
+static char	*get_next_string_alphabetically(char **pool, char *drop)
+{
+	char	*next_drop;
+
+	if (!pool)
+		return (NULL);
+	next_drop = "\255";
+	while (*pool)
+	{
+		if (ft_strncmp(*pool, drop, -1) > 0
+				&& ft_strncmp(*pool, next_drop, -1) < 0)
+			next_drop = *pool;
+		pool++;
+	}
+	return (next_drop);
+}
+
 static int print_export_data(void)
 {
-	char	**export_data;
 	char	**env_var;
+	char	*var;
 	int		i;
+	int		j;
 	int		fd;
 
-	// export_data = NULL;
-	// if (fetch_export_data())
-	// static variable adrress can t be null
-	export_data = *fetch_export_data();
+	env_var = *fetch_export_data();
 	fd = 1;
-	if (!export_data)
+	if (!env_var)
 		return (0);
-	env_var = export_data;
-	while (*env_var)
+	i = 0;
+	var = "\0";
+	while (env_var[i])
 	{
-		i = 0;
+		var = get_next_string_alphabetically(env_var, var);
+		j = 0;
 		ft_putstr_fd("declare -x  ", fd);
-		while ((*env_var)[i] && (*env_var)[i] != '=')
-			ft_putchar_fd((*env_var)[i++], fd);
-		if ((*env_var)[i] == '=')
-			printf("=\"%s\"", (*env_var) + i + 1);
+		while (var[j] && var[j] != '=')
+			ft_putchar_fd(var[j++], fd);
+		if (var[j] == '=')
+			printf("=\"%s\"", var + j + 1);
 		printf("\n");
-		env_var++;
+		i++;
 	}
 	return (0);
 }
