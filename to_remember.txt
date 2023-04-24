@@ -5,3 +5,5 @@ normalise cmd (upercase or lower case or mix doesn t matter)
 
 < "" would it work ?
 sigfault on empty line
+
+wtf is this echo ~/hello
