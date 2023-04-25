@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/25 19:45:38 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/25 21:28:14 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,30 +31,33 @@ char	*terminate_curr__get_next_input(char *input)
 	return (NULL);
 }
 
+static int check_wildcard(char *str, char *input)
+{
+	if (!str || !input)
+		return (1);
+	if (!ft_strncmp(str, "..", -1))
+		return (1);
+	if (*str == '.' && *input != '.')
+		return (1);
+	if (*input != '*' && *input != *str)
+		return (1);
+    if (input[ft_strlen(input) - 1] != '*'
+        && input[ft_strlen(input) - 1] != str[ft_strlen(str) - 1])
+        return (1);
+	if (!ft_strchr(input, '*'))
+		return (1);
+	return (0);
+}
+
 static int get_wildcard(char *str, char *in)
 {
-	int i;
-	int len;
 	char *match;
 	char *next_in;
 	char *input;
 
-	if (!str || !in)
+	if (check_wildcard(str, in))
 		return (0);
 	input = ft_strdup(in);
-	if (!ft_strncmp(str, "..", -1))
-		return (0);
-	if (*str == '.' && *in != '.')
-		return (0);
-	if (*input != '*' && *input != *str)
-		return 0;
-    if (input[ft_strlen(input) - 1] != '*'
-        && input[ft_strlen(input) - 1] != str[ft_strlen(str) - 1])
-        return 0;
-	if (ft_strchr(input, '*') == NULL)
-		return (0);
-	// if (!*input)
-	// 	return (0);
 	while (*input == '*')
 		input++;
 	while (*str)
@@ -73,18 +76,39 @@ static int get_wildcard(char *str, char *in)
 	return (0);
 }
 
-int main(int argc, char *argv[], char **envp)
+char	*make_wildcard_str(char *pattern)
 {
+	char	*wildcard;
+	char	*cwd;
 	DIR		*dir;
 	struct	dirent *direntf;
 
-	dir = opendir("/Users/maboulkh/Desktop/Minishell");
-	while (1)
+	wildcard = NULL;
+	cwd = getcwd(NULL, 0);
+	if (cwd == NULL)
+		exit(1);
+	// exit_minishell(1, "cwd error", TRUE);
+	dir = opendir(cwd);
+	free(cwd);
+	while (TRUE)
 	{
 		direntf = readdir(dir);
 		if (!direntf)
 			break;
-		if (get_wildcard(direntf->d_name, argv[1]))
-			printf("%s\n", direntf->d_name);
+		if (get_wildcard(direntf->d_name, pattern))
+		{
+			if (wildcard)
+				wildcard = pro_strjoin(wildcard, " ");
+			wildcard = pro_strjoin(wildcard, direntf->d_name);
+		}
 	}
+	printf("|%s|\n", wildcard);
+	closedir(dir);
+	return (0);
+}
+
+// cc wildcard.c src/parsing/utils/strjoin.c libft/libft.a -I./libft/includes -I./includes -fsanitize=address
+int main(int argc, char *argv[], char **envp)
+{
+	make_wildcard_str(argv[1]);
 }
