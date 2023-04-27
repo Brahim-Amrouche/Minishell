@@ -1,8 +1,8 @@
 SRC_FILES = ${wildcard ./src/**/*.c} ${wildcard ./src/*.c} ${wildcard ./src/**/**/*.c}
 
-INCLUDES = -I./includes -I./libft/includes
+INCLUDES = -I./includes -I./libft/includes -I./readline/8.2.1/include/readline
 
-READLINE = -lreadline
+READLINE = -lreadline -lhistory -L./readline/8.2.1/lib
 
 CC = cc
 
@@ -13,7 +13,7 @@ FLAGS = -Wall -Werror -Wextra -fsanitize=address $(INCLUDES)
 NAME = minishell
 
 %.o : %.c
-	@$(CC) $(FLAGS) $(INCLUDES) -c $^ -o $@
+	@$(CC) $(FLAGS) -c $^ -o $@
 
 all : $(NAME)
 
@@ -29,7 +29,7 @@ GREEN_TEXT= \033[0;32m
 
 $(NAME) : $(OBJ_FILES) ./libft/libft.a
 	@echo "$(WHITE_TEXT)Compiling Binary..."
-	@$(CC) $(FLAGS) $(INCLUDES) ${READLINE} $^ -o $(NAME)
+	@$(CC) $(FLAGS) ${READLINE} $^ -o $(NAME)
 	@echo "$(GREEN_TEXT)	Success : $(NAME) Compiled Successfully"
 	@echo "$(WHITE_TEXT)Finished"
 	@echo "$(NC_TEXT)"
