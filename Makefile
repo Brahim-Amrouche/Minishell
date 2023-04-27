@@ -1,8 +1,8 @@
 SRC_FILES = ${wildcard ./src/**/*.c} ${wildcard ./src/*.c} ${wildcard ./src/**/**/*.c}
 
-INCLUDES = -I./includes -I./libft/includes -I./readline/8.2.1/include/readline
+INCLUDES = -I./includes -I./libft/includes -DREADLINE_LIBRARY -I$(HOME)/.local/lib/readline/8.2.1/include/readline
 
-READLINE = -lreadline -lhistory -L./readline/8.2.1/lib
+READLINE = -lreadline -lhistory -L$(HOME)/.local/lib/readline/8.2.1/lib
 
 CC = cc
 
