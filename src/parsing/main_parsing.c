@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/15 13:54:47 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:48:14 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,5 @@ void	main_parsing(char *cmd, t_minishell *mini)
 		}
 		mini->exec_root = mini->exec_root->left;
 	}
-	// parse_tokens(mini);
 }
 

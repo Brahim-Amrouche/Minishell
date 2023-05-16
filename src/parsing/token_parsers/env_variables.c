@@ -6,11 +6,14 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 22:28:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/16 19:20:49 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:54:14 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+#define  DOLLAR_SIGN '$'
+
 
 t_boolean   ft_is_space(char c)
 {
@@ -73,11 +76,11 @@ void    get_var(t_list *token_node, t_minishell *mini)
     while (*(token + i))
     {
         j = i + 1;
-        if (*(token + i) == dollar_sign && *(token + j) && !ft_is_space(*(token + j)))
+        if (*(token + i) == DOLLAR_SIGN && *(token + j) && !ft_is_space(*(token + j)))
         {
             while (*(token + j))
             {
-                if (*(token + j) == dollar_sign || ft_is_space(*(token + j)))
+                if (*(token + j) == DOLLAR_SIGN || ft_is_space(*(token + j)))
                 {
                     j--;
                     break;
