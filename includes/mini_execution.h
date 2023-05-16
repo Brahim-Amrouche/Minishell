@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/16 09:17:41 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/18 00:15:43 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef enum e_export_type { ERROR = 0,
 char	**copy_envp(char **envp);
 char	**export_envp(t_minishell *minishell, char **envp);
 char	**add_elem_to_arr(char **arr, char *new_elem);
+char	**rm_elem_from_arr(char **arr, char **elem);
 
 // # ifndef t_bool
 // #  define t_bool
@@ -58,10 +59,11 @@ int exec_cmd(t_minishell *minishell, char *cmd);
 
 char **get_env_var(char *name, char **env);
 
-int change_dir(t_list *token);
+int change_dir(t_minishell *minishell, t_list *token);
 int echo(t_minishell *minishell, t_list *token);
 int env(t_minishell *minishell);
 int get_dir(void);
+char ***fetch_export_data(void);
 int export(t_minishell *minishell, t_list *token);
 int unset(t_minishell *minishell, t_list *token);
 

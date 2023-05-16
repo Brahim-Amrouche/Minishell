@@ -5,6 +5,7 @@ normalise cmd (upercase or lower case or mix doesn t matter)
 
 < "" would it work ?
 sigfault on empty line
+
 can u plz protect this
 ____________________________________________
 file : "src/parsing/token_parsers/env_variables.c"
@@ -16,3 +17,7 @@ export hello="src" && ls $hello
 
 skip_quotes;
 dont_handle_vars;
+
+
+wtf is this echo ~/hello
+

@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/24 15:39:34 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:31:08 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	exec_cmd(t_minishell *minishell, char *cmd)
 	else if (!cmd)
 		minishell->cmd_status = 0;
 	else if (!ft_strncmp(CD, cmd, ft_strlen(CD)))
-		minishell->cmd_status = change_dir(token);
+		minishell->cmd_status = change_dir(minishell, token);
 	else if (!ft_strncmp(PWD, cmd, ft_strlen(PWD)))
 		minishell->cmd_status = get_dir();
 	else if (!ft_strncmp(ENV, cmd, ft_strlen(ENV)))
