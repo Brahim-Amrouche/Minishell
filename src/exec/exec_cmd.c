@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/16 08:01:22 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/04/24 15:39:34 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,37 @@ char **get_env_var(char *name, char **env)
 int	exec_cmd(t_minishell *minishell, char *cmd)
 {
 	t_list *token;
-	t_list *temp;
+	// t_list *temp;
 
 	token = minishell->tokens;
 
-	temp = token;
-	while (temp)
+
+	t_exec_node **oper_cmds = minishell->parsed_cmds.op_cmds;
+	t_exec_node *pipe_list;
+	char		**cmd1;
+	while(*oper_cmds)
 	{
-        printf("tokens ==> |%s|\n", (char *)temp->content);
-        temp = temp->next;
-    }
+		printf("new operation \n");
+		pipe_list = *oper_cmds;
+		while(pipe_list->cmd) // this is a technical issue for now and to disscuss
+		{
+			printf("new pipe args\n");
+			cmd1 = pipe_list->cmd;
+			while (*cmd1)
+			{
+				printf("args |%s|\n", *cmd1);
+				cmd1++;
+			}
+			pipe_list++;
+		}
+		oper_cmds++;
+	}
+	// temp = token;
+	// while (temp)
+	// {
+    //     printf("tokens ==> |%s|\n", (char *)temp->content);
+    //     temp = temp->next;
+    // }
 	if (!cmd)
 		exit_minishell(-1, NULL, TRUE);
 	else if (!cmd)

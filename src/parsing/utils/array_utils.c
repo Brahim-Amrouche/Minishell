@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 04:30:17 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/12 02:00:39 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/04/17 00:36:01 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,37 @@ size_t	array_size(void *array, size_t data_size)
 	return (len);
 }
 
-// should be a null pointed arr
+void	*add_to_array_at_index(void *old_array, void *new_elem, size_t data_size, size_t index)
+{
+	size_t	cpy_mem_size;
+	size_t	array_len;
+	void	*new_array;
+	void	*temp;
+	
+	index++;
+	array_len = array_size(old_array, data_size);
+	new_array = ft_malloc((array_len + 2), m_info(NULL, 1, NULL, 0));
+	if (!new_array)
+		exit_minishell(ENOMEM, "couldn't add element at index to array", TRUE);
+	cpy_mem_size = index * data_size;
+	if (old_array)
+		ft_memcpy(new_array, old_array, cpy_mem_size);
+	temp = skip_bytes(new_array, cpy_mem_size);
+	ft_memcpy(temp , new_elem, data_size);
+	temp = skip_bytes(temp, data_size);
+	if (old_array)
+	{
+		old_array = skip_bytes(old_array, cpy_mem_size);
+		cpy_mem_size = (array_len - index) * data_size;
+		ft_memcpy(temp, old_array, cpy_mem_size);
+	}
+	temp = skip_bytes(temp, cpy_mem_size);
+	ft_bzero(temp, data_size);
+	return new_array;
+}
+
+
+// should be an array finished with a NULL or NULLISH value
 void	*add_element_to_array(void *old_array, void *new_elem, size_t data_size)
 {
 	size_t	cpy_mem_size;

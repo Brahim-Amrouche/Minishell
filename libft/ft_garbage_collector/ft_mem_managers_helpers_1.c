@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mem_managers_helpers_1.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:06:10 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/03 05:39:26 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/14 16:30:15 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ t_list	*mem_find_scope(uint64_t scope)
 	return (memory_scopes);
 }
 
-/* prints the memory state for debuging purposes
+// prints the memory state for debuging purposes
 void	ft_print_memory(void)
 {
 	t_list	*mem_root;
@@ -127,4 +127,3 @@ void	ft_print_memory(void)
 		mem_root = mem_root->next;
 	}
 }
-end of ft_print_memory(void)*/

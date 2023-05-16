@@ -6,11 +6,18 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 22:28:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/15 20:41:05 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:20:49 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_boolean   ft_is_space(char c)
+{
+    if (c == ' ' || c == '\t')
+        return TRUE;
+    return FALSE;
+}
 
 char    *find_env_var(char **envp, char *needle, t_boolean get_og)
 {

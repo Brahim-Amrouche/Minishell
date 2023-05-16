@@ -1,25 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
+/*   strdup.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/15 00:10:23 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/04 15:47:39 by bamrouch         ###   ########.fr       */
+/*   Created: 2023/04/17 01:09:17 by bamrouch          #+#    #+#             */
+/*   Updated: 2023/04/17 01:25:25 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-t_list	*ft_lstnew(void *content)
+char    *pro_str_dup(char *str)
 {
-	t_list	*res;
+    char *res;
+    size_t str_len;
+    size_t i;
 
-	res = ft_calloc(1, sizeof(t_list));
-	if (!res)
-		return (NULL);
-	res->content = content;
-	res->next = NULL;
-	return (res);
+    str_len = ft_strlen(str);
+    res = ft_malloc((str_len + 1) * sizeof(char), m_info(NULL, 1, NULL, 0));
+    if (!res)
+        return NULL;
+    i = 0;
+    while (*(str + i))
+    {
+        *(res + i) = *(str + i);
+        i++;
+    }
+    *(res + i) = 0;
+    return res;
 }

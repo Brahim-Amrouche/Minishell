@@ -11,3 +11,8 @@ file : "src/parsing/token_parsers/env_variables.c"
 function : char    *find_env_var(char **envp, char *needle, t_boolean get_og)  
 line 20:     if(!needle)  =>  if(!needle || !envp)
 ____________________________________________ dealt with
+
+export hello="src" && ls $hello
+
+skip_quotes;
+dont_handle_vars;
