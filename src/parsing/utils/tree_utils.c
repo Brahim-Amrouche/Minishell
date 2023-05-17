@@ -6,11 +6,21 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 14:03:14 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/14 16:42:52 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/17 17:11:30 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
+
+void	loop_exec_tree(t_exec_tree *root, void (*exec)(t_exec_tree *))
+{
+	if (!root)
+		return ;
+	loop_exec_tree(root->left, exec);
+	loop_exec_tree(root->right, exec);
+	exec(root);
+}
+
 
 t_exec_tree *exec_tree_node(int params_num, ...)
 {

@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/16 19:52:59 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/17 15:51:18 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_exec_tree
 typedef struct s_new_parser_helper
 {
 	t_list				*post_logic_token;
-	t_boolean			prev_is_parenthese;
+	t_exec_tree			*parenthese_node;
 }						t_new_parser_helper;
 
 typedef struct s_minishell
@@ -141,5 +141,6 @@ void					*add_element_to_array(void *old_array, void *new_elem,
 
 // tree_utils.c
 t_exec_tree				*exec_tree_node(int params_num, ...);
+void					loop_exec_tree(t_exec_tree *root, void (*exec)(t_exec_tree *));
 
 #endif
