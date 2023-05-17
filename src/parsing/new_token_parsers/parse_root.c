@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 14:39:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/16 15:02:22 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/17 11:43:31 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void    handle_args(char *token, t_minishell *mini)
 {
     void    *temp;
     
-    printf("in parsing types |%s|----|%d|\n", token,mini->exec_root->type);
     if (mini->exec_root->type == LOGICAL_NONE)
     {
         mini->exec_root->info.exec_node = ft_malloc(sizeof(t_exec_node), m_info(NULL, 1, NULL, 0));
@@ -58,7 +57,11 @@ t_exec_tree	*parsing_root(t_minishell *mini)
             continue;
         }
         else if (!ft_strncmp(token_content, "<<", 2) || !ft_strncmp(token_content, ">>", 2) || *token_content == '<' || *token_content == '>')
+        {
             parse_redirections(tokens, mini);
+            tokens = mini->tokens;
+            continue;
+        }
         else
             handle_args(token_content, mini);
         tokens = tokens->next;

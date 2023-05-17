@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/17 20:25:44 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/17 20:35:07 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void traverse_tree(t_exec_tree *tree, int depth, int offset, char **tree_d, int 
 	}
 }
 
- void print_tree(char ** tree, int depth)
+ void print_tree_n(char ** tree, int depth)
  {
 	int i;
 	int size;
@@ -150,7 +150,7 @@ int	exec_cmd(t_minishell *minishell)
 	ft_memset(&draw, 0, sizeof(draw));
 	types = ft_split("O | && || x", ' ');
 	traverse_tree(tree, 0, 0, draw, &tree_size, types);
-	print_tree(draw, tree_size);
+	print_tree_n(draw, tree_size);
 	// print_tree(tree);
 
 	// if (tree->type == LOGICAL_EXEC)
