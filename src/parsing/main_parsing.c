@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/18 18:07:13 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/18 18:15:54 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ void	strip_space_from_tokens(t_list *tokens, t_minishell *mini)
 
 void	 print_tree(t_exec_tree *node, t_minishell *mini)
 {
+	char **cmd;
+	t_redirections *input, *output;
+
 	printf("------------------------------\n");
 	printf("node type : %d\n",node->type);
 	if (node->left)
@@ -58,23 +61,24 @@ void	 print_tree(t_exec_tree *node, t_minishell *mini)
 		printf("the right type |%d|\n", node->right->type);
 	if (node->type == 4)
 	{
-		while (*node->info.exec_node->cmd)
+		cmd = node->info.exec_node->cmd;
+		while (*cmd)
 		{
-			*(node->info.exec_node->cmd) = unwrap_quotes(*(node->info.exec_node->cmd), mini);
-			printf("command args :%s\n", *(node->info.exec_node->cmd));
-			node->info.exec_node->cmd++;
+			*cmd = unwrap_quotes(*cmd, mini);
+			printf("command args :%s\n", *cmd);
+			cmd++;
 		}
-		while (node->info.exec_node->input && 
-			node->info.exec_node->input->continue_redirs)
+		input = node->info.exec_node->input;
+		while (input && input->continue_redirs)
 		{
-			printf("input redirs found|%s|\n",node->info.exec_node->input->content);
-			node->info.exec_node->input++;
+			printf("input redirs found|%s|\n",input->content);
+			input++;
 		}
-		while (node->info.exec_node->output && 
-			node->info.exec_node->output->continue_redirs)
+		output = node->info.exec_node->output;
+		while (output && output->continue_redirs)
 		{
-			printf("output redirs found|%s|\n",node->info.exec_node->output->content);
-			node->info.exec_node->output++;
+			printf("output redirs found|%s|\n",output->content);
+			output++;
 		}
 	}
 	printf("------------------------------\n");
