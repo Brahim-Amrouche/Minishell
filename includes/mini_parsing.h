@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/17 15:51:18 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/18 18:05:43 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,19 +97,19 @@ void					parse_redirections(t_list *redir_node,
 							t_minishell *mini);
 void					parse_logical_operators(t_list *logical_node,
 							t_minishell *mini, char *token_content);
+char    				*unwrap_quotes(char *arg, t_minishell *mini);
 
 //	main_parsing.c
 void					main_parsing(char *cmd, t_minishell *mini);
 
 // env_variables.c
-void					get_var(t_list *token_node, t_minishell *mini);
+char					*get_var(char *arg, t_minishell *mini);
 char					*find_env_var(char **envp, char *needle,
 							t_boolean get_og);
 
 //	binaries.c
 t_boolean				cmd_is_builtin(char *cmd);
-void					binary_parser(t_list *token_node, t_minishell *mini,
-							t_exec_node *exec_node);
+void					binary_parser(char **arg, t_minishell *mini);
 
 // utils
 // substr.c
@@ -126,7 +126,7 @@ char					*pro_str_dup(char *str);
 char					*pro_strjoin(char const *s1, char const *s2);
 
 // replace_value_in_token.c
-char					*replace_value_in_token(char *token, size_t pre,
+char					*replace_value_in_arg(char *token, size_t pre,
 							size_t post, char *env_val);
 
 // pro_lstnew.c
@@ -141,6 +141,6 @@ void					*add_element_to_array(void *old_array, void *new_elem,
 
 // tree_utils.c
 t_exec_tree				*exec_tree_node(int params_num, ...);
-void					loop_exec_tree(t_exec_tree *root, void (*exec)(t_exec_tree *));
+void					loop_exec_tree(t_exec_tree *root, t_minishell *mini ,void (*exec)(t_exec_tree *, t_minishell *));
 
 #endif

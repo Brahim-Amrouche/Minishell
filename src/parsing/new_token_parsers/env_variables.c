@@ -5,15 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/04 22:28:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/16 19:54:14 by bamrouch         ###   ########.fr       */
+/*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
+/*   Updated: 2023/05/18 18:11:41 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+# include "minishell.h"
 
 #define  DOLLAR_SIGN '$'
-
 
 t_boolean   ft_is_space(char c)
 {
@@ -46,49 +45,47 @@ char    *find_env_var(char **envp, char *needle, t_boolean get_og)
     return NULL;
 }
 
-static  char *replace_env_var(t_list *token_node, t_minishell *mini, size_t *i, size_t j)
+static  char *replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 {
     char	*env_name;
 	char	*env_val;
-    char    *token;
+    char    *new_arg;
 
-    token = token_node->content;
-    env_name = protected_substr(token, (*i) + 1, j);
+    env_name = protected_substr(arg, (*i) + 1, j);
 	if (!env_name)
 		exit_minishell(ENOMEM, "could't malloc env_name", TRUE);
     env_val = find_env_var(mini->envp, env_name, FALSE);
 	ft_free_node(1, env_name);
-    token_node->content = replace_value_in_token(token, *i, (*i) + j + 1, env_val);
+    new_arg = replace_value_in_arg(arg, *i, (*i) + j + 1, env_val);
     *i += ft_strlen(env_val) - 1; 
-    ft_free_node(1, token);
+    ft_free_node(1, arg);
     ft_free_node(1, env_val); 
-    return token_node->content;
+    return new_arg;
 }
 
-void    get_var(t_list *token_node, t_minishell *mini)
+char    *get_var(char *arg, t_minishell *mini)
 {
     size_t	i;
     size_t  j;
-    char    *token;
-
+ 
     i = 0;
-    token = token_node->content;
-    while (*(token + i))
+    while (*(arg + i))
     {
         j = i + 1;
-        if (*(token + i) == DOLLAR_SIGN && *(token + j) && !ft_is_space(*(token + j)))
+        if (*(arg + i) == DOLLAR_SIGN && *(arg + j) && !ft_is_space(*(arg + j)))
         {
-            while (*(token + j))
+            while (*(arg + j))
             {
-                if (*(token + j) == DOLLAR_SIGN || ft_is_space(*(token + j)))
+                if (*(arg + j) == DOLLAR_SIGN || ft_is_space(*(arg + j)))
                 {
                     j--;
                     break;
                 }
                 j++;
             }
-            token = replace_env_var(token_node, mini, &i, j);
+            arg = replace_env_var(arg, mini, &i, j);
 		}
         i++;
     }
+    return arg;
 }

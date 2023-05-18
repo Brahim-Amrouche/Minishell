@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/18 17:03:06 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/18 20:50:28 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	strip_space_from_tokens(t_list *tokens, t_minishell *mini)
 }
 
 
-void	 print_tree(t_exec_tree *node)
+void	 print_tree(t_exec_tree *node, t_minishell *mini)
 {
 	char **cmd;
 	t_redirections *input, *output;
@@ -64,6 +64,7 @@ void	 print_tree(t_exec_tree *node)
 		cmd = node->info.exec_node->cmd;
 		while (*cmd)
 		{
+			*cmd = unwrap_quotes(*cmd, mini);
 			printf("command args :%s\n", *cmd);
 			cmd++;
 		}
