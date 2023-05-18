@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 00:04:02 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/07 03:16:46 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/18 14:18:51 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 
 
 
-char    *replace_value_in_token(char *token, size_t  pre, size_t post, char *env_val)
+char    *replace_value_in_arg(char *token, size_t  pre, size_t post, char *env_val)
 {
 	char    *pre_token;
 	char	*res;

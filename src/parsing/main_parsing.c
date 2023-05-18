@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/17 17:18:25 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/18 18:07:13 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	strip_space_from_tokens(t_list *tokens, t_minishell *mini)
 }
 
 
-void	 print_tree(t_exec_tree *node)
+void	 print_tree(t_exec_tree *node, t_minishell *mini)
 {
 	printf("------------------------------\n");
 	printf("node type : %d\n",node->type);
@@ -60,6 +60,7 @@ void	 print_tree(t_exec_tree *node)
 	{
 		while (*node->info.exec_node->cmd)
 		{
+			*(node->info.exec_node->cmd) = unwrap_quotes(*(node->info.exec_node->cmd), mini);
 			printf("command args :%s\n", *(node->info.exec_node->cmd));
 			node->info.exec_node->cmd++;
 		}
@@ -85,6 +86,6 @@ void	main_parsing(char *cmd, t_minishell *mini)
 	tokenize(cmd, mini);
 	strip_space_from_tokens(mini->tokens, mini);
 	parsing_root(mini);
-	loop_exec_tree(mini->exec_root, print_tree);
+	loop_exec_tree(mini->exec_root, mini ,print_tree);
 }
 

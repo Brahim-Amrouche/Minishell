@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:25:39 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/16 23:16:41 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/18 18:00:23 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*cmd_is_exect(char *cmd, char **paths)
 		ft_free_node(STRJOIN_SCOPE, joined_path);
 		paths++;
 	}
-	return NULL;
+	return cmd;
 }
 
 static	t_boolean path_sep(char c)
@@ -106,23 +106,14 @@ t_boolean cmd_is_builtin(char *cmd)
 	return (FALSE);
 }
 
-void	binary_parser(t_list *token_node, t_minishell *mini, t_exec_node *exec_node)
+void	binary_parser(char **arg, t_minishell *mini)
 {
-	char *token;
 	char **paths;
-	char **cmd_holder;
 
-	token = token_node->content;
 	paths = parse_path(mini->envp);
-	cmd_holder = exec_node->cmd;
-	if (cmd_is_builtin(token))
+	if (cmd_is_builtin(*arg))
 		;
 	else
-		token_node->content = cmd_is_exect(token, paths);
-	if (!token_node->content)
-		return print_msg(2, "this is not an error just that you gave a wrong binary path");
-	cmd_holder = add_element_to_array(cmd_holder, &token_node->content, sizeof(char *));
-	// printf("the cmd after path search  %s\n", token_node->content);
-	exec_node->cmd = cmd_holder;
+		*arg = cmd_is_exect(*arg, paths);
 }
 
