@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:27:22 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/16 06:01:30 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/18 20:39:05 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,18 @@ char **add_elem_to_arr(char **arr, char *new_elem)
 
 char	**export_envp(t_minishell *minishell, char **envp)
 {
-	t_list	token;
+	char *cmd[3];
+	t_exec_node node;
 
-	token.next = NULL;
+	node.cmd = (char **) &cmd;
+	cmd[0] = "export";
+	cmd[2] = NULL;
 	if (!envp)
 		return (NULL);
 	while (*envp)
 	{
-		token.content = *envp;
-		export(minishell, &token);
+		cmd[1] = *envp;
+		export(minishell, &node, 0);
 		envp++;
 	}
 	return (minishell->envp);

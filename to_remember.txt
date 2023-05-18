@@ -21,3 +21,4 @@ dont_handle_vars;
 
 wtf is this echo ~/hello
 
+echo x$? // brahim do ur job

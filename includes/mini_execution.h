@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/17 20:34:07 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/18 18:34:19 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,12 @@ int exec_cmd(t_minishell *minishell);
 
 char **get_env_var(char *name, char **env);
 
-int change_dir(t_minishell *minishell, t_list *token);
-int echo(t_minishell *minishell, t_list *token);
+int change_dir(t_minishell *minishell, t_exec_node *node);
+int echo(t_minishell *minishell, t_exec_node *node);
 int env(t_minishell *minishell);
 int get_dir(void);
 char ***fetch_export_data(void);
-int export(t_minishell *minishell, t_list *token);
-int unset(t_minishell *minishell, t_list *token);
+int export(t_minishell *minishell, t_exec_node *node, int index);
+int unset(t_minishell *minishell, t_exec_node *node, int index);
 
 #endif // MINI_EXECUTIONG_H

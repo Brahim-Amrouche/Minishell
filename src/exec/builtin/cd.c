@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:08 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/24 11:22:51 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/18 19:50:25 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,26 @@
 
 static int	change__update_pwds(t_minishell *minishell, char *path)
 {
-	char	*dir;
-	t_list	token;
+	char		*dir;
+	char		*cmd[2];
+	t_exec_node	node;
 
+	node.cmd = (char **) &cmd;
+	cmd[1] = NULL;
 	dir = getcwd(NULL, 0);
-	token.next = NULL;
 	if (dir == NULL)
 		exit_minishell(1, "cwd buffer is not enough", TRUE);
-	token.content = pro_strjoin("OLDPWD=", dir);
+	cmd[0] = pro_strjoin("OLDPWD=", dir);
 	free(dir);
 	if (chdir(path) != 0)
 		return (1);
-	export(minishell, &token);
+	export(minishell, &node, 0);
 	dir = getcwd(NULL, 0);
 	if (dir == NULL)
 		exit_minishell(1, "cwd buffer is not enough", TRUE);
-	token.content = pro_strjoin("PWD=", dir);
+	cmd[0] = pro_strjoin("PWD=", dir);
 	free(dir);
-	export(minishell, &token);
+	export(minishell, &node, 0);
 	return (0);
 }
 
@@ -64,15 +66,15 @@ static char	*go_to_weird_paths(t_minishell *minishell, char *path, int *stat)
 	return (path);
 }
 
-int	change_dir(t_minishell *minishell, t_list *token)
+int	change_dir(t_minishell *minishell, t_exec_node *node)
 {
 	char	*path;
 	int		status;
 
 	status = 0;
 	path = NULL;
-	if (token->next)
-		path = token->next->content;
+	if (*(node->cmd + 1))
+		path = *(node->cmd + 1);
 	if (path && (*path == '\0' || *path == '-'))
 		path = go_to_weird_paths(minishell, path, &status);
 	else if (path && *path != '/')
@@ -87,10 +89,10 @@ int	change_dir(t_minishell *minishell, t_list *token)
 		print_msg(2, "minishell: cd: $/: Permission denied", path);
 	if (access(path, X_OK) != 0)
 	{
-		free(path);
+		// free(path);
 		return (1);
 	}
 	status = change__update_pwds(minishell, path);
-	free(path);
+	// free(path);
 	return (status);
 }

@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:11 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/18 07:22:35 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/18 20:20:27 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ char ***fetch_export_data(void)
 	return (&export_data);
 }
 
-static void exporting(t_minishell *minishell, t_list *token,
+static void exporting(t_minishell *minishell, char *arg,
 					char *var_name, t_export export_type)
 {
 	char		***export_data;
@@ -142,31 +142,33 @@ static void exporting(t_minishell *minishell, t_list *token,
 	
 	export_data = fetch_export_data();
 	existing_var = get_env_var(var_name, *export_data);
-	var = export_append(existing_var , token->content, export_type);
+	var = export_append(existing_var , arg, export_type);
 	*export_data = add_or_replace_elem(*export_data, var, var_name);
 	if (export_type != DECLARE)
 		minishell->envp = add_or_replace_elem(minishell->envp, var, var_name);
 }
 
-int	export(t_minishell *minishell, t_list *token)
+int	export(t_minishell *minishell, t_exec_node *node, int index)
 {
 	char		*var_name;
+	char		*arg;
 	t_export	export_type;
 
-	if (!token)
+	arg = *(node->cmd + (++index));
+	if (!arg)
 		return (print_export_data());
-	export_type = check_export_type(token->content);
-	var_name = get_export_variable_name(token->content, export_type);
+	export_type = check_export_type(arg);
+	var_name = get_export_variable_name(arg, export_type);
 	if (export_type)
-		exporting(minishell, token, var_name, export_type);
+		exporting(minishell, arg, var_name, export_type);
 	else
 	{
 		minishell->cmd_status = 1;
 		print_msg(2, "minishell: export: `$': not a valid identifier", var_name);
 	}
 	ft_free_node(SUBSTR_SCOPE, var_name);
-	if (token->next)
-		export(minishell, token->next);
+	if (*(node->cmd + (index + 1)))
+		export(minishell, node, index);
 	//  waht about in case of error
 	return (0);
 }

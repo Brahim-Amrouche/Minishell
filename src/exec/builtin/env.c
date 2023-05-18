@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:59 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/09 07:00:36 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/18 20:40:17 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	env(t_minishell *minishell)
 {
 	char		**envp;
 
-	printf("env is here\n");
 	envp = minishell->envp;
 	if (!envp)
 		return (0);
