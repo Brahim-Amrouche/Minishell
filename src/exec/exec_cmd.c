@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/18 20:31:12 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/19 20:55:38 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,67 @@ int pow2(int n)
 	return (res);
 }
 
+int lunch_bin(t_exec_node *node, t_minishell *mini)
+{
+	char **cmd;
+	int		id;
+
+	id = fork();
+	if (id == -1)
+		exit_minishell(1, "could't fork", TRUE);
+	if (id == 0)
+	{
+		cmd = node->cmd;
+		binary_parser(cmd, mini);
+		if (access(cmd[0], F_OK) && (cmd[0] || cmd))
+			exit_minishell(127, "command not found", FALSE);
+		else if (access(cmd[0], X_OK))
+			exit_minishell(126, "permission denied", FALSE);
+		else
+			execve(cmd[0], cmd, mini->envp);
+		exit(126);
+	}
+	return (id);
+}
+
 static t_boolean match_cmd(char *cmd, char *match)
 {
 	return (!ft_strncmp(cmd, match, -1));
 }
 
-int call_cmd(t_minishell *minishell, t_exec_node *node)
+typedef enum e_tree_side
+{
+	RIGHT = 0,
+	LEFT = 1,
+}	t_tree_side;
+
+typedef struct s_pipes
+{
+	int	p1[2];
+	int	p2[2];
+}	t_pipes;
+
+typedef struct s_exec_pipe
+{
+	t_tree_side	side;
+	t_pipes		*pipe;
+	int			*id;
+	int			pipe_lvl;
+}	t_exec_pipe;
+
+static void	wait_all(pid_t last_proc, int *status)
+{
+	pid_t	id;
+	int		stat;
+
+	id = wait(&stat);
+	if (id == last_proc)
+		*status = stat / 256;
+	if (id != -1)
+		wait_all(last_proc, status);
+}
+
+int call_cmd(t_minishell *minishell, t_exec_node *node, t_exec_pipe info)
 {
 	int		*status;
 	char	*cmd;
@@ -67,107 +122,156 @@ int call_cmd(t_minishell *minishell, t_exec_node *node)
 		*status = unset(minishell, node, 0);
 	else if (match_cmd(cmd, BASH_EXIT))
 		exit_minishell(-1, NULL, TRUE);
+	else
+	{
+		*(info.id) = lunch_bin(node, minishell);
+		if (info.pipe_lvl == 0 || (info.pipe_lvl == 1 && info.side == RIGHT))
+			wait_all(*(info.id), status);
+	}
 	return (*status);
 }
 
-void traverse_tree(t_exec_tree *tree, t_minishell *minishell)
+static void	switch_pipes(t_exec_pipe info)
 {
-	t_exec_node *node;
-
-	if (tree->type == LOGICAL_EXEC)
-	{
-		node = tree->info.exec_node;
-		call_cmd(minishell, node);
-		// printf("\t|%s|\t", node->cmd[0]);
-		if (!ft_strncmp("exit", node->cmd[0], -1))
-			exit(0);
-	}
-	if (tree->left)
-		traverse_tree(tree->left, minishell);
-	if (tree->right)
-		traverse_tree(tree->right, minishell);
+	ft_memmove(&(info.pipe->p1), &(info.pipe->p1), sizeof(info.pipe->p1));
+	return ;
 }
 
-void make_tree(t_exec_tree *tree, int depth, int offset, char **tree_d, int *tree_size, char **types)
+int pipe_stdin(void)
 {
-	t_exec_node *node;
+	
+}
 
-	if (tree->type == LOGICAL_EXEC)
-	{
-		node = tree->info.exec_node;
-		if (depth > *tree_size)
-			*tree_size = depth;
-		tree_d[pow2(depth) + offset - 1] = node->cmd[0];
-		if (!ft_strncmp("exit", node->cmd[0], -1))
-			exit(0);
-	}
+int pipe_stdout(void)
+{
+
+}
+
+int	piping(t_exec_pipe info)
+{
+	if (info.pipe_lvl == 0)
+		return (0);
+	else if (info.pipe_lvl == 1 && info.side == LEFT)
+		pipe_stdin();
+	else if (info.pipe_lvl == 1 && info.side == RIGHT)
+		pipe_stdout();
 	else
+		switch_pipes(info);
+	// if (cmd_number != pipex->cmd_nbr - 1)
+	// 	if (pipe(pipex->pipes.p2) == -1)
+	// 		exit_with_msg("couldnt open pipe", TRUE);
+}
+
+void traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
+{
+	t_exec_node *node;
+	int			id;
+
+	if (tree->type == LOGICAL_PIPE)
+		(info.pipe_lvl)++;
+	if (tree->type == LOGICAL_EXEC)
 	{
-		tree_d[pow2(depth) + offset - 1] = types[tree->type];
+		info.id = &id;
+		piping(info);
+		node = tree->info.exec_node;
+		call_cmd(minishell, node, info);
+		if (!ft_strncmp("exit", node->cmd[0], -1))
+			exit(0);
 	}
 	if (tree->left)
 	{
-		make_tree(tree->left, depth + 1, 2 * offset, tree_d, tree_size, types);
+		info.side = LEFT;
+		traverse_tree(tree->left, minishell, info);
 	}
 	if (tree->right)
 	{
-		make_tree(tree->right, depth + 1, 2 * offset + 1, tree_d, tree_size, types);
+		info.side = RIGHT;
+		traverse_tree(tree->right, minishell, info);
 	}
 }
 
-void print_tree_n(char ** tree, int depth)
-{
-	int i;
-	int j;
-	int size;
-	int d;
+// void make_tree(t_exec_tree *tree, int depth, int offset, char **tree_d, int *tree_size, char **types)
+// {
+// 	t_exec_node *node;
 
-	d = 0;
-	size = 1;
-	while (d < depth + 1)
-	{
-		if (d % 2)
-			printf("    ");
-		i = pow2(d) - 1;
-		while (i < size)
-		{
-			j = 0;
-			while (j < (pow2(depth) / pow2(d + 1)))
-			{
-				printf("        ");
-				j++;
-			}
-			if (tree[i])
-				printf("%8s,%d", tree[i], i);
-			else
-				printf("        ");
-			i++;
-		}
-		printf("\n");
-		d++;
-		size = pow2(d + 1) - 1;
-	}
-}
+// 	if (tree->type == LOGICAL_EXEC)
+// 	{
+// 		node = tree->info.exec_node;
+// 		if (depth > *tree_size)
+// 			*tree_size = depth;
+// 		tree_d[pow2(depth) + offset - 1] = node->cmd[0];
+// 		if (!ft_strncmp("exit", node->cmd[0], -1))
+// 			exit(0);
+// 	}
+// 	else
+// 	{
+// 		tree_d[pow2(depth) + offset - 1] = types[tree->type];
+// 	}
+// 	if (tree->left)
+// 	{
+// 		make_tree(tree->left, depth + 1, 2 * offset, tree_d, tree_size, types);
+// 	}
+// 	if (tree->right)
+// 	{
+// 		make_tree(tree->right, depth + 1, 2 * offset + 1, tree_d, tree_size, types);
+// 	}
+// }
 
-int traverse_and_print_tree(t_exec_tree *tree)
-{
-	char		**tree_d;
-	char		*draw[200];
-	int			tree_size;
-	char		**types;
+// void print_tree_n(char ** tree, int depth)
+// {
+// 	int i;
+// 	int j;
+// 	int size;
+// 	int d;
 
-	tree_d = NULL;
-	tree_size = 0;
-	ft_memset(&draw, 0, sizeof(draw));
-	types = ft_split("O | && || x", ' ');
-	make_tree(tree, 0, 0, draw, &tree_size, types);
-	print_tree_n(draw, tree_size);
-	return (0);
-}
+// 	d = 0;
+// 	size = 1;
+// 	while (d < depth + 1)
+// 	{
+// 		if (d % 2)
+// 			printf("    ");
+// 		i = pow2(d) - 1;
+// 		while (i < size)
+// 		{
+// 			j = 0;
+// 			while (j < (pow2(depth) / pow2(d + 1)))
+// 			{
+// 				printf("        ");
+// 				j++;
+// 			}
+// 			if (tree[i])
+// 				printf("%8s,%d", tree[i], i);
+// 			else
+// 				printf("        ");
+// 			i++;
+// 		}
+// 		printf("\n");
+// 		d++;
+// 		size = pow2(d + 1) - 1;
+// 	}
+// }
+
+// int traverse_and_print_tree(t_exec_tree *tree)
+// {
+// 	char		**tree_d;
+// 	char		*draw[200];
+// 	int			tree_size;
+// 	char		**types;
+
+// 	tree_d = NULL;
+// 	tree_size = 0;
+// 	ft_memset(&draw, 0, sizeof(draw));
+// 	types = ft_split("O | && || x", ' ');
+// 	make_tree(tree, 0, 0, draw, &tree_size, types);
+// 	print_tree_n(draw, tree_size);
+// 	return (0);
+// }
 
 int exec_cmd(t_minishell *minishell)
 {
 	t_exec_tree *tree;
+	t_exec_pipe	pipe_info;
+	t_pipes	pipes;
 	// t_exec_node *node;
 	// int depth;
 	// int route;
@@ -175,8 +279,10 @@ int exec_cmd(t_minishell *minishell)
 	// // t_list *temp;
 
 	// token = minishell->tokens;
+	ft_memset(&pipe_info, 0, sizeof(pipe_info));
+	pipe_info.pipe = &pipes;
 	tree = minishell->exec_root;
 	// traverse_and_print_tree(tree);
-	traverse_tree(tree, minishell);
+	traverse_tree(tree, minishell, pipe_info);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binaries.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:25:39 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/18 18:00:23 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/19 18:32:08 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*cmd_is_exect(char *cmd, char **paths)
 	is_a_path = str_is_a_path(cmd);
 	if (is_a_path)
 		return cmd;
-	while (*paths)
+	while (paths && *paths)
 	{
 		joined_path = pro_strjoin(*paths, cmd);
 		if (!joined_path)
@@ -81,39 +81,39 @@ static char	**parse_path(char *envp[])
 	return (paths);
 }
 
-t_boolean cmd_is_builtin(char *cmd)
-{
-	char    *builtin_list[8];
-	size_t  cmd_len;
-	size_t  i;
+// t_boolean cmd_is_builtin(char *cmd)
+// {
+// 	char    *builtin_list[8];
+// 	size_t  cmd_len;
+// 	size_t  i;
 
-	i = 0;
-	builtin_list[0] = ECHO;
-	builtin_list[1] = CD;
-	builtin_list[2] = PWD;
-	builtin_list[3] = EXPORT;
-	builtin_list[4] = UNSET;
-	builtin_list[5] = ENV;
-	builtin_list[6] = BASH_EXIT;
-	builtin_list[7] = NULL;
-	cmd_len = ft_strlen(cmd);
-	while (builtin_list[i])
-	{
-		if (!ft_strncmp(cmd, builtin_list[i], cmd_len))
-			return (TRUE);
-		i++;
-	}
-	return (FALSE);
-}
+// 	i = 0;
+// 	builtin_list[0] = ECHO;
+// 	builtin_list[1] = CD;
+// 	builtin_list[2] = PWD;
+// 	builtin_list[3] = EXPORT;
+// 	builtin_list[4] = UNSET;
+// 	builtin_list[5] = ENV;
+// 	builtin_list[6] = BASH_EXIT;
+// 	builtin_list[7] = NULL;
+// 	cmd_len = ft_strlen(cmd);
+// 	while (builtin_list[i])
+// 	{
+// 		if (!ft_strncmp(cmd, builtin_list[i], cmd_len))
+// 			return (TRUE);
+// 		i++;
+// 	}
+// 	return (FALSE);
+// }
 
 void	binary_parser(char **arg, t_minishell *mini)
 {
 	char **paths;
 
 	paths = parse_path(mini->envp);
-	if (cmd_is_builtin(*arg))
-		;
-	else
-		*arg = cmd_is_exect(*arg, paths);
+	// if (cmd_is_builtin(*arg))
+	// 	;
+	// else
+	*arg = cmd_is_exect(*arg, paths);
 }
 
