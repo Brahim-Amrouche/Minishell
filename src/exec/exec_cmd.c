@@ -83,6 +83,8 @@ typedef struct s_exec_pipe
 {
 	t_tree_side	side;
 	t_pipes		*pipe;
+	int			std[2];
+	int			start;
 	int			*id;
 	int			pipe_lvl;
 }	t_exec_pipe;
@@ -150,16 +152,73 @@ int pipe_stdout(void)
 
 }
 
-int	piping(t_exec_pipe info)
+static void	close_with_msg_on_error(int *p, int side)
 {
+	if (close(p[side]))
+		ft_putendl_fd("Error : replace_std() close fail", 2);
+}
+
+void	close_2fd(int p[2])
+{
+	if (!p)
+		return ;
+	if (close(p[0]))
+		ft_putendl_fd("Error : unable to close fd[0]", 2);
+	if (close(p[1]))
+		ft_putendl_fd("Error : unable to close fd[1]", 2);
+}
+
+static void	dup2_with_msg_on_error(int src, int dst)
+{
+	if (dup2(src, dst) == -1)
+		ft_putendl_fd("Error : replace_std() dup2 fail", 2);
+}
+
+void	replace_stdout(int *p)
+{
+	dup2_with_msg_on_error(p[1], STDOUT_FILENO);
+	close_with_msg_on_error(p, 1);
+}
+
+void	replace_stdin(int *p)
+{
+	dup2_with_msg_on_error(p[0], STDIN_FILENO);
+	close_with_msg_on_error(p, 0);
+}
+
+int create_pipe2(int *pip)
+{
+	if (pipe(pip) == -1)
+		exit_minishell(1, "couldnt open pipe", TRUE);
+}
+
+t_exec_pipe	piping(t_exec_pipe info)
+{
+	switch_pipes(info);
+	info.std[0] = dup(STDIN_FILENO);
+	info.std[1] = dup(STDOUT_FILENO);
 	if (info.pipe_lvl == 0)
-		return (0);
-	else if (info.pipe_lvl == 1 && info.side == LEFT)
-		pipe_stdin();
+		return (info);
 	else if (info.pipe_lvl == 1 && info.side == RIGHT)
-		pipe_stdout();
+		return (info);
 	else
-		switch_pipes(info);
+	{
+		dprintf(2, "create pipe 2\n");
+		create_pipe2(info.pipe->p2);
+	}
+		dprintf(2, "replace stdout\n");
+	replace_stdout(info.pipe->p2);
+	if (info.pipe_lvl >= 1 && info.side == LEFT)
+		return (info);
+	dprintf(2, "replace stdin\n");
+	replace_stdin(info.pipe->p1);
+	return (info);
+
+	// else if (info.pipe_lvl >= 1 && info.side == LEFT)
+
+		// create_pipe 2  -> read 1 -> write 2 -> close | switch 21
+	// else if (info.pipe_lvl == 1 && info.side == LEFT)
+	// 	pipe_stdin();
 	// if (cmd_number != pipex->cmd_nbr - 1)
 	// 	if (pipe(pipex->pipes.p2) == -1)
 	// 		exit_with_msg("couldnt open pipe", TRUE);
@@ -198,12 +257,24 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
 	if (tree->type == LOGICAL_EXEC)
 	{
 		info.id = &id;
-		piping(info);
+		info = piping(info);
 		node = tree->info.exec_node;
 		status = call_cmd(minishell, node, info);
 		// printf("status after call cmd is %d\n", status);
 		if (!ft_strncmp("exit", node->cmd[0], -1))
 			exit(0);
+		if (info.pipe_lvl >= 1 || (info.pipe_lvl == 1 && info.side == LEFT))
+		{
+			dprintf(2, "close stdout\n");
+			close(1);
+		}
+			// close_2fd(info.pipe->p1);
+		if (info.pipe_lvl == 1 && info.side == RIGHT)
+		{
+			dprintf(2, "return to std\n");
+			replace_stdout(info.std);
+			replace_stdin(info.std);
+		}
 	}
 	if (info.pipe_lvl && (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR))
 	{
