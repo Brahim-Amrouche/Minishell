@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/18 20:50:28 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/22 22:52:30 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,6 @@ void	main_parsing(char *cmd, t_minishell *mini)
 	tokenize(cmd, mini);
 	strip_space_from_tokens(mini->tokens, mini);
 	parsing_root(mini);
-	// loop_exec_tree(mini->exec_root, print_tree);
+	// loop_exec_tree(mini->exec_root, mini, print_tree);
 }
 

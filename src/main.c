@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/22 00:17:44 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/22 23:05:30 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	main(int argc, char *argv[], char *envp[])
 		ft_bzero(&minishell, sizeof(t_minishell));
 		minishell.envp = envp;
 		minishell.cmd_status = status;
-		cmd = readline("minishell$ ");
+		cmd = readline("\033[0;32mminishell$ \033[0m");
 		ft_malloc(1, m_info(cmd , 1, NULL, 0));
 		if (is_spaces_line(cmd))
 		{
