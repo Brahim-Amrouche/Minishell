@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/20 17:42:22 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/22 00:17:44 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 t_boolean	is_spaces_line(char *line)
 {
+	if (!line)
+		return (TRUE);
 	while (*line == ' ' || *line == '\t')
 		line++;
 	if (!*line)
@@ -32,6 +34,7 @@ int	main(int argc, char *argv[], char *envp[])
 	(void) argc;
 	(void) argv;
 	status = 0;
+	ft_bzero(&minishell, sizeof(t_minishell));
 	envp = export_envp(&minishell, envp);
 	while (TRUE)
 	{

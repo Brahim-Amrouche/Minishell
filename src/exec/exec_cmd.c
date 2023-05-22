@@ -138,7 +138,7 @@ int call_cmd(t_minishell *minishell, t_exec_node *node, t_exec_pipe info)
 
 static void	switch_pipes(t_exec_pipe info)
 {
-	ft_memmove(&(info.pipe->p1), &(info.pipe->p1), sizeof(info.pipe->p1));
+	ft_memmove(&(info.pipe->p1), &(info.pipe->p2), sizeof(info.pipe->p1));
 	return ;
 }
 
@@ -195,8 +195,6 @@ int create_pipe2(int *pip)
 t_exec_pipe	piping(t_exec_pipe info)
 {
 	switch_pipes(info);
-	info.std[0] = dup(STDIN_FILENO);
-	info.std[1] = dup(STDOUT_FILENO);
 	if (info.pipe_lvl == 0)
 		return (info);
 	else if (info.pipe_lvl == 1 && info.side == RIGHT)
@@ -256,6 +254,17 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
 		(info.pipe_lvl)++;
 	if (tree->type == LOGICAL_EXEC)
 	{
+		if (info.pipe_lvl >= 1 && info.side == LEFT)
+		{
+			info.std[0] = dup(STDIN_FILENO);
+			info.std[1] = dup(STDOUT_FILENO);
+		}
+		if (info.pipe_lvl == 1 && info.side == RIGHT)
+		{
+			dprintf(2, "return to std\n");
+			replace_stdout(info.std);
+			// replace_stdin(info.std);
+		}
 		info.id = &id;
 		info = piping(info);
 		node = tree->info.exec_node;
@@ -268,13 +277,13 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
 			dprintf(2, "close stdout\n");
 			close(1);
 		}
-			// close_2fd(info.pipe->p1);
 		if (info.pipe_lvl == 1 && info.side == RIGHT)
 		{
-			dprintf(2, "return to std\n");
-			replace_stdout(info.std);
+			dprintf(2, "return to stdin\n");
+			// replace_stdout(info.std);
 			replace_stdin(info.std);
 		}
+			// close_2fd(info.pipe->p1);
 	}
 	if (info.pipe_lvl && (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR))
 	{
