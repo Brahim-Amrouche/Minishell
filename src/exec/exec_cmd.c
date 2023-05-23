@@ -138,21 +138,17 @@ int call_cmd(t_minishell *minishell, t_exec_node *node, t_exec_pipe info)
 	return (*status);
 }
 
-static void	switch_pipes(t_exec_pipe info)
+static void	switch_pipes(t_exec_pipe *info)
 {
-	ft_memmove(&(info.pipe->p1), &(info.pipe->p2), sizeof(info.pipe->p1));
+	ft_memmove(info->p1, info->p2, sizeof(info->p1));
 	return ;
 }
 
-int pipe_stdin(void)
-{
-
-}
-
-int pipe_stdout(void)
-{
-
-}
+// static void	switch_pipes(t_exec_pipe info)
+// {
+// 	ft_memmove(&(info.pipe->p1), &(info.pipe->p2), sizeof(info.pipe->p1));
+// 	return ;
+// }
 
 static void	close_with_msg_on_error(int *p, int side)
 {
@@ -194,35 +190,35 @@ int create_pipe2(int *pip)
 		exit_minishell(1, "couldnt open pipe", TRUE);
 }
 
-t_exec_pipe	piping(t_exec_pipe info)
-{
-	switch_pipes(info);
-	if (info.pipe_lvl == 0)
-		return (info);
-	else if (info.pipe_lvl == 1 && info.side == RIGHT)
-		return (info);
-	else
-	{
-		dprintf(2, "create pipe 2\n");
-		create_pipe2(info.pipe->p2);
-	}
-		dprintf(2, "replace stdout\n");
-	replace_stdout(info.pipe->p2);
-	if (info.pipe_lvl >= 1 && info.side == LEFT)
-		return (info);
-	dprintf(2, "replace stdin\n");
-	replace_stdin(info.pipe->p1);
-	return (info);
+// t_exec_pipe	piping(t_exec_pipe info)
+// {
+// 	switch_pipes(info);
+// 	if (info.pipe_lvl == 0)
+// 		return (info);
+// 	else if (info.pipe_lvl == 1 && info.side == RIGHT)
+// 		return (info);
+// 	else
+// 	{
+// 		dprintf(2, "create pipe 2\n");
+// 		create_pipe2(info.pipe->p2);
+// 	}
+// 		dprintf(2, "replace stdout\n");
+// 	replace_stdout(info.pipe->p2);
+// 	if (info.pipe_lvl >= 1 && info.side == LEFT)
+// 		return (info);
+// 	dprintf(2, "replace stdin\n");
+// 	replace_stdin(info.pipe->p1);
+// 	return (info);
 
-	// else if (info.pipe_lvl >= 1 && info.side == LEFT)
+// 	// else if (info.pipe_lvl >= 1 && info.side == LEFT)
 
-		// create_pipe 2  -> read 1 -> write 2 -> close | switch 21
-	// else if (info.pipe_lvl == 1 && info.side == LEFT)
-	// 	pipe_stdin();
-	// if (cmd_number != pipex->cmd_nbr - 1)
-	// 	if (pipe(pipex->pipes.p2) == -1)
-	// 		exit_with_msg("couldnt open pipe", TRUE);
-}
+// 		// create_pipe 2  -> read 1 -> write 2 -> close | switch 21
+// 	// else if (info.pipe_lvl == 1 && info.side == LEFT)
+// 	// 	pipe_stdin();
+// 	// if (cmd_number != pipex->cmd_nbr - 1)
+// 	// 	if (pipe(pipex->pipes.p2) == -1)
+// 	// 		exit_with_msg("couldnt open pipe", TRUE);
+// }
 
 int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info);
 
@@ -238,31 +234,55 @@ int	create_waiting_proc(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe i
 	{
 		status = 0;
 		*minishell->stat = status;
+		// if (info.pipe_lvl)
+		// {
+		// 	switch_pipes(&info);
+		// 	pipe(info.p2);
+		// }
 		traverse_tree(tree, minishell, info);
 		exit(status);
 	}
 	return (id);
 }
 
+
+
 int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
 {
-
 	t_exec_node *node;
 	int			id;
-	// int			pip[2];
-	int			std_out;
-	int			std_in;
 	int			status;
+	int			fork_id;
 
-	// dprintf(2, "traverse tree\n");
 	status = 0;
 	minishell->stat = &status;
+	// if (tree->type == LOGICAL_PIPE)
+	// {
+	// 	(info.pipe_lvl)++;
+	// }
+	// else if (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR)
+	// {
+	// 	info.pipe_lvl = 0;
+	// }
+	if ((!info.pipe_lvl && tree->type == LOGICAL_PIPE) || (info.pipe_lvl && (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR)))
+	{
+		if (tree->type == LOGICAL_PIPE)
+			(info.pipe_lvl)++;
+		info.side = RIGHT;
+		create_waiting_proc(tree, minishell, info);
+		while (wait(NULL) != -1)
+			;
+		return (0);
+	}
+	if (tree->type == LOGICAL_PIPE)
+		(info.pipe_lvl)--;
+
 	if (tree->type == LOGICAL_PIPE)
 	{
+		switch_pipes(&info);
 		pipe(info.p2);
 		(info.pipe_lvl)++;
 	}
-
 	if (tree->type == LOGICAL_EXEC)
 	{
 		info.id = &id;
@@ -271,120 +291,59 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
 		if (!ft_strncmp("exit", node->cmd[0], -1))
 			exit(0);
 	}
+	if (tree->type == LOGICAL_PIPE)
+	{
+		info.std[1] = dup(STDOUT_FILENO);
+		dup2(info.p2[1], STDOUT_FILENO);
+		close(info.p2[1]);
+	}
 	if (tree->left)
 	{
-		if (tree->type == LOGICAL_PIPE)
-		{
-			std_out = dup(STDOUT_FILENO);
-			dup2(info.p2[1], STDOUT_FILENO);
-			close(info.p2[1]);
-		}
 		info.side = LEFT;
 		status = traverse_tree(tree->left, minishell, info);
 	}
+	if (tree->type == LOGICAL_PIPE)
+	{
+		dup2(info.std[1], STDOUT_FILENO);
+		close(info.std[1]);
+		info.std[0] = dup(STDIN_FILENO);
+		dup2(info.p2[0], STDIN_FILENO);
+		close(info.p2[0]);
+	}
 	if (tree->right)
 	{
-		if (tree->type == LOGICAL_PIPE)
-		{
-			dup2(std_out, STDOUT_FILENO);
-			close(std_out);
-			std_in = dup(STDIN_FILENO);
-			dup2(info.p2[0], STDIN_FILENO);
-			close(info.p2[0]);
-		}
 		info.side = RIGHT;
 		status = traverse_tree(tree->right, minishell, info);
 	}
-		if (tree->type == LOGICAL_PIPE)
-		{
-			dup2(std_in, STDIN_FILENO);
-			close(std_in);
-		}
-
-		// dprintf(2, "end right\n");
+	if (tree->type == LOGICAL_PIPE)
+	{
+		dup2(info.std[0], STDIN_FILENO);
+		close(info.std[0]);
+	}
 	if (info.pipe_lvl == 0 || (info.pipe_lvl == 1 && info.side == RIGHT))
 	{
-		// dprintf(2, "waiting\n");
 		while (wait(NULL) != -1)
 			;
 	}
+
+	// if (tree->left)
+	// {
+	// 	info.side = LEFT;
+	// 	status = traverse_tree(tree->left, minishell, info);
+	// }
+	// if (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR)
+	// {
+	// 	printf("or or and\n");
+	// 	while (wait(NULL) != -1)
+	// 		;
+	// 	if (status && tree->type == LOGICAL_AND)
+	// 		return (status);
+	// 	else if (!status && tree->type == LOGICAL_OR)
+	// 		return (status);
+	// }
 	return (status);
 }
 
-// int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
-// {
-// 	t_exec_node *node;
-// 	int			id;
-// 	int			status;
-
-// 	status = 0;
-// 	minishell->stat = &status;
-// 	if (tree->type == LOGICAL_PIPE)
-// 		(info.pipe_lvl)++;
-// 	if (tree->type == LOGICAL_EXEC)
-// 	{
-// 		// if (info.pipe_lvl >= 1 && info.side == LEFT)
-// 		// {
-// 		// 	info.std[0] = dup(STDIN_FILENO);
-// 		// 	info.std[1] = dup(STDOUT_FILENO);
-// 		// }
-// 		// if (info.pipe_lvl == 1 && info.side == RIGHT)
-// 		// {
-// 		// 	dprintf(2, "return to std\n");
-// 		// 	replace_stdout(info.std);
-// 		// 	// replace_stdin(info.std);
-// 		// }
-// 		info.id = &id;
-// 		// info = piping(info);
-// 		node = tree->info.exec_node;
-// 		status = call_cmd(minishell, node, info);
-// 		// printf("status after call cmd is %d\n", status);
-// 		if (!ft_strncmp("exit", node->cmd[0], -1))
-// 			exit(0);
-// 		// if (info.pipe_lvl >= 1 || (info.pipe_lvl == 1 && info.side == LEFT))
-// 		// {
-// 		// 	dprintf(2, "close stdout\n");
-// 		// 	close(1);
-// 		// }
-// 		// if (info.pipe_lvl == 1 && info.side == RIGHT)
-// 		// {
-// 		// 	dprintf(2, "return to stdin\n");
-// 		// 	// replace_stdout(info.std);
-// 		// 	replace_stdin(info.std);
-// 		// }
-// 			// close_2fd(info.pipe->p1);
-// 	}
-// 	if (info.pipe_lvl && (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR))
-// 	{
-// 		info.pipe_lvl = 0;
-// 		info.side = RIGHT;
-// 		create_waiting_proc(tree, minishell, info);
-// 		return (0);
-// 	}
-// 	if (tree->left)
-// 	{
-// 		info.side = LEFT;
-// 		status = traverse_tree(tree->left, minishell, info);
-// 	}
-// 	if (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR)
-// 	{
-// 		printf("or or and\n");
-// 		while (wait(NULL) != -1)
-// 			;
-// 		if (status && tree->type == LOGICAL_AND)
-// 			return (status);
-// 		else if (!status && tree->type == LOGICAL_OR)
-// 			return (status);
-// 	}
-// 		// printf("status after left is %d\n", status);
-// 	if (tree->right)
-// 	{
-// 		info.side = RIGHT;
-// 		status = traverse_tree(tree->right, minishell, info);
-// 	}
-// 		// printf("status after right is %d\n", status);
-// 	return (status);
-// }
 
 // void make_tree(t_exec_tree *tree, int depth, int offset, char **tree_d, int *tree_size, char **types)
 // {
