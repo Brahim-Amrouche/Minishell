@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/18 18:34:19 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/23 21:46:39 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	**rm_elem_from_arr(char **arr, char **elem);
 // }				t_bool;
 // # endif // t_bool
 
-int exec_cmd(t_minishell *minishell);
+int main_execution(t_minishell *minishell);
 
 
 

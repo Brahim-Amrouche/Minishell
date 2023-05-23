@@ -21,7 +21,6 @@ char **get_env_var(char *name, char **env)
 	len = ft_strlen(name);
 	while (*env)
 	{
-		// if (!ft_strncmp(*env, name, len) && (*env)[len] == '=')
 		if (!ft_strncmp(*env, name, len) && ((*env)[len] == '=' || !(*env)[len]))
 			return (env);
 		env++;
@@ -67,30 +66,6 @@ static t_boolean match_cmd(char *cmd, char *match)
 	return (!ft_strncmp(cmd, match, -1));
 }
 
-typedef enum e_tree_side
-{
-	RIGHT = 0,
-	LEFT = 1,
-}	t_tree_side;
-
-typedef struct s_pipes
-{
-	int	p1[2];
-	int	p2[2];
-}	t_pipes;
-
-typedef struct s_exec_pipe
-{
-	t_tree_side	side;
-	t_pipes		*pipe;
-	int			std[2];
-	int			p1[2];
-	int			p2[2];
-	int			start;
-	int			*id;
-	int			pipe_lvl;
-}	t_exec_pipe;
-
 static void	wait_all(pid_t last_proc, int *status)
 {
 	pid_t	id;
@@ -103,15 +78,17 @@ static void	wait_all(pid_t last_proc, int *status)
 		wait_all(last_proc, status);
 }
 
-int call_cmd(t_minishell *minishell, t_exec_node *node, t_exec_pipe info)
+int call_cmd(t_minishell *minishell, t_exec_node *node)
 {
 	int		*status;
 	char	*cmd;
+	int		id;
 	t_boolean is_bin;
 
 	if (!node || !node->cmd || !*node->cmd)
 		return (0); // check later
 	is_bin = FALSE;
+	id = 0;
 	cmd = *node->cmd;
 	status = minishell->stat;
 	if (match_cmd(cmd, CD))
@@ -131,169 +108,89 @@ int call_cmd(t_minishell *minishell, t_exec_node *node, t_exec_pipe info)
 	else
 	{
 		is_bin = TRUE;
-		*(info.id) = lunch_bin(node, minishell);
+		id = lunch_bin(node, minishell);
 	}
-	// if ((is_bin && info.pipe_lvl == 0) || (info.pipe_lvl == 1 && info.side == RIGHT))
-		wait_all(*(info.id), status);
+	wait_all(id, status);
 	return (*status);
 }
 
-static void	switch_pipes(t_exec_pipe *info)
-{
-	ft_memmove(info->p1, info->p2, sizeof(info->p1));
-	return ;
-}
+int traverse_tree(t_exec_tree *tree, t_minishell *minishell);
 
-// static void	switch_pipes(t_exec_pipe info)
-// {
-// 	ft_memmove(&(info.pipe->p1), &(info.pipe->p2), sizeof(info.pipe->p1));
-// 	return ;
-// }
-
-static void	close_with_msg_on_error(int *p, int side)
-{
-	if (close(p[side]))
-		ft_putendl_fd("Error : replace_std() close fail", 2);
-}
-
-void	close_2fd(int p[2])
-{
-	if (!p)
-		return ;
-	if (close(p[0]))
-		ft_putendl_fd("Error : unable to close fd[0]", 2);
-	if (close(p[1]))
-		ft_putendl_fd("Error : unable to close fd[1]", 2);
-}
-
-static void	dup2_with_msg_on_error(int src, int dst)
-{
-	if (dup2(src, dst) == -1)
-		ft_putendl_fd("Error : replace_std() dup2 fail", 2);
-}
-
-void	replace_stdout(int *p)
-{
-	dup2_with_msg_on_error(p[1], STDOUT_FILENO);
-	close_with_msg_on_error(p, 1);
-}
-
-void	replace_stdin(int *p)
-{
-	dup2_with_msg_on_error(p[0], STDIN_FILENO);
-	close_with_msg_on_error(p, 0);
-}
-
-int create_pipe2(int *pip)
-{
-	if (pipe(pip) == -1)
-		exit_minishell(1, "couldnt open pipe", TRUE);
-}
-
-// t_exec_pipe	piping(t_exec_pipe info)
-// {
-// 	switch_pipes(info);
-// 	if (info.pipe_lvl == 0)
-// 		return (info);
-// 	else if (info.pipe_lvl == 1 && info.side == RIGHT)
-// 		return (info);
-// 	else
-// 	{
-// 		dprintf(2, "create pipe 2\n");
-// 		create_pipe2(info.pipe->p2);
-// 	}
-// 		dprintf(2, "replace stdout\n");
-// 	replace_stdout(info.pipe->p2);
-// 	if (info.pipe_lvl >= 1 && info.side == LEFT)
-// 		return (info);
-// 	dprintf(2, "replace stdin\n");
-// 	replace_stdin(info.pipe->p1);
-// 	return (info);
-
-// 	// else if (info.pipe_lvl >= 1 && info.side == LEFT)
-
-// 		// create_pipe 2  -> read 1 -> write 2 -> close | switch 21
-// 	// else if (info.pipe_lvl == 1 && info.side == LEFT)
-// 	// 	pipe_stdin();
-// 	// if (cmd_number != pipex->cmd_nbr - 1)
-// 	// 	if (pipe(pipex->pipes.p2) == -1)
-// 	// 		exit_with_msg("couldnt open pipe", TRUE);
-// }
-
-int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info);
-
-int	create_waiting_proc(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
-{
-	int status;
-	int id;
-
-	id = fork();
-	if (id == -1)
-		exit_minishell(1, "could't fork", TRUE);
-	if (id == 0)
-	{
-		status = 0;
-		*minishell->stat = status;
-		// if (info.pipe_lvl)
-		// {
-		// 	switch_pipes(&info);
-		// 	pipe(info.p2);
-		// }
-		traverse_tree(tree, minishell, info);
-		exit(status);
-	}
-	return (id);
-}
-
-
-
-int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
+void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {
 	t_exec_node *node;
-	int			id;
-	int			status;
-	int			f1, f2;
 
+	node = tree->info.exec_node;
+	if (!ft_strncmp("exit", node->cmd[0], -1))
+		exit(0);
+	*(minishell->stat) = call_cmd(minishell, node);
+}
+
+void exec_and_or(t_exec_tree *tree, t_minishell *minishell)
+{
+	int	*stat;
+
+	stat = (minishell->stat);
+	if (tree->left)
+		*stat = traverse_tree(tree->left, minishell);
+	while (wait(NULL) != -1)
+		;
+	if (*stat && tree->type == LOGICAL_AND)
+		return;
+	else if (!*stat && tree->type == LOGICAL_OR)
+		return;
+	if (tree->right)
+		*stat = traverse_tree(tree->right, minishell);
+}
+
+void exec_pipe(t_exec_tree *tree, t_minishell *minishell)
+{
+	int	f1;
+	int	f2;
+	int	p[2];
+	int	status;
+	
+	pipe(p);
+	f1 = fork();
+	if (f1 == -1)
+		exit_minishell(1, "couldn't fork", TRUE);
+	if (!f1)
+	{
+		close(p[0]);
+		dup2(p[1], 1);
+		close(p[1]);
+		status = traverse_tree(tree->left,minishell);
+		exit(status);
+	}
+	close(p[1]);
+	f2 = fork();
+	if (f2 == -1)
+		exit_minishell(1, "couldn't fork", TRUE);
+	if(!f2)
+	{
+		dup2(p[0], 0);
+		close(p[0]);
+		status = traverse_tree(tree->right, minishell);
+		exit(status);
+	}
+	close(p[0]);
+	wait_all(f2, minishell->stat);
+}
+
+int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
+{
+	int	status;
+
+	if (!tree)
+		return (0);
 	status = 0;
 	minishell->stat = &status;
-
 	if (tree->type == LOGICAL_PIPE)
-	{
-		int p[2];
-		pipe(p);
-		f1 = fork();
-		if (f1 == -1)
-			exit_minishell(1, "couldn't fork", TRUE);
-		if (!f1)
-		{
-			close(p[0]);
-			dup2(p[1], 1);
-			close(p[1]);
-			traverse_tree(tree->left,minishell, info);
-			exit(0);
-		}
-		close(p[1]);
-		f2 = fork();
-		if (f2 == -1)
-			exit_minishell(1, "couldn't fork", TRUE);
-		if(!f2)
-		{
-			dup2(p[0], 0);
-			close(p[0]);
-			traverse_tree(tree->right, minishell, info);
-			exit(0);
-		}
-		close(p[0]);
-		wait_all(f2, &status);
-	}
-	if (tree->type == LOGICAL_EXEC)
-	{
-		info.id = &id;
-		node = tree->info.exec_node;
-		if (!ft_strncmp("exit", node->cmd[0], -1))
-			exit(0);
-		status = call_cmd(minishell, node, info);
-	}
+		exec_pipe(tree, minishell);
+	else if (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR)
+		exec_and_or(tree, minishell);
+	else if (tree->type == LOGICAL_EXEC)
+		exec_cmd(tree, minishell);
 	return (status);
 }
 
@@ -375,23 +272,13 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
 // 	return (0);
 // }
 
-int exec_cmd(t_minishell *minishell)
+int main_execution(t_minishell *minishell)
 {
 	t_exec_tree *tree;
-	t_exec_pipe	pipe_info;
-	t_pipes	pipes;
-	// t_exec_node *node;
-	// int depth;
-	// int route;
-	// t_list *token;
-	// // t_list *temp;
 
-	// token = minishell->tokens;
-	ft_memset(&pipe_info, 0, sizeof(pipe_info));
-	pipe_info.pipe = &pipes;
 	tree = minishell->exec_root;
 	// traverse_and_print_tree(tree);
-	minishell->cmd_status = traverse_tree(tree, minishell, pipe_info);
-	// printf("minishell status is %d\n", minishell->cmd_status);
+	minishell->cmd_status = traverse_tree(tree, minishell);
+	printf("minishell status is %d\n", minishell->cmd_status);
 	return (0);
 }
