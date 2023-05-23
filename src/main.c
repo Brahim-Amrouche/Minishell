@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/22 23:05:30 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/23 22:00:38 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	main(int argc, char *argv[], char *envp[])
 		// here comes the parsing
 		main_parsing(cmd, &minishell);
 		// here comes execution
-		exec_cmd(&minishell);
+		main_execution(&minishell);
 		ft_free(1, FALSE);
 		envp = minishell.envp;
 	}
