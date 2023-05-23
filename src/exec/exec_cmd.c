@@ -103,6 +103,52 @@ static void	wait_all(pid_t last_proc, int *status)
 		wait_all(last_proc, status);
 }
 
+t_boolean check_if_builtin(char *cmd)
+{
+	if (match_cmd(cmd, CD))
+		return (TRUE);
+	else if (match_cmd(cmd, PWD))
+		return (TRUE);
+	else if (match_cmd(cmd, ENV))
+		return (TRUE);
+	else if (match_cmd(cmd, ECHO))
+		return (TRUE);
+	else if (match_cmd(cmd, EXPORT))
+		return (TRUE);
+	else if (match_cmd(cmd, UNSET))
+		return (TRUE);
+	else if (match_cmd(cmd, BASH_EXIT))
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
+int exec_builtin(t_minishell *minishell, t_exec_node *node, t_exec_pipe info)
+{
+	int		*status;
+	char	*cmd;
+
+	if (!node || !node->cmd || !*node->cmd)
+		return (0); // check later
+	cmd = *node->cmd;
+	status = minishell->stat;
+	if (match_cmd(cmd, CD))
+		*status = change_dir(minishell, node);
+	else if (match_cmd(cmd, PWD))
+		*status = get_dir();
+	else if (match_cmd(cmd, ENV))
+		*status = env(minishell);
+	else if (match_cmd(cmd, ECHO))
+		*status = echo(minishell, node);
+	else if (match_cmd(cmd, EXPORT))
+		*status = export(minishell, node, 0);
+	else if (match_cmd(cmd, UNSET))
+		*status = unset(minishell, node, 0);
+	else if (match_cmd(cmd, BASH_EXIT))
+		exit_minishell(-1, NULL, TRUE);
+
+}
+
 int call_cmd(t_minishell *minishell, t_exec_node *node, t_exec_pipe info)
 {
 	int		*status;
@@ -113,6 +159,8 @@ int call_cmd(t_minishell *minishell, t_exec_node *node, t_exec_pipe info)
 		return (0); // check later
 	is_bin = FALSE;
 	cmd = *node->cmd;
+	if (check_if_builtin(cmd))
+		exec_builtin(minishell, node, info);
 	status = minishell->stat;
 	if (match_cmd(cmd, CD))
 		*status = change_dir(minishell, node);
@@ -138,9 +186,9 @@ int call_cmd(t_minishell *minishell, t_exec_node *node, t_exec_pipe info)
 	return (*status);
 }
 
-static void	switch_pipes(t_exec_pipe info)
+static void	switch_pipes(t_exec_pipe *info)
 {
-	ft_memmove(&(info.pipe->p1), &(info.pipe->p2), sizeof(info.pipe->p1));
+	ft_memmove(&(info->p1), &(info->p2), sizeof(info->p1));
 	return ;
 }
 
@@ -244,21 +292,49 @@ int	create_waiting_proc(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe i
 	return (id);
 }
 
+void pipe_left(t_exec_tree *tree, t_exec_pipe *info)
+{
+	if (tree->type == LOGICAL_PIPE)
+	{
+		info->std[1] = dup(STDOUT_FILENO);
+		dup2(info->p2[1], STDOUT_FILENO);
+		close(info->p2[1]);
+	}
+}
+
+void pipe_right(t_exec_tree *tree, t_exec_pipe *info)
+{
+	if (tree->type == LOGICAL_PIPE)
+	{
+		dup2(info->std[1], STDOUT_FILENO);
+		close(info->std[1]);
+		info->std[0] = dup(STDIN_FILENO);
+		dup2(info->p2[0], STDIN_FILENO);
+		close(info->p2[0]);
+	}
+}
+
+void return_std(t_exec_tree *tree, t_exec_pipe *info)
+{
+	if (tree->type == LOGICAL_PIPE)
+	{
+		dup2(info->std[0], STDIN_FILENO);
+		close(info->std[0]);
+	}
+}
+
 int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
 {
 
 	t_exec_node *node;
 	int			id;
-	// int			pip[2];
-	int			std_out;
-	int			std_in;
 	int			status;
 
-	// dprintf(2, "traverse tree\n");
 	status = 0;
 	minishell->stat = &status;
 	if (tree->type == LOGICAL_PIPE)
 	{
+		switch_pipes(&info);
 		pipe(info.p2);
 		(info.pipe_lvl)++;
 	}
@@ -271,40 +347,22 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell, t_exec_pipe info)
 		if (!ft_strncmp("exit", node->cmd[0], -1))
 			exit(0);
 	}
+	pipe_left(tree, &info);
 	if (tree->left)
 	{
-		if (tree->type == LOGICAL_PIPE)
-		{
-			std_out = dup(STDOUT_FILENO);
-			dup2(info.p2[1], STDOUT_FILENO);
-			close(info.p2[1]);
-		}
 		info.side = LEFT;
 		status = traverse_tree(tree->left, minishell, info);
 	}
+	pipe_right(tree, &info);
 	if (tree->right)
 	{
-		if (tree->type == LOGICAL_PIPE)
-		{
-			dup2(std_out, STDOUT_FILENO);
-			close(std_out);
-			std_in = dup(STDIN_FILENO);
-			dup2(info.p2[0], STDIN_FILENO);
-			close(info.p2[0]);
-		}
 		info.side = RIGHT;
 		status = traverse_tree(tree->right, minishell, info);
 	}
-		if (tree->type == LOGICAL_PIPE)
-		{
-			dup2(std_in, STDIN_FILENO);
-			close(std_in);
-		}
+	return_std(tree, &info);
 
-		// dprintf(2, "end right\n");
 	if (info.pipe_lvl == 0 || (info.pipe_lvl == 1 && info.side == RIGHT))
 	{
-		// dprintf(2, "waiting\n");
 		while (wait(NULL) != -1)
 			;
 	}
