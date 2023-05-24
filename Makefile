@@ -48,6 +48,11 @@ dev : fclean devflag $(NAME)
 devflag :
 	$(eval FLAGS := -Wall -Wextra -fsanitize=address $(INCLUDES))
 
+lin : linuxflag $(NAME)
+
+linuxflag :
+	$(eval FLAGS := -Wall -Wextra -fsanitize=address -DLINUX $(INCLUDES))
+
 clean :
 	@echo "$(RED_TEXT)Cleaning $(NAME) Object Files"
 	@rm -rf	$(OBJ_FILES) 

@@ -83,11 +83,9 @@ int call_cmd(t_minishell *minishell, t_exec_node *node)
 	int		*status;
 	char	*cmd;
 	int		id;
-	t_boolean is_bin;
 
 	if (!node || !node->cmd || !*node->cmd)
 		return (0); // check later
-	is_bin = FALSE;
 	id = 0;
 	cmd = *node->cmd;
 	status = minishell->stat;
@@ -103,13 +101,10 @@ int call_cmd(t_minishell *minishell, t_exec_node *node)
 		*status = export(minishell, node, 0);
 	else if (match_cmd(cmd, UNSET))
 		*status = unset(minishell, node, 0);
-	// else if (match_cmd(cmd, BASH_EXIT))
-	// 	exit_minishell(-1, NULL, TRUE);
+	else if (match_cmd(cmd, BASH_EXIT))
+		*status = exit_shell(node);
 	else
-	{
-		is_bin = TRUE;
 		id = lunch_bin(node, minishell);
-	}
 	wait_all(id, status);
 	return (*status);
 }
@@ -121,8 +116,8 @@ void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 	t_exec_node *node;
 
 	node = tree->info.exec_node;
-	if (!ft_strncmp("exit", node->cmd[0], -1))
-		exit(0);
+	// if (!ft_strncmp("exit", node->cmd[0], -1))
+	// 	exit(0);
 	*(minishell->stat) = call_cmd(minishell, node);
 }
 
@@ -279,6 +274,6 @@ int main_execution(t_minishell *minishell)
 	tree = minishell->exec_root;
 	// traverse_and_print_tree(tree);
 	minishell->cmd_status = traverse_tree(tree, minishell);
-	printf("minishell status is %d\n", minishell->cmd_status);
+	// printf("minishell status is %d\n", minishell->cmd_status);
 	return (0);
 }

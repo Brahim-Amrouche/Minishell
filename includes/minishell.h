@@ -13,8 +13,15 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "ft_garbage_collector.h"
-# include "readline.h"
-# include "history.h"
+# ifdef LINUX
+#  include <sys/types.h>
+#  include <sys/wait.h>
+#  include <readline/readline.h>
+#  include <readline/history.h>
+# else
+#  include "readline.h"
+#  include "history.h"
+#endif // LINUX
 # include "mini_parsing.h"
 # include "mini_execution.h"
 # include "errno.h"

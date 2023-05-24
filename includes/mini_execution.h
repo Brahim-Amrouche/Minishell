@@ -53,8 +53,6 @@ char	**rm_elem_from_arr(char **arr, char **elem);
 
 int main_execution(t_minishell *minishell);
 
-
-
 # define DEFAULT_FILE_PERMISSIONS 0666
 
 char **get_env_var(char *name, char **env);
@@ -66,5 +64,6 @@ int get_dir(void);
 char ***fetch_export_data(void);
 int export(t_minishell *minishell, t_exec_node *node, int index);
 int unset(t_minishell *minishell, t_exec_node *node, int index);
+int exit_shell(t_exec_node *node);
 
 #endif // MINI_EXECUTIONG_H
