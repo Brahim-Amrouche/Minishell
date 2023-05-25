@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/25 16:20:15 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/25 21:37:22 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void exit_on_empty_line(char *line)
 
 int	*id_fetcher(void)
 {
-	static int id[3];
+	static int id[4];
 	return (id);
 }
 
@@ -48,21 +48,18 @@ void	handle_sigquit(int sig)
 	rl_redisplay();
 }
 
-void	handle_sigkill(int sig)
+void	handle_sigint(int sig)
 {
 	sig++;
 	write(1, "\n", 1);
-	id_fetcher()[2] = 1;
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	// if (id_fetcher()[1] > 0)
-	// 	kill(id_fetcher()[1], SIGKILL);
-	// if (id_fetcher()[0] > 0)
-	// 	kill(id_fetcher()[0], SIGKILL);
-	// if (id_fetcher()[0] <= 0)
-	// {
-	rl_redisplay();
-	// }
+	if (state.readline_stop)
+		state.exec_stop = TRUE;
+	else
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -73,7 +70,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void) argc;
 	(void) argv;
-	signal(SIGINT, &handle_sigkill);
+	signal(SIGINT, &handle_sigint);
 	signal(SIGQUIT, &handle_sigquit);
 	status = 0;
 	ft_bzero(&minishell, sizeof(t_minishell));
@@ -83,9 +80,11 @@ int	main(int argc, char *argv[], char *envp[])
 		ft_bzero(&minishell, sizeof(t_minishell));
 		minishell.envp = envp;
 		minishell.cmd_status = status;
+		state.exec_stop = FALSE;
+		state.readline_stop = FALSE;
 		cmd = readline("\033[0;32mminishell$ \033[0m");
+		state.readline_stop = TRUE;
 		ft_malloc(1, m_info(cmd, 1, NULL, 0));
-		id_fetcher()[2] = 0;
 		exit_on_empty_line(cmd);
 		if (is_spaces_line(cmd))
 		{
@@ -98,6 +97,8 @@ int	main(int argc, char *argv[], char *envp[])
 		// here comes execution
 		main_execution(&minishell);
 		ft_free(1, FALSE);
+		if (state.exec_stop)
+			minishell.cmd_status = STOP_WITH_SIGINT;
 		envp = minishell.envp;
 		status = minishell.cmd_status;
 	}

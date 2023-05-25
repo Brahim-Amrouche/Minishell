@@ -43,7 +43,7 @@ test :
 ctest :
 	@cd tests && rm -rf	std1 std2 bash1 bash2 test
 
-dev : fclean devflag $(NAME)
+dev : devflag $(NAME)
 
 devflag :
 	$(eval FLAGS := -Wall -Wextra -fsanitize=address $(INCLUDES))

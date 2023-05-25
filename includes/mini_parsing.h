@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/20 14:32:44 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/25 21:38:41 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,11 @@ typedef struct s_minishell
 	char				**envp;
 	int					cmd_status;
 	int					*stat;
-	t_boolean			stop;
-	int					id[2];
 }						t_minishell;
 
 // new_tokenization
-char					*str_tokenize(char *str, char *seperators);
+char *
+str_tokenize(char *str, char *seperators);
 void					tokenize(char *input, t_minishell *mini);
 
 // new_parsing

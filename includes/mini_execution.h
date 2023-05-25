@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/23 21:46:39 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/25 21:39:10 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,16 @@
 
 #define ENV_SCOPE 69
 
+
+#define STOP_WITH_SIGINT 130
+
+typedef struct s_signal_var
+{
+	t_boolean	readline_stop;
+	t_boolean	exec_stop;
+}	t_signal_var;
+
+t_signal_var	state;
 
 typedef struct s_env_var
 {

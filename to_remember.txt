@@ -24,3 +24,6 @@ wtf is this echo ~/hello
 echo x$? // brahim do ur job
 
 increment shell lvl
+
+
+char    *get_var(char *arg, t_minishell *mini)

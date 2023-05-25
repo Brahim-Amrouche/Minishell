@@ -155,6 +155,8 @@ void exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 	id_fetcher()[0] = f1;
 	if (!f1)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		close(p[0]);
 		dup2(p[1], 1);
 		close(p[1]);
@@ -168,6 +170,8 @@ void exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 	id_fetcher()[1] = f2;
 	if(!f2)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		dup2(p[0], 0);
 		close(p[0]);
 		status = traverse_tree(tree->right, minishell);
@@ -185,8 +189,8 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 		return (0);
 	status = 0;
 	minishell->stat = &status;
-	if (id_fetcher()[2])
-		return (1);
+	if (state.exec_stop)
+		return (130);
 	if (tree->type == LOGICAL_PIPE)
 		exec_pipe(tree, minishell);
 	else if (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR)
