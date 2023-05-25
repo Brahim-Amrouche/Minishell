@@ -48,6 +48,8 @@ int lunch_bin(t_exec_node *node, t_minishell *mini)
 		exit_minishell(1, "could't fork", TRUE);
 	if (id == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		cmd = node->cmd;
 		binary_parser(cmd, mini);
 		if (access(cmd[0], F_OK) && (cmd[0] || cmd))

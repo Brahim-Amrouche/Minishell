@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parentheses.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:10:42 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/17 17:11:06 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/25 14:48:16 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,9 @@ void    make_parenthese_tokens(t_list *parenthese_node, t_minishell *new_mini)
 
 void    handle_parenthese(t_list *token_node, t_minishell *mini)
 {
-    char *token;
 	t_minishell new_mini;
 	t_exec_tree	*handled_parentheses;
 	
-	token = token_node->content;
 	ft_bzero(&new_mini, sizeof(t_minishell));
 	make_parenthese_tokens(token_node, &new_mini);
 	mini->tokens = new_mini.n_parser_helper.post_logic_token;
