@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/23 22:00:38 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/25 15:10:43 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	*id_fetcher(void)
 void	handle_sigkill(int sig)
 {
 	sig++;
+	printf("\n");
 	id_fetcher()[2] = 1;
 	if (id_fetcher()[0] > 0)
 		kill(id_fetcher()[0], SIGKILL);
@@ -72,6 +73,7 @@ int	main(int argc, char *argv[], char *envp[])
 		minishell.envp = envp;
 		minishell.cmd_status = status;
 		cmd = readline("\033[0;32mminishell$ \033[0m");
+		id_fetcher()[2] = 0;
 		ft_malloc(1, m_info(cmd , 1, NULL, 0));
 		exit_on_empty_line(cmd);
 		if (is_spaces_line(cmd))
@@ -84,7 +86,6 @@ int	main(int argc, char *argv[], char *envp[])
 		main_parsing(cmd, &minishell);
 		// here comes execution
 		main_execution(&minishell);
-		id_fetcher()[2] = 0;
 		ft_free(1, FALSE);
 		envp = minishell.envp;
 		status = minishell.cmd_status;
