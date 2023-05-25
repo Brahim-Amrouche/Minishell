@@ -25,6 +25,35 @@ t_boolean	is_spaces_line(char *line)
 	return (FALSE);
 }
 
+void exit_on_empty_line(char *line)
+{
+	if (!line)
+	{
+		printf("exit\n");
+		ft_free(0, TRUE);
+		exit(0);
+	}
+}
+
+int	*id_fetcher(void)
+{
+	static int id[3];
+	return (id);
+}
+
+void	handle_sigkill(int sig)
+{
+	sig++;
+	id_fetcher()[2] = 1;
+	if (id_fetcher()[0] > 0)
+		kill(id_fetcher()[0], SIGKILL);
+	if (id_fetcher()[1] > 0)
+		kill(id_fetcher()[1], SIGKILL);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	char		*cmd;
@@ -33,6 +62,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void) argc;
 	(void) argv;
+	signal(SIGINT, &handle_sigkill);
 	status = 0;
 	ft_bzero(&minishell, sizeof(t_minishell));
 	envp = export_envp(&minishell, envp);
@@ -43,6 +73,7 @@ int	main(int argc, char *argv[], char *envp[])
 		minishell.cmd_status = status;
 		cmd = readline("\033[0;32mminishell$ \033[0m");
 		ft_malloc(1, m_info(cmd , 1, NULL, 0));
+		exit_on_empty_line(cmd);
 		if (is_spaces_line(cmd))
 		{
 			minishell.cmd_status = 0;
@@ -53,8 +84,10 @@ int	main(int argc, char *argv[], char *envp[])
 		main_parsing(cmd, &minishell);
 		// here comes execution
 		main_execution(&minishell);
+		id_fetcher()[2] = 0;
 		ft_free(1, FALSE);
 		envp = minishell.envp;
+		status = minishell.cmd_status;
 	}
 	rl_clear_history();
 	return 0;

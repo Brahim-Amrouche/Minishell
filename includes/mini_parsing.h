@@ -82,6 +82,8 @@ typedef struct s_minishell
 	char				**envp;
 	int					cmd_status;
 	int					*stat;
+	t_boolean			stop;
+	int					id[2];
 }						t_minishell;
 
 // new_tokenization

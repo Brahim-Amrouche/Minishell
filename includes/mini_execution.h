@@ -13,7 +13,7 @@
 #ifndef MINI_EXECUTION_H
 # define MINI_EXECUTION_H
 # include "minishell.h"
-
+# include <signal.h>
 
 
 # ifndef O_SYMLINK
@@ -65,5 +65,6 @@ char ***fetch_export_data(void);
 int export(t_minishell *minishell, t_exec_node *node, int index);
 int unset(t_minishell *minishell, t_exec_node *node, int index);
 int exit_shell(t_exec_node *node);
+int *id_fetcher(void);
 
 #endif // MINI_EXECUTIONG_H

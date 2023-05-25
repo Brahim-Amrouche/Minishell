@@ -105,6 +105,7 @@ int call_cmd(t_minishell *minishell, t_exec_node *node)
 		*status = exit_shell(node);
 	else
 		id = lunch_bin(node, minishell);
+	id_fetcher()[0] = id;
 	wait_all(id, status);
 	return (*status);
 }
@@ -149,6 +150,7 @@ void exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 	f1 = fork();
 	if (f1 == -1)
 		exit_minishell(1, "couldn't fork", TRUE);
+	id_fetcher()[0] = f1;
 	if (!f1)
 	{
 		close(p[0]);
@@ -161,6 +163,7 @@ void exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 	f2 = fork();
 	if (f2 == -1)
 		exit_minishell(1, "couldn't fork", TRUE);
+	id_fetcher()[1] = f2;
 	if(!f2)
 	{
 		dup2(p[0], 0);
@@ -180,6 +183,8 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 		return (0);
 	status = 0;
 	minishell->stat = &status;
+	if (id_fetcher()[2])
+		return (1);
 	if (tree->type == LOGICAL_PIPE)
 		exec_pipe(tree, minishell);
 	else if (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR)
