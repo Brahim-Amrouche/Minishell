@@ -6,17 +6,11 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:07 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/09 03:02:09 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/25 22:28:16 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-typedef enum e_stat
-{
-	SUCCESS = 0,
-	FAIL = 1,
-}	t_stat;
 
 t_stat	try_convert_strtoll(const char *str, long long *number)
 {

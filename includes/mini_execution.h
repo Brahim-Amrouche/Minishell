@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/25 21:39:10 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/25 22:24:03 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,11 @@
 # include "minishell.h"
 # include <signal.h>
 
-
 # ifndef O_SYMLINK
 # define O_SYMLINK 0
 # endif // O_SYMLINK
 
 #define ENV_SCOPE 69
-
 
 #define STOP_WITH_SIGINT 130
 
@@ -40,11 +38,20 @@ typedef struct s_env_var
 }	t_env;
 
 
-typedef enum e_export_type { ERROR = 0,
-							 DECLARE = 1,
-							 ASSIGN = 2,
-							 APPEND = 3,
-} t_export;
+typedef enum e_export_type
+{
+	ERROR = 0,
+	DECLARE = 1,
+	ASSIGN = 2,
+	APPEND = 3,
+}	t_export;
+
+typedef enum e_stat
+{
+	SUCCESS = 0,
+	FAIL = 1,
+}	t_stat;
+
 
 char	**copy_envp(char **envp);
 char	**export_envp(t_minishell *minishell, char **envp);
@@ -66,6 +73,7 @@ int main_execution(t_minishell *minishell);
 # define DEFAULT_FILE_PERMISSIONS 0666
 
 char **get_env_var(char *name, char **env);
+t_stat	try_convert_strtoll(const char *str, long long *number);
 
 int change_dir(t_minishell *minishell, t_exec_node *node);
 int echo(t_minishell *minishell, t_exec_node *node);
