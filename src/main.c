@@ -35,10 +35,10 @@ void exit_on_empty_line(char *line)
 	}
 }
 
-int	*id_fetcher(void)
+t_signal_var *get_sigvar(void)
 {
-	static int id[4];
-	return (id);
+	static t_signal_var sigvar;
+	return (&sigvar);
 }
 
 void	handle_sigquit(int sig)
@@ -52,8 +52,8 @@ void	handle_sigint(int sig)
 {
 	sig++;
 	write(1, "\n", 1);
-	if (state.readline_stop)
-		state.exec_stop = TRUE;
+	if ((*get_sigvar()).readline_stop)
+		(*get_sigvar()).exec_stop = TRUE;
 	else
 	{
 		rl_on_new_line();
@@ -80,10 +80,10 @@ int	main(int argc, char *argv[], char *envp[])
 		ft_bzero(&minishell, sizeof(t_minishell));
 		minishell.envp = envp;
 		minishell.cmd_status = status;
-		state.exec_stop = FALSE;
-		state.readline_stop = FALSE;
+		(*get_sigvar()).exec_stop = FALSE;
+		(*get_sigvar()).readline_stop = FALSE;
 		cmd = readline("\033[0;32mminishell$ \033[0m");
-		state.readline_stop = TRUE;
+		(*get_sigvar()).readline_stop = TRUE;
 		ft_malloc(1, m_info(cmd, 1, NULL, 0));
 		exit_on_empty_line(cmd);
 		if (is_spaces_line(cmd))
@@ -96,8 +96,8 @@ int	main(int argc, char *argv[], char *envp[])
 		main_parsing(cmd, &minishell);
 		// here comes execution
 		main_execution(&minishell);
-		ft_free(1, FALSE);
-		if (state.exec_stop)
+		// ft_free(1, FALSE);
+		if ((*get_sigvar()).exec_stop)
 			minishell.cmd_status = STOP_WITH_SIGINT;
 		envp = minishell.envp;
 		status = minishell.cmd_status;

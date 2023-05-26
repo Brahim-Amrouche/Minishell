@@ -58,9 +58,8 @@ char *make_shell_lvl(int shell_lvl)
 	int i;
 
 	ft_bzero(shell_lvl_str, sizeof(shell_lvl_str));
-	ft_memcmp(shell_lvl_str, "SHLVL=", 7);
-	printf("shell _lvl = %s\n", shell_lvl_str);
-	i = 7;
+	ft_memcpy(shell_lvl_str, "SHLVL=", 6);
+	i = 6;
 	if (shell_lvl > 99)
 		shell_lvl_str[i++] = (shell_lvl / 100) + '0';
 	if (shell_lvl > 9)
@@ -75,35 +74,46 @@ char *make_shell_lvl(int shell_lvl)
 char **add_essentiel_env(t_minishell *minishell)
 {
 	char *var;
-	int shell_lvl;
-	char **shell_lvl_str;
 
 	var = ft_strdup("_=/usr/bin/env");
+	ft_malloc(1, m_info(var, ENV_SCOPE, NULL, 0));
 	minishell->envp = add_or_replace_elem(minishell->envp, var, NULL);
+	return (minishell->envp);
+}
+
+char	*calc_new_shell_lvl(t_minishell *minishell)
+{
+	char	*var;
+	int		shell_lvl;
+	char	**shell_lvl_str;
+
 	shell_lvl = 1;
 	shell_lvl_str = get_env_var("SHLVL", minishell->envp);
 	if (shell_lvl_str)
 		shell_lvl = ft_atoi((*shell_lvl_str) + 6) + 1;
-	if (shell_lvl == 1000)
+	printf("shell _lvl = %d\n", shell_lvl);
+	if (shell_lvl == 1000 || shell_lvl < 0)
 		shell_lvl = 0;
 	else if (shell_lvl > 1000)
 	{
+		print_msg(2, "minishell: warning: shell level (%) too high, resetting to 1", shell_lvl);
 		shell_lvl = 1;
-		print_msg(2, "bash: warning: shell level (1001) too high, resetting to 1");
 	}
+	printf("shell _lvl = %d\n", shell_lvl);
 	var = make_shell_lvl(shell_lvl);
-	minishell->envp = add_or_replace_elem(minishell->envp, var, "SHLVL");
-	return (minishell->envp);
+	ft_malloc(1, m_info(var, 1, NULL, 0));
+	return (var);
 }
 
 char	**export_envp(t_minishell *minishell, char **envp)
 {
-	char *cmd[3];
+	char *cmd[5];
+	char *dir;
 	t_exec_node node;
 
 	node.cmd = (char **) &cmd;
+	ft_bzero(cmd, sizeof(cmd));
 	cmd[0] = "export";
-	cmd[2] = NULL;
 	if (!envp)
 		return (NULL);
 	while (*envp)
@@ -113,6 +123,14 @@ char	**export_envp(t_minishell *minishell, char **envp)
 			export(minishell, &node, 0);
 		envp++;
 	}
+	dir = getcwd(NULL, 0);
+	if (dir == NULL)
+		exit_minishell(1, "cwd buffer is not enough", TRUE);
+	cmd[1] = pro_strjoin("PWD=", dir);
+	free(dir);
+	cmd[2] = "OLDPWD";
+	cmd[3] = calc_new_shell_lvl(minishell);
+	export(minishell, &node, 0);
 	minishell->envp = add_essentiel_env(minishell);
 	return (minishell->envp);
 }

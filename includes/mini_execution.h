@@ -29,7 +29,7 @@ typedef struct s_signal_var
 	t_boolean	exec_stop;
 }	t_signal_var;
 
-t_signal_var	state;
+t_signal_var *get_sigvar(void);
 
 typedef struct s_env_var
 {

@@ -143,6 +143,8 @@ static void exporting(t_minishell *minishell, char *arg,
 	export_data = fetch_export_data();
 	existing_var = get_env_var(var_name, *export_data);
 	var = export_append(existing_var , arg, export_type);
+	if (export_type == DECLARE && existing_var)
+		return ;
 	*export_data = add_or_replace_elem(*export_data, var, var_name);
 	if (export_type != DECLARE)
 		minishell->envp = add_or_replace_elem(minishell->envp, var, var_name);
