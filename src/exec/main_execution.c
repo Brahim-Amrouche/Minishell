@@ -122,27 +122,30 @@ t_stat	handle_redirection(t_redirections *input, int	*std, int *stat)
 		return (SUCCESS);
 	}
 	else if (input->is_read)
-	{
 		flag = O_RDONLY;
-	}
 	else if (input->is_write)
+		flag = O_WRONLY | O_CREAT | O_TRUNC;
+	else if (input->is_append)
 	{
-		flag = O_WRONLY | O_CREAT;
-		if (input->is_append)
-			flag = flag | O_APPEND;
+		flag = O_WRONLY | O_CREAT | O_APPEND;
+		input->is_write = TRUE;
 	}
-	if (access(input->content, F_OK))
+	if (access(input->content, F_OK) == 0)
+	{
+		if ((input->is_read && access(input->content, R_OK))
+			|| (input->is_write && access(input->content, W_OK)))
+		{
+			*stat = ERR_NO_P;
+			print_msg(2, "minishell: $: Permission denied", input->content);
+			return (FAIL);
+		}
+	}
+	else if (!input->is_write)
 	{
 		*stat = ERR_NO_F;
 		print_msg(2, "minishell: $: No such file or directory", input->content);
-	}
-	else if (access(input->content, X_OK))
-	{
-		*stat = ERR_NO_P;
-		print_msg(2, "minishell: $: Permission denied", input->content);
-	}
-	if (access(input->content, X_OK))
 		return (FAIL);
+	}
 	fd = open(input->content, flag, 0644);
 	if (fd < 0)
 	{
@@ -167,7 +170,6 @@ t_stat	handle_redirection(t_redirections *input, int	*std, int *stat)
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
-	dprintf(2, "got here input->content = |%s|\n", input->content);
 	return (SUCCESS);
 }
 
