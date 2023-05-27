@@ -62,29 +62,36 @@ void	handle_sigint(int sig)
 	}
 }
 
+void	reset_minishell(t_minishell *minishell, t_signal_var *sigvar)
+{
+	int		status;
+	char	**envp;
+
+	envp = minishell->envp;
+	status = minishell->cmd_status;
+	ft_bzero(minishell, sizeof(t_minishell));
+	ft_bzero(sigvar, sizeof(t_signal_var));
+	minishell->envp = envp;
+	minishell->cmd_status = status;
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	char		*cmd;
-	int			status;
 	t_minishell minishell;
 
 	(void) argc;
 	(void) argv;
 	signal(SIGINT, &handle_sigint);
 	signal(SIGQUIT, &handle_sigquit);
-	status = 0;
 	ft_bzero(&minishell, sizeof(t_minishell));
 	envp = export_envp(&minishell, envp);
 	while (TRUE)
 	{
-		ft_bzero(&minishell, sizeof(t_minishell));
-		minishell.envp = envp;
-		minishell.cmd_status = status;
-		(*get_sigvar()).exec_stop = FALSE;
-		(*get_sigvar()).readline_stop = FALSE;
+		reset_minishell(&minishell, get_sigvar());
 		cmd = readline("\033[0;32mminishell$ \033[0m");
-		(*get_sigvar()).readline_stop = TRUE;
 		ft_malloc(1, m_info(cmd, 1, NULL, 0));
+		(*get_sigvar()).readline_stop = TRUE;
 		exit_on_empty_line(cmd);
 		if (is_spaces_line(cmd))
 		{
@@ -99,8 +106,6 @@ int	main(int argc, char *argv[], char *envp[])
 		// ft_free(1, FALSE);
 		if ((*get_sigvar()).exec_stop)
 			minishell.cmd_status = STOP_WITH_SIGINT;
-		envp = minishell.envp;
-		status = minishell.cmd_status;
 	}
 	rl_clear_history();
 	return 0;

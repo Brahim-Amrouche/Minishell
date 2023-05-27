@@ -22,6 +22,8 @@
 #define ENV_SCOPE 69
 
 #define STOP_WITH_SIGINT 130
+#define ERR_NO_F 126
+#define ERR_NO_P 127
 
 typedef struct s_signal_var
 {

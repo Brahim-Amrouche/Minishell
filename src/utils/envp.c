@@ -91,7 +91,6 @@ char	*calc_new_shell_lvl(t_minishell *minishell)
 	shell_lvl_str = get_env_var("SHLVL", minishell->envp);
 	if (shell_lvl_str)
 		shell_lvl = ft_atoi((*shell_lvl_str) + 6) + 1;
-	printf("shell _lvl = %d\n", shell_lvl);
 	if (shell_lvl == 1000 || shell_lvl < 0)
 		shell_lvl = 0;
 	else if (shell_lvl > 1000)
@@ -99,7 +98,6 @@ char	*calc_new_shell_lvl(t_minishell *minishell)
 		print_msg(2, "minishell: warning: shell level (%) too high, resetting to 1", shell_lvl);
 		shell_lvl = 1;
 	}
-	printf("shell _lvl = %d\n", shell_lvl);
 	var = make_shell_lvl(shell_lvl);
 	ft_malloc(1, m_info(var, 1, NULL, 0));
 	return (var);

@@ -111,16 +111,109 @@ int call_cmd(t_minishell *minishell, t_exec_node *node)
 	return (*status);
 }
 
+t_stat	handle_redirection(t_redirections *input, int	*std, int *stat)
+{
+	int flag;
+	int fd;
+
+	flag = 0;
+	if (input->is_heredoc)
+	{
+		return (SUCCESS);
+	}
+	else if (input->is_read)
+	{
+		flag = O_RDONLY;
+	}
+	else if (input->is_write)
+	{
+		flag = O_WRONLY | O_CREAT;
+		if (input->is_append)
+			flag = flag | O_APPEND;
+	}
+	if (access(input->content, F_OK))
+	{
+		*stat = ERR_NO_F;
+		print_msg(2, "minishell: $: No such file or directory", input->content);
+	}
+	else if (access(input->content, X_OK))
+	{
+		*stat = ERR_NO_P;
+		print_msg(2, "minishell: $: Permission denied", input->content);
+	}
+	if (access(input->content, X_OK))
+		return (FAIL);
+	fd = open(input->content, flag, 0644);
+	if (fd < 0)
+	{
+		*stat = 1;
+		print_msg(2, "minishell: $: can't be open", input->content);
+		return (FAIL);
+	}
+	if (input->continue_redirs && (input + 1)->content)
+	{
+		close(fd);
+		return (SUCCESS);
+	}
+	if (input->is_read)
+	{
+		std[0] = dup(STDIN_FILENO);
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+	}
+	else if (input->is_write)
+	{
+		std[1] = dup(STDOUT_FILENO);
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+	}
+	dprintf(2, "got here input->content = |%s|\n", input->content);
+	return (SUCCESS);
+}
+
+t_stat	redirect_cmd(t_redirections *input, int	*std, int *stat)
+{
+	if (!input || !(input->content) || *stat)
+		return (SUCCESS);
+	while (TRUE)
+	{
+		if (handle_redirection(input, std, stat))
+			return (FAIL);
+		if (!input->continue_redirs)
+			break;
+		input++;
+		if (!input->content)
+			break;
+	}
+	return (SUCCESS);
+}
+
 int traverse_tree(t_exec_tree *tree, t_minishell *minishell);
 
 void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {
 	t_exec_node *node;
+	int			std[2];
+	int			err;
 
+	err = 0;
+	std[0] = -1;
+	std[1] = -1;
 	node = tree->info.exec_node;
-	// if (!ft_strncmp("exit", node->cmd[0], -1))
-	// 	exit(0);
-	*(minishell->stat) = call_cmd(minishell, node);
+	err += redirect_cmd(node->input, std, minishell->stat);
+	err += redirect_cmd(node->output, std, minishell->stat);
+	if (!err)
+		*(minishell->stat) = call_cmd(minishell, node);
+	if (std[0] >= 0)
+	{
+		dup2(std[0], STDIN_FILENO);
+		close(std[0]);
+	}
+	if (std[1] >= 0)
+	{
+		dup2(std[1], STDOUT_FILENO);
+		close(std[1]);
+	}
 }
 
 void exec_and_or(t_exec_tree *tree, t_minishell *minishell)
