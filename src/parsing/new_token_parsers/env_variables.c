@@ -6,13 +6,11 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/18 18:11:41 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/27 14:45:06 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
-
-#define  DOLLAR_SIGN '$'
 
 t_boolean   ft_is_space(char c)
 {
@@ -63,6 +61,20 @@ static  char *replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
     return new_arg;
 }
 
+
+void    skip_quotes(char *arg, size_t *i)
+{
+    char quote_type;
+    
+    if (*(arg + *i) == DOUBLE_QUOTE || *(arg + *i) == SINGLE_QUOTE)
+    {
+        quote_type = *(arg + *i);
+        (*i)++;
+        while (*(arg + *i) != quote_type)
+            (*i)++;
+    }
+}
+
 char    *get_var(char *arg, t_minishell *mini)
 {
     size_t	i;
@@ -71,6 +83,7 @@ char    *get_var(char *arg, t_minishell *mini)
     i = 0;
     while (*(arg + i))
     {
+        skip_quotes(arg, &i);
         j = i + 1;
         if (*(arg + i) == DOLLAR_SIGN && *(arg + j) && !ft_is_space(*(arg + j)))
         {

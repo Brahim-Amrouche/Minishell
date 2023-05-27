@@ -6,13 +6,13 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 16:50:57 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/17 19:43:15 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/27 15:16:27 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	new_t_redirection(t_redirections *new_redir, char *content, int type)
+void	new_t_redirection(t_redirections *new_redir, char *content, int type, t_boolean low_prio)
 {
 	
 	ft_bzero(new_redir, sizeof(t_redirections));
@@ -25,10 +25,11 @@ void	new_t_redirection(t_redirections *new_redir, char *content, int type)
 		new_redir->is_heredoc = TRUE;
 	else if (type == 4)
 		new_redir->is_append = TRUE;
+	new_redir->low_prio = low_prio;
 	new_redir->continue_redirs = TRUE;
 }
 
-static	void	parse_here_doc_redir(t_list *redir_node, t_minishell *mini)
+static	void	parse_here_doc_redir(t_list *redir_node, t_minishell *mini, t_boolean low_prio)
 {
 	char *content;
 	t_redirections	new_heredoc;
@@ -37,7 +38,7 @@ static	void	parse_here_doc_redir(t_list *redir_node, t_minishell *mini)
 	content = redir_node->content;
 	if (!ft_strncmp(content, "<<", 2) || !ft_strncmp(content, ">>", 2) || *content == '<' || *content == '>')
 		exit_minishell(-1, "no redirection after here_doc redir", TRUE);
-	new_t_redirection(&new_heredoc ,content, 3);
+	new_t_redirection(&new_heredoc ,content, 3, low_prio);
 	old_redir_array = mini->exec_root->info.exec_node->input;
 	mini->exec_root->info.exec_node->input = add_element_to_array(old_redir_array, &new_heredoc, sizeof(t_redirections));
 	if (!mini->exec_root->info.exec_node->input)
@@ -46,7 +47,7 @@ static	void	parse_here_doc_redir(t_list *redir_node, t_minishell *mini)
 	mini->tokens = redir_node->next;
 }
 
-static void	parse_append_redir(t_list *redir_node, t_minishell *mini)
+static void	parse_append_redir(t_list *redir_node, t_minishell *mini, t_boolean low_prio)
 {
 	char *content;
 	t_redirections new_append;
@@ -55,7 +56,7 @@ static void	parse_append_redir(t_list *redir_node, t_minishell *mini)
 	content = redir_node->content;
 	if (!ft_strncmp(content, "<<", 2) || !ft_strncmp(content, ">>", 2) || *content == '<' || *content == '>')
 		exit_minishell(-1, "no redirection after append redir", TRUE);
-	new_t_redirection(&new_append, content, 4);
+	new_t_redirection(&new_append, content, 4, low_prio);
 	old_redir_array = mini->exec_root->info.exec_node->output;
 	mini->exec_root->info.exec_node->output = add_element_to_array(old_redir_array, &new_append, sizeof(t_redirections));
 	if (!mini->exec_root->info.exec_node->output)
@@ -65,7 +66,7 @@ static void	parse_append_redir(t_list *redir_node, t_minishell *mini)
 }
 
 
-static	void parse_write_redir(t_list *redir_node, t_minishell *mini)
+static	void parse_write_redir(t_list *redir_node, t_minishell *mini, t_boolean low_prio)
 {
 	char	*content;
 	t_redirections	new_write;
@@ -74,7 +75,7 @@ static	void parse_write_redir(t_list *redir_node, t_minishell *mini)
 	content = redir_node->content;
 	if (!ft_strncmp(content, "<<", 2) || !ft_strncmp(content, ">>", 2) || *content == '<')
 		exit_minishell(-1, "no redirection after write redir", TRUE);
-	new_t_redirection(&new_write, content, 2);
+	new_t_redirection(&new_write, content, 2, low_prio);
 	old_redir_array = mini->exec_root->info.exec_node->output;
 	mini->exec_root->info.exec_node->output = add_element_to_array(old_redir_array, &new_write, sizeof(t_redirections));
 	if(!mini->exec_root->info.exec_node->output)
@@ -83,7 +84,7 @@ static	void parse_write_redir(t_list *redir_node, t_minishell *mini)
 	mini->tokens = redir_node->next;
 }
 
-static void parse_read_redir(t_list *redir_node, t_minishell *mini)
+static void parse_read_redir(t_list *redir_node, t_minishell *mini, t_boolean low_prio)
 {
 	char *content;
 	t_redirections new_read;
@@ -95,10 +96,10 @@ static void parse_read_redir(t_list *redir_node, t_minishell *mini)
 	else if (*content == '>')
 	{
 		redir_node = redir_node->next;
-		parse_write_redir(redir_node, mini);
+		parse_write_redir(redir_node, mini, low_prio);
 		content = redir_node->content;
 	}
-	new_t_redirection(&new_read, content, 1);
+	new_t_redirection(&new_read, content, 1, low_prio);
 	old_redir_array = mini->exec_root->info.exec_node->input;
 	mini->exec_root->info.exec_node->input = add_element_to_array(old_redir_array, &new_read, sizeof(t_redirections));
 	if(!mini->exec_root->info.exec_node->input)
@@ -107,8 +108,7 @@ static void parse_read_redir(t_list *redir_node, t_minishell *mini)
 	mini->tokens = redir_node->next;
 }
 
-
-void	fill_parenthese_redirection(t_list *redir_node,t_exec_tree *new_root, t_minishell *mini,void (*f_redir)(t_list *redir_node, t_minishell *mini))
+void	fill_parenthese_redirection(t_list *redir_node,t_exec_tree *new_root, t_minishell *mini,void (*f_redir)(t_list *redir_node, t_minishell *mini, t_boolean low_prio))
 {
 	if (!new_root)
 		return ;
@@ -117,14 +117,14 @@ void	fill_parenthese_redirection(t_list *redir_node,t_exec_tree *new_root, t_min
 	if (new_root->type == 4)
 	{
 		mini->exec_root = new_root;
-		f_redir(redir_node, mini);
+		f_redir(redir_node, mini, TRUE);
 	}
 }
 
 void    parse_redirections(t_list *redir_node, t_minishell *mini)
 {
     char *content;
-	void (*redir)(t_list *redir_node, t_minishell *mini);
+	void (*redir)(t_list *redir_node, t_minishell *mini, t_boolean low_prio);
 	t_exec_tree *root;
 	
 	if(!redir_node->next)
@@ -145,5 +145,5 @@ void    parse_redirections(t_list *redir_node, t_minishell *mini)
 		mini->exec_root = root;
 	}
 	else
-		redir(redir_node->next, mini);
+		redir(redir_node->next, mini, FALSE);
 }

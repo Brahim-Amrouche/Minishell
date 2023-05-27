@@ -6,14 +6,13 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:27:20 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/18 17:33:45 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/27 14:33:36 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#define SINGLE_QUOTE '\047'
-#define DOUBLE_QUOTE '\042'
+
 
 
 char	*remove_quotes(char *arg, t_minishell *mini, size_t *i, size_t j)

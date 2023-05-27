@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/25 21:38:41 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/27 15:10:53 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@
 # define SUBSTR_SCOPE 1
 # define STRDUP_SCOPE 1
 
+
+#define	DOLLAR_SIGN '$'
+#define SINGLE_QUOTE '\047'
+#define DOUBLE_QUOTE '\042'
+
+
 typedef enum s_logical_operators
 {
 	LOGICAL_NONE,
@@ -44,6 +50,7 @@ typedef struct s_redirections
 	t_boolean			is_write;
 	t_boolean			is_heredoc;
 	t_boolean			is_append;
+	t_boolean			low_prio;
 	t_boolean			continue_redirs;
 }						t_redirections;
 
@@ -100,6 +107,7 @@ void					parse_redirections(t_list *redir_node,
 void					parse_logical_operators(t_list *logical_node,
 							t_minishell *mini, char *token_content);
 char    				*unwrap_quotes(char *arg, t_minishell *mini);
+char					*replace_args(char *arg, t_minishell *mini);
 
 //	main_parsing.c
 void					main_parsing(char *cmd, t_minishell *mini);

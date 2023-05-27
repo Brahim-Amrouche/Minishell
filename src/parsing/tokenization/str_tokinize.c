@@ -6,14 +6,14 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 00:47:00 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/16 19:09:50 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/27 15:18:00 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#define DOUBLE_QUOTE "\042\n"
-#define UNIQUE_QUOTE "\047\n"
+#define DOUBLE_QUOTE_SEP "\042\n"
+#define UNIQUE_QUOTE_SEP "\047\n"
 
 static int	check_if_sep(char *s, char *seprators)
 {
@@ -57,12 +57,12 @@ static size_t index_str_chr(char *s, char *seprators)
 	cancel_token = NULL;
 	while (s[i])
 	{
-		if (!cancel_token && (check_if_sep(s + i, DOUBLE_QUOTE) >= 0 || check_if_sep(s + i, UNIQUE_QUOTE) >= 0))
+		if (!cancel_token && (check_if_sep(s + i, DOUBLE_QUOTE_SEP) >= 0 || check_if_sep(s + i, UNIQUE_QUOTE_SEP) >= 0))
 		{
 			if(s[i] == '\042')
-				cancel_token = DOUBLE_QUOTE;
+				cancel_token = DOUBLE_QUOTE_SEP;
 			else
-				cancel_token = UNIQUE_QUOTE;
+				cancel_token = UNIQUE_QUOTE_SEP;
 		}
 		else if (cancel_token && check_if_sep(s + i, cancel_token) >= 0)
 			cancel_token = NULL;
