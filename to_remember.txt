@@ -27,3 +27,6 @@ increment shell lvl
 
 
 char    *get_var(char *arg, t_minishell *mini)
+
+
+sigfault on ->| < x (ls < x < y)
