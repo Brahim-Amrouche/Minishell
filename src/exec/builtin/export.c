@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:11 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/18 20:20:27 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/28 21:20:04 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,13 +150,13 @@ static void exporting(t_minishell *minishell, char *arg,
 		minishell->envp = add_or_replace_elem(minishell->envp, var, var_name);
 }
 
-int	export(t_minishell *minishell, t_exec_node *node, int index)
+int	export(t_minishell *minishell, t_exec_info *node, int index)
 {
 	char		*var_name;
 	char		*arg;
 	t_export	export_type;
 
-	arg = *(node->cmd + (++index));
+	arg = *(node->content + (++index));
 	if (!arg)
 		return (print_export_data());
 	export_type = check_export_type(arg);
@@ -169,7 +169,7 @@ int	export(t_minishell *minishell, t_exec_node *node, int index)
 		print_msg(2, "minishell: export: `$': not a valid identifier", var_name);
 	}
 	ft_free_node(SUBSTR_SCOPE, var_name);
-	if (*(node->cmd + (index + 1)))
+	if (*(node->content + (index + 1)))
 		export(minishell, node, index);
 	//  waht about in case of error
 	return (0);

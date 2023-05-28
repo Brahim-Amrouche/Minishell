@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:27:22 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/28 19:20:15 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/28 21:19:26 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,9 @@ char	**export_envp(t_minishell *minishell, char **envp)
 {
 	char *cmd[5];
 	char *dir;
-	t_exec_node node;
+	t_exec_info node;
 
-	node.cmd = (char **) &cmd;
+	node.content = (char **) &cmd;
 	ft_bzero(cmd, sizeof(cmd));
 	cmd[0] = "export";
 	if (!envp)

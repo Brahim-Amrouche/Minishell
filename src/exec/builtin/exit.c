@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:07 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/25 22:28:16 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/28 21:20:04 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_stat	try_convert_strtoll(const char *str, long long *number)
 	return (SUCCESS);
 }
 
-int exit_shell(t_exec_node *node)
+int exit_shell(t_exec_info *node)
 {
 	long long	status;
 	char		*arg;
@@ -47,7 +47,7 @@ int exit_shell(t_exec_node *node)
 
 	err = FALSE;
 	printf("exit\n");
-	arg = node->cmd[1];
+	arg = node->content[1];
 	if (!arg)
 	{
 		ft_free(0, TRUE);
@@ -58,14 +58,14 @@ int exit_shell(t_exec_node *node)
 		err = TRUE;
 		status = 2;
 	}
-	arg = node->cmd[2];
+	arg = node->content[2];
 	if (!err && arg)
 	{
 		print_msg(2, "exit: too many arguments");
 		return (1);
 	}
 	if (err)
-		print_msg(2, "exit: $: numeric argument required", node->cmd[1]);
+		print_msg(2, "exit: $: numeric argument required", node->content[1]);
 	status = status % 256;
 	ft_free(0, TRUE);
 	exit(status);

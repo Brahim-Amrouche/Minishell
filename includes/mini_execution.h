@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_execution.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/28 19:21:37 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/28 21:16:15 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,14 @@ int main_execution(t_minishell *minishell);
 char **get_env_var(char *name, char **env);
 t_stat	try_convert_strtoll(const char *str, long long *number);
 
-int change_dir(t_minishell *minishell, t_exec_node *node);
-int echo(t_minishell *minishell, t_exec_node *node);
+int change_dir(t_minishell *minishell, t_exec_info *node);
+int echo(t_minishell *minishell, t_exec_info *node);
 int env(t_minishell *minishell);
 int get_dir(void);
 char ***fetch_export_data(void);
-int export(t_minishell *minishell, t_exec_node *node, int index);
-int unset(t_minishell *minishell, t_exec_node *node, int index);
-int exit_shell(t_exec_node *node);
+int export(t_minishell *minishell, t_exec_info *node, int index);
+int unset(t_minishell *minishell, t_exec_info *node, int index);
+int exit_shell(t_exec_info *node);
 int *id_fetcher(void);
 
 #endif // MINI_EXECUTIONG_H

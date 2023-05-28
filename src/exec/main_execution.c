@@ -38,7 +38,7 @@ int pow2(int n)
 	return (res);
 }
 
-int lunch_bin(t_exec_node *node, t_minishell *mini)
+int lunch_bin(t_exec_info *node, t_minishell *mini)
 {
 	char	**cmd;
 	int		id;
@@ -50,7 +50,7 @@ int lunch_bin(t_exec_node *node, t_minishell *mini)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		cmd = node->cmd;
+		cmd = node->content;
 		binary_parser(cmd, mini);
 		if (access(cmd[0], F_OK) && (cmd[0] || cmd))
 			exit_minishell(127, "command not found", FALSE);
@@ -80,16 +80,16 @@ static void	wait_all(pid_t last_proc, int *status)
 		wait_all(last_proc, status);
 }
 
-int call_cmd(t_minishell *minishell, t_exec_node *node)
+int call_cmd(t_minishell *minishell, t_exec_info *node)
 {
 	int		*status;
 	char	*cmd;
 	int		id;
 
-	if (!node || !node->cmd || !*node->cmd)
+	if (!node || !node->content || !*node->content)
 		return (0); // check later
 	id = 0;
-	cmd = *node->cmd;
+	cmd = *node->content;
 	status = minishell->stat;
 	if (match_cmd(cmd, CD))
 		*status = change_dir(minishell, node);
@@ -111,154 +111,154 @@ int call_cmd(t_minishell *minishell, t_exec_node *node)
 	return (*status);
 }
 
-int open_heredoc(char *limiter, int *std, int *stat)
-{
-	char	*line;
-	int		p[2];
-	int		id;
+// int open_heredoc(char *limiter, int *std, int *stat)
+// {
+// 	char	*line;
+// 	int		p[2];
+// 	int		id;
 
-	if (pipe(p) == -1)
-		exit_minishell(1, "couldnt open pipe", TRUE);
-	id = fork();
-	if (!id)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		if (close(p[0]))
-			print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
-		while (TRUE)
-		{
-			line = readline("> ");
-			ft_malloc(1, m_info(line, 1, NULL, 0));
-			if (line && !ft_strncmp(line, limiter, ft_strlen(limiter)))
-				break ;
-			write(p[1], line, ft_strlen(line));
-			write(p[1], "\n", 1);
-		}
-		if (close(p[1]))
-			print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
-		exit(0);
-	}
-	waitpid(id, stat, 0);
-	if (close(p[1]))
-		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
-	return (p[0]);
-}
+// 	if (pipe(p) == -1)
+// 		exit_minishell(1, "couldnt open pipe", TRUE);
+// 	id = fork();
+// 	if (!id)
+// 	{
+// 		signal(SIGINT, SIG_DFL);
+// 		signal(SIGQUIT, SIG_DFL);
+// 		if (close(p[0]))
+// 			print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+// 		while (TRUE)
+// 		{
+// 			line = readline("> ");
+// 			ft_malloc(1, m_info(line, 1, NULL, 0));
+// 			if (line && !ft_strncmp(line, limiter, ft_strlen(limiter)))
+// 				break ;
+// 			write(p[1], line, ft_strlen(line));
+// 			write(p[1], "\n", 1);
+// 		}
+// 		if (close(p[1]))
+// 			print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+// 		exit(0);
+// 	}
+// 	waitpid(id, stat, 0);
+// 	if (close(p[1]))
+// 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+// 	return (p[0]);
+// }
 
-t_stat	handle_redirection(t_redirections *input, int	*std, int *stat)
-{
-	int flag;
-	int fd;
+// t_stat	handle_redirection(t_redirections *input, int	*std, int *stat)
+// {
+// 	int flag;
+// 	int fd;
 
-	flag = 0;
-	if (input->is_heredoc)
-	{
-		fd = open_heredoc(input->content, std, stat);
-		if (input->continue_redirs && (input + 1)->content)
-		{
-			close(fd);
-			return (SUCCESS);
-		}
-		std[0] = dup(STDIN_FILENO);
-		dup2(fd, STDIN_FILENO);
-		close(fd);
-		return (SUCCESS);
-	}
-	else if (input->is_read)
-		flag = O_RDONLY;
-	else if (input->is_write)
-		flag = O_WRONLY | O_CREAT | O_TRUNC;
-	else if (input->is_append)
-	{
-		flag = O_WRONLY | O_CREAT | O_APPEND;
-		input->is_write = TRUE;
-	}
-	if (access(input->content, F_OK) == 0)
-	{
-		if ((input->is_read && access(input->content, R_OK))
-			|| (input->is_write && access(input->content, W_OK)))
-		{
-			*stat = ERR_NO_P;
-			print_msg(2, "minishell: $: Permission denied", input->content);
-			return (FAIL);
-		}
-	}
-	else if (!input->is_write)
-	{
-		*stat = ERR_NO_F;
-		print_msg(2, "minishell: $: No such file or directory", input->content);
-		return (FAIL);
-	}
-	fd = open(input->content, flag, 0644);
-	if (fd < 0)
-	{
-		*stat = 1;
-		print_msg(2, "minishell: $: can't be open", input->content);
-		return (FAIL);
-	}
-	if (input->continue_redirs && (input + 1)->content)
-	{
-		close(fd);
-		return (SUCCESS);
-	}
-	if (input->is_read)
-	{
-		std[0] = dup(STDIN_FILENO);
-		dup2(fd, STDIN_FILENO);
-		close(fd);
-	}
-	else if (input->is_write)
-	{
-		std[1] = dup(STDOUT_FILENO);
-		dup2(fd, STDOUT_FILENO);
-		close(fd);
-	}
-	return (SUCCESS);
-}
+// 	flag = 0;
+// 	if (input->is_heredoc)
+// 	{
+// 		fd = open_heredoc(input->content, std, stat);
+// 		if (input->continue_redirs && (input + 1)->content)
+// 		{
+// 			close(fd);
+// 			return (SUCCESS);
+// 		}
+// 		std[0] = dup(STDIN_FILENO);
+// 		dup2(fd, STDIN_FILENO);
+// 		close(fd);
+// 		return (SUCCESS);
+// 	}
+// 	else if (input->is_read)
+// 		flag = O_RDONLY;
+// 	else if (input->is_write)
+// 		flag = O_WRONLY | O_CREAT | O_TRUNC;
+// 	else if (input->is_append)
+// 	{
+// 		flag = O_WRONLY | O_CREAT | O_APPEND;
+// 		input->is_write = TRUE;
+// 	}
+// 	if (access(input->content, F_OK) == 0)
+// 	{
+// 		if ((input->is_read && access(input->content, R_OK))
+// 			|| (input->is_write && access(input->content, W_OK)))
+// 		{
+// 			*stat = ERR_NO_P;
+// 			print_msg(2, "minishell: $: Permission denied", input->content);
+// 			return (FAIL);
+// 		}
+// 	}
+// 	else if (!input->is_write)
+// 	{
+// 		*stat = ERR_NO_F;
+// 		print_msg(2, "minishell: $: No such file or directory", input->content);
+// 		return (FAIL);
+// 	}
+// 	fd = open(input->content, flag, 0644);
+// 	if (fd < 0)
+// 	{
+// 		*stat = 1;
+// 		print_msg(2, "minishell: $: can't be open", input->content);
+// 		return (FAIL);
+// 	}
+// 	if (input->continue_redirs && (input + 1)->content)
+// 	{
+// 		close(fd);
+// 		return (SUCCESS);
+// 	}
+// 	if (input->is_read)
+// 	{
+// 		std[0] = dup(STDIN_FILENO);
+// 		dup2(fd, STDIN_FILENO);
+// 		close(fd);
+// 	}
+// 	else if (input->is_write)
+// 	{
+// 		std[1] = dup(STDOUT_FILENO);
+// 		dup2(fd, STDOUT_FILENO);
+// 		close(fd);
+// 	}
+// 	return (SUCCESS);
+// }
 
-t_stat	redirect_cmd(t_redirections *input, int	*std, int *stat)
-{
-	if (!input || !(input->content) || *stat)
-		return (SUCCESS);
-	while (TRUE)
-	{
-		if (handle_redirection(input, std, stat))
-			return (FAIL);
-		if (!input->continue_redirs)
-			break;
-		input++;
-		if (!input->content)
-			break;
-	}
-	return (SUCCESS);
-}
+// t_stat	redirect_cmd(t_redirections *input, int	*std, int *stat)
+// {
+// 	if (!input || !(input->content) || *stat)
+// 		return (SUCCESS);
+// 	while (TRUE)
+// 	{
+// 		if (handle_redirection(input, std, stat))
+// 			return (FAIL);
+// 		if (!input->continue_redirs)
+// 			break;
+// 		input++;
+// 		if (!input->content)
+// 			break;
+// 	}
+// 	return (SUCCESS);
+// }
 
 int traverse_tree(t_exec_tree *tree, t_minishell *minishell);
 
 void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {
-	t_exec_node *node;
+	t_exec_info *node;
 	int			std[2];
 	int			err;
 
 	err = 0;
 	std[0] = -1;
 	std[1] = -1;
-	node = tree->info.exec_node;
-	err += redirect_cmd(node->input, std, minishell->stat);
-	err += redirect_cmd(node->output, std, minishell->stat);
+	// node = &tree->info;
+	// err += redirect_cmd(node->input, std, minishell->stat);
+	// err += redirect_cmd(node->output, std, minishell->stat);
 	if (!err)
 		*(minishell->stat) = call_cmd(minishell, node);
-	if (std[0] >= 0)
-	{
-		dup2(std[0], STDIN_FILENO);
-		close(std[0]);
-	}
-	if (std[1] >= 0)
-	{
-		dup2(std[1], STDOUT_FILENO);
-		close(std[1]);
-	}
+	// if (std[0] >= 0)
+	// {
+	// 	dup2(std[0], STDIN_FILENO);
+	// 	close(std[0]);
+	// }
+	// if (std[1] >= 0)
+	// {
+	// 	dup2(std[1], STDOUT_FILENO);
+	// 	close(std[1]);
+	// }
 }
 
 void exec_and_or(t_exec_tree *tree, t_minishell *minishell)
@@ -338,15 +338,15 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 
 // void make_tree(t_exec_tree *tree, int depth, int offset, char **tree_d, int *tree_size, char **types)
 // {
-// 	t_exec_node *node;
+// 	t_exec_info *node;
 
 // 	if (tree->type == LOGICAL_EXEC)
 // 	{
 // 		node = tree->info.exec_node;
 // 		if (depth > *tree_size)
 // 			*tree_size = depth;
-// 		tree_d[pow2(depth) + offset - 1] = node->cmd[0];
-// 		if (!ft_strncmp("exit", node->cmd[0], -1))
+// 		tree_d[pow2(depth) + offset - 1] = node->content[0];
+// 		if (!ft_strncmp("exit", node->content[0], -1))
 // 			exit(0);
 // 	}
 // 	else
