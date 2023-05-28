@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/27 15:10:53 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/28 19:24:47 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,36 +34,30 @@
 #define DOUBLE_QUOTE '\042'
 
 
-typedef enum s_logical_operators
+typedef enum e_logical_operators
 {
 	LOGICAL_NONE,
 	LOGICAL_PIPE,
 	LOGICAL_AND,
 	LOGICAL_OR,
+	LOGICAL_REDI,
 	LOGICAL_EXEC,
 }						t_logical_operators;
 
-typedef struct s_redirections
+typedef enum e_redirection_types
 {
-	char				*content;
-	t_boolean			is_read;
-	t_boolean			is_write;
-	t_boolean			is_heredoc;
-	t_boolean			is_append;
-	t_boolean			low_prio;
-	t_boolean			continue_redirs;
-}						t_redirections;
-
-typedef struct s_exec_node
-{
-	char				**cmd;
-	t_redirections		*input;
-	t_redirections		*output;
-}						t_exec_node;
+	NONE,
+	INPUT_REDI,
+	OUTPUT_REDI,
+	HERE_DOC_REDI,
+	APPEND_REDI,
+}	t_redirection_types;
 
 typedef struct s_exec_info
 {
-	t_exec_node			*exec_node;
+	char				**content;
+	t_redirection_types	redir_type;
+	t_boolean			low_prio_redir;
 }						t_exec_info;
 
 typedef struct s_exec_tree
@@ -102,8 +96,7 @@ void					handle_parenthese(t_list *token_node,
 							t_minishell *mini);
 void					make_parenthese_tokens(t_list *parenthese_node,
 							t_minishell *new_mini);
-void					parse_redirections(t_list *redir_node,
-							t_minishell *mini);
+void					parse_redirections(t_list *redir_node, t_minishell *mini);
 void					parse_logical_operators(t_list *logical_node,
 							t_minishell *mini, char *token_content);
 char    				*unwrap_quotes(char *arg, t_minishell *mini);

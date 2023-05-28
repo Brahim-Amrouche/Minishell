@@ -111,6 +111,40 @@ int call_cmd(t_minishell *minishell, t_exec_node *node)
 	return (*status);
 }
 
+int open_heredoc(char *limiter, int *std, int *stat)
+{
+	char	*line;
+	int		p[2];
+	int		id;
+
+	if (pipe(p) == -1)
+		exit_minishell(1, "couldnt open pipe", TRUE);
+	id = fork();
+	if (!id)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		if (close(p[0]))
+			print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+		while (TRUE)
+		{
+			line = readline("> ");
+			ft_malloc(1, m_info(line, 1, NULL, 0));
+			if (line && !ft_strncmp(line, limiter, ft_strlen(limiter)))
+				break ;
+			write(p[1], line, ft_strlen(line));
+			write(p[1], "\n", 1);
+		}
+		if (close(p[1]))
+			print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+		exit(0);
+	}
+	waitpid(id, stat, 0);
+	if (close(p[1]))
+		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+	return (p[0]);
+}
+
 t_stat	handle_redirection(t_redirections *input, int	*std, int *stat)
 {
 	int flag;
@@ -119,6 +153,15 @@ t_stat	handle_redirection(t_redirections *input, int	*std, int *stat)
 	flag = 0;
 	if (input->is_heredoc)
 	{
+		fd = open_heredoc(input->content, std, stat);
+		if (input->continue_redirs && (input + 1)->content)
+		{
+			close(fd);
+			return (SUCCESS);
+		}
+		std[0] = dup(STDIN_FILENO);
+		dup2(fd, STDIN_FILENO);
+		close(fd);
 		return (SUCCESS);
 	}
 	else if (input->is_read)

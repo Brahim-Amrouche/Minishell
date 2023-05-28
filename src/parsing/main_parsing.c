@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/25 15:11:07 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/28 19:21:14 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	strip_space_from_tokens(t_list *tokens, t_minishell *mini)
 void	 print_tree(t_exec_tree *node, t_minishell *mini)
 {
 	char **cmd;
-	t_redirections *input, *output;
 
 	printf("------------------------------\n");
 	printf("node type : %d\n",node->type);
@@ -59,26 +58,14 @@ void	 print_tree(t_exec_tree *node, t_minishell *mini)
 		printf("the left type |%d|\n", node->left->type);
 	if (node->right)
 		printf("the right type |%d|\n", node->right->type);
-	if (node->type == 4)
+	if (node->type == 4 || node->type == 5)
 	{
-		cmd = node->info.exec_node->cmd;
+		cmd = node->info.content;
 		while (*cmd)
 		{
 			*cmd = unwrap_quotes(*cmd, mini);
 			printf("command args :%s\n", *cmd);
 			cmd++;
-		}
-		input = node->info.exec_node->input;
-		while (input && input->continue_redirs)
-		{
-			printf("input redirs found|%s|\n",input->content);
-			input++;
-		}
-		output = node->info.exec_node->output;
-		while (output && output->continue_redirs)
-		{
-			printf("output redirs found|%s|\n",output->content);
-			output++;
 		}
 	}
 	printf("------------------------------\n");
