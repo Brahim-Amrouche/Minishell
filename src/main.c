@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/29 17:51:30 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/29 18:43:28 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,6 @@ int	main(int argc, char *argv[], char *envp[])
 		add_history(cmd);
 		// here comes the parsing
 		main_parsing(cmd, &minishell);
-		// tcgetattr(STDIN_FILENO, &term);
-		// term.c_lflag |= ECHOCTL;
-		// tcsetattr(STDIN_FILENO, TCSANOW, &term);
 		// here comes execution
 		main_execution(&minishell);
 		// ft_free(1, FALSE);

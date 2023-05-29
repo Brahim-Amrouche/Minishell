@@ -261,8 +261,39 @@ int	traverse_tree(t_exec_tree *tree, t_minishell *minishell);
 void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {
 	t_exec_info *node;
+	char		**args;
+	char		**new_args;
+	char		*new_elem;
+	int			i;
 
 	node = &tree->info;
+	args = node->content;
+	new_args = NULL;
+	i = 0;
+			// need wildcard to be ordered
+	while (args[i])
+	{
+		if (*(args[i]) == '\"' || *(args[i]) == '\''
+			|| !ft_strchr(args[i], '*'))
+		{
+			new_elem = pro_str_dup(args[i]);
+			// new_args = add_element_to_array(new_args, new_elem, sizeof(new_elem));
+			new_args = add_elem_to_arr(new_args, new_elem);
+		}
+		else
+		{
+			new_args = replace_wildcard(args[i], new_args);
+		}
+		// dprintf(2, "arg is %s|\n", new_args[i]);
+		i++;
+	}
+	args = new_args;
+	while (*args)
+	{
+		*args = replace_args(*args, minishell);
+		args++;
+	}
+	node->content = new_args;
 	*(minishell->stat) = call_cmd(minishell, node);
 }
 
