@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:25:39 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/19 18:32:08 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/29 14:25:03 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ static char	**parse_path(char *envp[])
 // 	size_t  i;
 
 // 	i = 0;
-// 	builtin_list[0] = ECHO;
+// 	builtin_list[0] = MINI_ECHO;
 // 	builtin_list[1] = CD;
 // 	builtin_list[2] = PWD;
 // 	builtin_list[3] = EXPORT;

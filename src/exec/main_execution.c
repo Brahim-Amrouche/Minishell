@@ -97,7 +97,7 @@ int call_cmd(t_minishell *minishell, t_exec_info *node)
 		*status = get_dir();
 	else if (match_cmd(cmd, ENV))
 		*status = env(minishell);
-	else if (match_cmd(cmd, ECHO))
+	else if (match_cmd(cmd, MINI_ECHO))
 		*status = echo(minishell, node);
 	else if (match_cmd(cmd, EXPORT))
 		*status = export(minishell, node, 0);
@@ -106,8 +106,12 @@ int call_cmd(t_minishell *minishell, t_exec_info *node)
 	else if (match_cmd(cmd, BASH_EXIT))
 		*status = exit_shell(node);
 	else
+	{
 		id = lunch_bin(node, minishell);
+		(*get_sigvar()).in_child = TRUE;
+	}
 	wait_all(id, status);
+	(*get_sigvar()).in_child = FALSE;
 	return (*status);
 }
 
@@ -140,14 +144,19 @@ int open_heredoc(char	*limiter, int *p)
 	// if (!id)
 	// {
 	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	// signal(SIGQUIT, SIG_DFL);
 	if (close(p[0]))
 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
 	while (TRUE)
 	{
 		line = readline("> ");
 		ft_malloc(1, m_info(line, 1, NULL, 0));
-		if (line && match_cmd(line, limiter))
+		if (!line)
+		{
+			print_msg(2, "minishell: warning: here-document delimited by end-of-file (wanted `$')", limiter);
+			break ;
+		}
+		if (match_cmd(line, limiter))
 			break ;
 		write(p[1], line, ft_strlen(line));
 		write(p[1], "\n", 1);

@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/28 23:03:02 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/29 14:25:52 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 
-# define ECHO "echo"
+# define MINI_ECHO "echo"
 # define CD "cd"
 # define PWD "pwd"
 # define EXPORT "export"

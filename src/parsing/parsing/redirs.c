@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   n_redirs.c                                         :+:      :+:    :+:   */
+/*   redirs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:02:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/28 19:14:29 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/29 02:25:42 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void    set_redir_type(char *redir_type, t_exec_tree *redir_node)
         redir_node->info.redir_type = HERE_DOC_REDI;
     else if (!ft_strncmp(redir_type, ">>", 2))
         redir_node->info.redir_type = APPEND_REDI;
-    if (*redir_type == '<')
+    else if (*redir_type == '<')
         redir_node->info.redir_type = INPUT_REDI;
-    if (*redir_type == '>')
+    else if (*redir_type == '>')
         redir_node->info.redir_type = OUTPUT_REDI;
 }
 

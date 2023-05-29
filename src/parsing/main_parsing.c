@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/28 21:25:50 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/29 02:55:32 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,10 @@ void	 print_tree(t_exec_tree *node, t_minishell *mini)
 		{
 			*cmd = unwrap_quotes(*cmd, mini);
 			printf("command args :%s\n", *cmd);
+			if (node->type == 4 && node->info.low_prio_redir)
+			{
+				printf("is low prio\n");
+			}
 			cmd++;
 		}
 	}
@@ -77,6 +81,6 @@ void	main_parsing(char *cmd, t_minishell *mini)
 	tokenize(cmd, mini);
 	strip_space_from_tokens(mini->tokens, mini);
 	parsing_root(mini);
-	loop_exec_tree(mini->exec_root, mini, print_tree);
+	// loop_exec_tree(mini->exec_root, mini, print_tree);
 }
 

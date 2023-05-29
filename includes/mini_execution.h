@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/28 21:16:15 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/29 17:44:20 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINI_EXECUTION_H
 # include "minishell.h"
 # include <signal.h>
+# include <termios.h>
 
 # ifndef O_SYMLINK
 # define O_SYMLINK 0
@@ -29,6 +30,8 @@ typedef struct s_signal_var
 {
 	t_boolean	readline_stop;
 	t_boolean	exec_stop;
+	t_boolean	in_heredoc;
+	t_boolean	in_child;
 }	t_signal_var;
 
 t_signal_var *get_sigvar(void);
