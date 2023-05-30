@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/29 14:25:52 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/30 10:56:57 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,8 @@ t_boolean				str_is_a_path(char *str);
 
 // array_utils.c
 void					*add_element_to_array(void *old_array, void *new_elem,
+							size_t data_size);
+void					*add_arr_to_array(void *dest_arr, void *src_arr,
 							size_t data_size);
 
 // tree_utils.c

@@ -258,42 +258,45 @@ t_stat	handle_redirection(t_exec_info *input, t_minishell *minishell)
 
 int	traverse_tree(t_exec_tree *tree, t_minishell *minishell);
 
-void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
+char	**create_args_with_wildcard(char **args)
 {
-	t_exec_info *node;
-	char		**args;
 	char		**new_args;
+	char		**wildcard_arr;
 	char		*new_elem;
 	int			i;
 
-	node = &tree->info;
-	args = node->content;
 	new_args = NULL;
 	i = 0;
-			// need wildcard to be ordered
 	while (args[i])
 	{
 		if (*(args[i]) == '\"' || *(args[i]) == '\''
 			|| !ft_strchr(args[i], '*'))
 		{
 			new_elem = pro_str_dup(args[i]);
-			new_args = add_element_to_array(new_args, &new_elem, sizeof(new_elem));
-			// new_args = add_elem_to_arr(new_args, new_elem);
+			new_args = add_element_to_array(new_args, &new_elem, sizeof(char *));
 		}
 		else
 		{
-			new_args = replace_wildcard(args[i], new_args);
+			wildcard_arr = create_wildcard_arr(args[i]);
+			new_args = add_arr_to_array(new_args, wildcard_arr, sizeof(char *));
 		}
-		// dprintf(2, "arg is %s|\n", new_args[i]);
 		i++;
 	}
-	args = new_args;
-	while (*args)
-	{
-		*args = replace_args(*args, minishell);
-		args++;
-	}
-	node->content = new_args;
+	return (new_args);
+}
+
+void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
+{
+	t_exec_info *node;
+	char		**args;
+	int			i;
+
+	node = &tree->info;
+	args = create_args_with_wildcard(node->content);
+	i = -1;
+	while (args[++i])
+		args[i] = replace_args(args[i], minishell);
+	node->content = args;
 	*(minishell->stat) = call_cmd(minishell, node);
 }
 

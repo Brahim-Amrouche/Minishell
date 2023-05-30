@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/29 21:13:19 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/30 10:40:49 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	**copy_envp(char **envp);
 char	**export_envp(t_minishell *minishell, char **envp);
 char	**add_elem_to_arr(char **arr, char *new_elem);
 char	**rm_elem_from_arr(char **arr, char **elem);
-char	**replace_wildcard(char *pattern, char **args);
+char	**create_wildcard_arr(char *pattern);
 
 // # ifndef t_bool
 // #  define t_bool

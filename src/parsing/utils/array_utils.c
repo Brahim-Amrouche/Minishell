@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   array_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 04:30:17 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/16 19:41:14 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/30 11:20:36 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,31 @@ void	*add_element_to_array(void *old_array, void *new_elem, size_t data_size)
 	temp = skip_bytes(new_array, cpy_mem_size);
 	ft_memcpy(temp, new_elem, data_size);
 	temp = skip_bytes(temp, data_size);
+	ft_bzero(temp, data_size);
+	return (new_array);
+}
+
+void	*add_arr_to_array(void *dest_arr, void *src_arr, size_t data_size)
+{
+	size_t	cpy_mem_size;
+	size_t	total_len;
+	size_t	dest_len;
+	void	*new_array;
+	void	*temp;
+
+	dest_len = array_size(dest_arr, data_size);
+	total_len = dest_len + array_size(src_arr, data_size);
+	new_array = ft_malloc((total_len + 1) * data_size, m_info(NULL, 1, NULL,
+				0));
+	if (!new_array)
+		exit_minishell(ENOMEM, "couldn't combine arrays", TRUE);
+	cpy_mem_size = dest_len * data_size;
+	if (dest_arr)
+		ft_memcpy(new_array, dest_arr, cpy_mem_size);
+	temp = skip_bytes(new_array, cpy_mem_size);
+	cpy_mem_size = (total_len - dest_len) * data_size;
+	ft_memcpy(temp, src_arr, cpy_mem_size);
+	temp = skip_bytes(temp, cpy_mem_size);
 	ft_bzero(temp, data_size);
 	return (new_array);
 }

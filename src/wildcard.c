@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/30 02:19:49 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/30 10:40:23 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,19 +76,14 @@ static int get_wildcard(char *str, char *in)
 	return (0);
 }
 
-char	**replace_wildcard(char *pattern, char **args)
+char		**make_wildcard_arr(DIR *dir, char *pattern)
 {
-	char	*new_elem;
-	char	*cwd;
-	DIR		*dir;
 	struct	dirent *direntf;
+	char	*new_elem;
+	char	**args;
 	int		i;
 
-	cwd = getcwd(NULL, 0);
-	if (cwd == NULL)
-		exit(1);
-	dir = opendir(cwd);
-	free(cwd);
+	args = NULL;
 	i = 0;
 	while (TRUE)
 	{
@@ -98,7 +93,6 @@ char	**replace_wildcard(char *pattern, char **args)
 		if (get_wildcard(direntf->d_name, pattern))
 		{
 			new_elem = pro_str_dup(direntf->d_name);
-			// args = add_elem_to_arr(args, new_elem);
 			args = add_element_to_array(args, &new_elem, sizeof(new_elem));
 			i++;
 		}
@@ -106,9 +100,51 @@ char	**replace_wildcard(char *pattern, char **args)
 	if (i == 0)
 	{
 		new_elem = pro_str_dup(pattern);
-		// args = add_elem_to_arr(args, new_elem);
 		args = add_element_to_array(args, &new_elem, sizeof(new_elem));
 	}
+	return (args);
+}
+
+void	sort_wildcard(char **wildcard)
+{
+	char	*help;
+	int		i;
+	int		j;
+
+	if (!wildcard)
+		return ;
+	i = 0;
+	while (wildcard[i])
+	{
+		j = i;
+		while (wildcard[j] && wildcard[j + 1])
+		{
+			if (ft_strncmp(wildcard[j], wildcard[j + 1], -1) > 0)
+			{
+				help = wildcard[j];
+				wildcard[j] = wildcard[j + 1];
+				wildcard[j + 1] = help;
+			}
+			j++;
+		}
+		i++;
+	}
+	return ;
+}
+
+char	**create_wildcard_arr(char *pattern)
+{
+	char	**args;
+	char	*cwd;
+	DIR		*dir;
+
+	cwd = getcwd(NULL, 0);
+	if (cwd == NULL)
+		exit(1);
+	dir = opendir(cwd);
+	free(cwd);
+	args = make_wildcard_arr(dir, pattern);
+	sort_wildcard(args);
 	closedir(dir);
 	return (args);
 }
