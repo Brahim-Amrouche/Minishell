@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/29 21:32:37 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/30 02:19:49 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,16 +98,16 @@ char	**replace_wildcard(char *pattern, char **args)
 		if (get_wildcard(direntf->d_name, pattern))
 		{
 			new_elem = pro_str_dup(direntf->d_name);
-			args = add_elem_to_arr(args, new_elem);
-			// args = add_element_to_array(args, new_elem, sizeof(new_elem));
+			// args = add_elem_to_arr(args, new_elem);
+			args = add_element_to_array(args, &new_elem, sizeof(new_elem));
 			i++;
 		}
 	}
 	if (i == 0)
 	{
 		new_elem = pro_str_dup(pattern);
-		args = add_elem_to_arr(args, new_elem);
-		// args = add_element_to_array(args, new_elem, sizeof(new_elem));
+		// args = add_elem_to_arr(args, new_elem);
+		args = add_element_to_array(args, &new_elem, sizeof(new_elem));
 	}
 	closedir(dir);
 	return (args);

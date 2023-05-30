@@ -277,8 +277,8 @@ void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 			|| !ft_strchr(args[i], '*'))
 		{
 			new_elem = pro_str_dup(args[i]);
-			// new_args = add_element_to_array(new_args, new_elem, sizeof(new_elem));
-			new_args = add_elem_to_arr(new_args, new_elem);
+			new_args = add_element_to_array(new_args, &new_elem, sizeof(new_elem));
+			// new_args = add_elem_to_arr(new_args, new_elem);
 		}
 		else
 		{
