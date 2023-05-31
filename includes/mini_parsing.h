@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/30 10:56:57 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/30 19:37:16 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,12 @@ typedef struct s_exec_info
 	t_boolean			low_prio_redir;
 }						t_exec_info;
 
+typedef struct s_redir_info
+{
+	char				**content;
+	t_redirection_types	*redir_type;
+}						t_redir_info;
+
 typedef struct s_exec_tree
 {
 	t_logical_operators	type;
@@ -67,6 +73,7 @@ typedef struct s_exec_tree
 	struct s_exec_tree	*left;
 	struct s_exec_tree	*right;
 	t_exec_info			info;
+	t_redir_info		redir;
 }						t_exec_tree;
 
 typedef struct s_new_parser_helper
