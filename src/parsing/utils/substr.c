@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:18:12 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/07 03:18:31 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/31 21:13:18 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ char	*protected_substr(char const *s, unsigned int start, size_t len)
 		len = 0;
 	if (len >= s_len - start)
 		len = s_len - start;
-	res = ft_malloc((len + 1) * sizeof(char), 
-							m_info(NULL, SUBSTR_SCOPE, NULL, 0));
+	res = ft_malloc((len + 1) * sizeof(char),
+			m_info(NULL, SUBSTR_SCOPE, NULL, 0));
 	if (!res)
 		return (NULL);
 	i = 0;

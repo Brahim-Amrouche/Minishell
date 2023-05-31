@@ -12,54 +12,55 @@
 
 #include "minishell.h"
 
-void    make_parenthese_tokens(t_list *parenthese_node, t_minishell *new_mini)
+void	make_parenthese_tokens(t_list *parenthese_node, t_minishell *new_mini)
 {
-    t_list	*new_tokens;
-    char	*token;
-    long    unclosed_parentheses;
-    
+	t_list	*new_tokens;
+	char	*token;
+	long	unclosed_parentheses;
+
 	if (*(char *)parenthese_node->content == ')')
 		exit_minishell(-1, "dont try closing something unopen )", TRUE);
-    unclosed_parentheses = 1;
+	unclosed_parentheses = 1;
 	parenthese_node = parenthese_node->next;
 	new_tokens = NULL;
 	while (unclosed_parentheses && parenthese_node)
-    {
+	{
 		token = parenthese_node->content;
 		if (*token == '(')
 			unclosed_parentheses++;
 		else if (*token == ')')
 			unclosed_parentheses--;
 		if (unclosed_parentheses == 0)
-			break;
+			break ;
 		ft_lstadd_back(&new_tokens, pro_lstnew(parenthese_node->content));
-        parenthese_node = parenthese_node->next;
-    }
-	if(parenthese_node)
+		parenthese_node = parenthese_node->next;
+	}
+	if (parenthese_node)
 		new_mini->n_parser_helper.post_logic_token = parenthese_node->next;
 	else
 		exit_minishell(-1, "need more of these )", TRUE);
-    new_mini->tokens = new_tokens;
+	new_mini->tokens = new_tokens;
 }
 
-void    handle_parenthese(t_list *token_node, t_minishell *mini)
+void	handle_parenthese(t_list *token_node, t_minishell *mini)
 {
-	t_minishell new_mini;
+	t_minishell	new_mini;
 	t_exec_tree	*handled_parentheses;
-	
-	if (mini->exec_root->type == LOGICAL_EXEC || mini->exec_root == LOGICAL_REDI)
+
+	if (mini->exec_root->type == LOGICAL_EXEC
+		|| mini->exec_root == LOGICAL_REDI)
 		exit_minishell(-1, "No sush things before a parenthese", TRUE);
 	ft_bzero(&new_mini, sizeof(t_minishell));
 	make_parenthese_tokens(token_node, &new_mini);
 	mini->tokens = new_mini.n_parser_helper.post_logic_token;
 	handled_parentheses = parsing_root(&new_mini);
 	mini->n_parser_helper.parenthese_node = handled_parentheses;
-	if(mini->exec_root->type)
+	if (mini->exec_root->type)
 	{
 		handled_parentheses->parent = mini->exec_root;
-		if(!mini->exec_root->left)
+		if (!mini->exec_root->left)
 			mini->exec_root->left = handled_parentheses;
-		else if(!mini->exec_root->right)
+		else if (!mini->exec_root->right)
 			mini->exec_root->right = handled_parentheses;
 		else
 			exit_minishell(-1, "come debug me", TRUE);

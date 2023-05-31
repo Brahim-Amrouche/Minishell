@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:08 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/18 19:50:25 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/28 21:24:07 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static int	change__update_pwds(t_minishell *minishell, char *path)
 {
 	char		*dir;
 	char		*cmd[2];
-	t_exec_node	node;
+	t_exec_info	node;
 
-	node.cmd = (char **) &cmd;
+	node.content = (char **) &cmd;
 	cmd[1] = NULL;
 	dir = getcwd(NULL, 0);
 	if (dir == NULL)
@@ -66,15 +66,15 @@ static char	*go_to_weird_paths(t_minishell *minishell, char *path, int *stat)
 	return (path);
 }
 
-int	change_dir(t_minishell *minishell, t_exec_node *node)
+int	change_dir(t_minishell *minishell, t_exec_info *node)
 {
 	char	*path;
 	int		status;
 
 	status = 0;
 	path = NULL;
-	if (*(node->cmd + 1))
-		path = *(node->cmd + 1);
+	if (*(node->content + 1))
+		path = *(node->content + 1);
 	if (path && (*path == '\0' || *path == '-'))
 		path = go_to_weird_paths(minishell, path, &status);
 	else if (path && *path != '/')

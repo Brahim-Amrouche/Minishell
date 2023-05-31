@@ -12,22 +12,22 @@
 
 #include "minishell.h"
 
-char    *pro_str_dup(char *str)
+char	*pro_str_dup(char *str)
 {
-    char *res;
-    size_t str_len;
-    size_t i;
+	char	*res;
+	size_t	str_len;
+	size_t	i;
 
-    str_len = ft_strlen(str);
-    res = ft_malloc((str_len + 1) * sizeof(char), m_info(NULL, 1, NULL, 0));
-    if (!res)
-        return NULL;
-    i = 0;
-    while (*(str + i))
-    {
-        *(res + i) = *(str + i);
-        i++;
-    }
-    *(res + i) = 0;
-    return res;
+	str_len = ft_strlen(str);
+	res = ft_malloc((str_len + 1) * sizeof(char), m_info(NULL, 1, NULL, 0));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (*(str + i))
+	{
+		*(res + i) = *(str + i);
+		i++;
+	}
+	*(res + i) = 0;
+	return (res);
 }

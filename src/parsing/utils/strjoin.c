@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
-
-
+#include "minishell.h"
 
 char	*pro_strjoin(char const *s1, char const *s2)
 {
@@ -28,7 +26,8 @@ char	*pro_strjoin(char const *s1, char const *s2)
 		s2 = "";
 	s1_len = ft_strlen(s1) + 1;
 	total_len = s1_len + ft_strlen(s2);
-	res = ft_malloc(total_len * sizeof(char), m_info(NULL, STRJOIN_SCOPE, NULL, 0));
+	res = ft_malloc(total_len * sizeof(char), m_info(NULL, STRJOIN_SCOPE, NULL,
+				0));
 	if (!res)
 		return (NULL);
 	res[0] = 0;

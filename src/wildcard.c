@@ -6,12 +6,11 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/29 20:24:21 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/30 10:40:23 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <dirent.h>
 
 static char	*terminate_curr__get_next_input(char *input)
 {
@@ -42,8 +41,8 @@ static int check_wildcard(char *str, char *input)
 	if (*input != '*' && *input != *str)
 		return (1);
     if (input[ft_strlen(input) - 1] != '*'
-        && input[ft_strlen(input) - 1] != str[ft_strlen(str) - 1])
-        return (1);
+		&& input[ft_strlen(input) - 1] != str[ft_strlen(str) - 1])
+		return (1);
 	if (!ft_strchr(input, '*'))
 		return (1);
 	return (0);
@@ -57,7 +56,8 @@ static int get_wildcard(char *str, char *in)
 
 	if (check_wildcard(str, in))
 		return (0);
-	input = ft_strdup(in);
+		
+	input = pro_str_dup(in);
 	while (*input == '*')
 		input++;
 	while (*str)
@@ -76,19 +76,15 @@ static int get_wildcard(char *str, char *in)
 	return (0);
 }
 
-char	*replace_wildcard(char *pattern, char **arg, int *i)
+char		**make_wildcard_arr(DIR *dir, char *pattern)
 {
-	char	*wildcard;
-	char	*cwd;
-	DIR		*dir;
 	struct	dirent *direntf;
+	char	*new_elem;
+	char	**args;
+	int		i;
 
-	wildcard = NULL;
-	cwd = getcwd(NULL, 0);
-	if (cwd == NULL)
-		exit(1);
-	dir = opendir(cwd);
-	free(cwd);
+	args = NULL;
+	i = 0;
 	while (TRUE)
 	{
 		direntf = readdir(dir);
@@ -96,14 +92,61 @@ char	*replace_wildcard(char *pattern, char **arg, int *i)
 			break;
 		if (get_wildcard(direntf->d_name, pattern))
 		{
-			if (wildcard)
-				wildcard = pro_strjoin(wildcard, " ");
-			wildcard = pro_strjoin(wildcard, direntf->d_name);
+			new_elem = pro_str_dup(direntf->d_name);
+			args = add_element_to_array(args, &new_elem, sizeof(new_elem));
+			i++;
 		}
 	}
-	// printf("|%s|\n", wildcard);
+	if (i == 0)
+	{
+		new_elem = pro_str_dup(pattern);
+		args = add_element_to_array(args, &new_elem, sizeof(new_elem));
+	}
+	return (args);
+}
+
+void	sort_wildcard(char **wildcard)
+{
+	char	*help;
+	int		i;
+	int		j;
+
+	if (!wildcard)
+		return ;
+	i = 0;
+	while (wildcard[i])
+	{
+		j = i;
+		while (wildcard[j] && wildcard[j + 1])
+		{
+			if (ft_strncmp(wildcard[j], wildcard[j + 1], -1) > 0)
+			{
+				help = wildcard[j];
+				wildcard[j] = wildcard[j + 1];
+				wildcard[j + 1] = help;
+			}
+			j++;
+		}
+		i++;
+	}
+	return ;
+}
+
+char	**create_wildcard_arr(char *pattern)
+{
+	char	**args;
+	char	*cwd;
+	DIR		*dir;
+
+	cwd = getcwd(NULL, 0);
+	if (cwd == NULL)
+		exit(1);
+	dir = opendir(cwd);
+	free(cwd);
+	args = make_wildcard_arr(dir, pattern);
+	sort_wildcard(args);
 	closedir(dir);
-	return (0);
+	return (args);
 }
 
 // char	*make_wildcard_str(char *pattern)

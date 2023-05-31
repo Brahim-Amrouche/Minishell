@@ -6,20 +6,21 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 00:04:02 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/18 14:18:51 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/31 21:12:26 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
-// char    *replace_value_in_token(char *token, size_t  pre, size_t post, char *env_val)
+// char    *replace_value_in_token(char *token, size_t  pre, size_t post,
+// char *env_val)
 // {
 // 	char	*res;
 // 	size_t	len;
 // 	size_t	i;
 
 // 	len = ft_strlen(token) - (post - pre) + ft_strlen(env_val);
-// 	res = ft_malloc((len + 1) * sizeof(char), 
+// 	res = ft_malloc((len + 1) * sizeof(char),
 // 							m_info(NULL, 1, NULL, 0));
 // 	i = 0;
 // 	while (i < pre)
@@ -35,15 +36,14 @@
 // 	return (res);
 // }
 
-
-
-char    *replace_value_in_arg(char *token, size_t  pre, size_t post, char *env_val)
+char	*replace_value_in_arg(char *token, size_t pre, size_t post,
+		char *env_val)
 {
-	char    *pre_token;
+	char	*pre_token;
 	char	*res;
-	char    *post_token;
+	char	*post_token;
 	char	*temp_res;
-	size_t  token_len;
+	size_t	token_len;
 
 	token_len = ft_strlen(token);
 	pre_token = protected_substr(token, 0, pre);
@@ -62,5 +62,5 @@ char    *replace_value_in_arg(char *token, size_t  pre, size_t post, char *env_v
 		exit_minishell(ENOMEM, " couldn't join post_token to res", TRUE);
 	ft_free_node(STRJOIN_SCOPE, temp_res);
 	ft_free_node(SUBSTR_SCOPE, post_token);
-	return res;
+	return (res);
 }

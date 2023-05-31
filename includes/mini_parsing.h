@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/28 19:30:52 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/31 20:51:47 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 
-# define ECHO "echo"
+# define MINI_ECHO "echo"
 # define CD "cd"
 # define PWD "pwd"
 # define EXPORT "export"
@@ -33,14 +33,12 @@
 #define SINGLE_QUOTE '\047'
 #define DOUBLE_QUOTE '\042'
 
-
 typedef enum e_logical_operators
 {
 	LOGICAL_NONE,
 	LOGICAL_PIPE,
 	LOGICAL_AND,
 	LOGICAL_OR,
-	LOGICAL_REDI,
 	LOGICAL_EXEC,
 }						t_logical_operators;
 
@@ -53,12 +51,11 @@ typedef enum e_redirection_types
 	APPEND_REDI,
 }	t_redirection_types;
 
-typedef struct s_exec_info
+typedef struct s_redir_info
 {
-	char				**content;
+	char				*content;
 	t_redirection_types	redir_type;
-	t_boolean			low_prio_redir;
-}						t_exec_info;
+}						t_redir_info;
 
 typedef struct s_exec_tree
 {
@@ -66,7 +63,8 @@ typedef struct s_exec_tree
 	struct s_exec_tree	*parent;
 	struct s_exec_tree	*left;
 	struct s_exec_tree	*right;
-	t_exec_info			info;
+	char				**argv;
+	t_redir_info		**redir;
 }						t_exec_tree;
 
 typedef struct s_new_parser_helper
@@ -74,6 +72,12 @@ typedef struct s_new_parser_helper
 	t_list				*post_logic_token;
 	t_exec_tree			*parenthese_node;
 }						t_new_parser_helper;
+
+typedef struct s_redir
+{
+	int			std[2];
+	t_boolean	in_pipe;
+}	t_redir;
 
 typedef struct s_minishell
 {
@@ -83,6 +87,7 @@ typedef struct s_minishell
 	char				**envp;
 	int					cmd_status;
 	int					*stat;
+	t_redir				*redir;
 }						t_minishell;
 
 // new_tokenization
@@ -150,6 +155,8 @@ t_boolean				str_is_a_path(char *str);
 
 // array_utils.c
 void					*add_element_to_array(void *old_array, void *new_elem,
+							size_t data_size);
+void					*add_arr_to_array(void *dest_arr, void *src_arr,
 							size_t data_size);
 
 // tree_utils.c

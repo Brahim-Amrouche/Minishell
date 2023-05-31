@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/25 21:37:22 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/30 20:33:31 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,12 @@ t_signal_var *get_sigvar(void)
 void	handle_sigquit(int sig)
 {
 	sig++;
-	rl_replace_line("", 0);
+	if ((*get_sigvar()).in_child)
+	{
+		if ((*get_sigvar()).readline_stop)
+			(*get_sigvar()).exec_stop = TRUE;
+		write(1, "Quit\n", 5);// here or stderr?
+	}
 	rl_redisplay();
 }
 
@@ -77,17 +82,22 @@ void	reset_minishell(t_minishell *minishell, t_signal_var *sigvar)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	char		*cmd;
-	t_minishell minishell;
+	char			*cmd;
+	t_minishell		minishell;
+	struct termios	term;
 
 	(void) argc;
 	(void) argv;
+	// tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);
 	signal(SIGINT, &handle_sigint);
 	signal(SIGQUIT, &handle_sigquit);
 	ft_bzero(&minishell, sizeof(t_minishell));
 	envp = export_envp(&minishell, envp);
 	while (TRUE)
 	{
+		tcgetattr(STDIN_FILENO, &term);
+		term.c_lflag &= ~(ECHOCTL);
+		tcsetattr(STDIN_FILENO, TCSANOW, &term);
 		reset_minishell(&minishell, get_sigvar());
 		cmd = readline("\033[0;32mminishell$ \033[0m");
 		ft_malloc(1, m_info(cmd, 1, NULL, 0));
@@ -102,7 +112,7 @@ int	main(int argc, char *argv[], char *envp[])
 		// here comes the parsing
 		main_parsing(cmd, &minishell);
 		// here comes execution
-		main_execution(&minishell);
+		// main_execution(&minishell);
 		// ft_free(1, FALSE);
 		if ((*get_sigvar()).exec_stop)
 			minishell.cmd_status = STOP_WITH_SIGINT;

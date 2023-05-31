@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_execution.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/28 19:21:37 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/30 10:40:49 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define MINI_EXECUTION_H
 # include "minishell.h"
 # include <signal.h>
+# include <termios.h>
+# include <dirent.h>
 
 # ifndef O_SYMLINK
 # define O_SYMLINK 0
@@ -29,6 +31,8 @@ typedef struct s_signal_var
 {
 	t_boolean	readline_stop;
 	t_boolean	exec_stop;
+	t_boolean	in_heredoc;
+	t_boolean	in_child;
 }	t_signal_var;
 
 t_signal_var *get_sigvar(void);
@@ -59,6 +63,7 @@ char	**copy_envp(char **envp);
 char	**export_envp(t_minishell *minishell, char **envp);
 char	**add_elem_to_arr(char **arr, char *new_elem);
 char	**rm_elem_from_arr(char **arr, char **elem);
+char	**create_wildcard_arr(char *pattern);
 
 // # ifndef t_bool
 // #  define t_bool
@@ -77,14 +82,14 @@ int main_execution(t_minishell *minishell);
 char **get_env_var(char *name, char **env);
 t_stat	try_convert_strtoll(const char *str, long long *number);
 
-int change_dir(t_minishell *minishell, t_exec_node *node);
-int echo(t_minishell *minishell, t_exec_node *node);
+int change_dir(t_minishell *minishell, t_exec_info *node);
+int echo(t_minishell *minishell, t_exec_info *node);
 int env(t_minishell *minishell);
 int get_dir(void);
 char ***fetch_export_data(void);
-int export(t_minishell *minishell, t_exec_node *node, int index);
-int unset(t_minishell *minishell, t_exec_node *node, int index);
-int exit_shell(t_exec_node *node);
+int export(t_minishell *minishell, t_exec_info *node, int index);
+int unset(t_minishell *minishell, t_exec_info *node, int index);
+int exit_shell(t_exec_info *node);
 int *id_fetcher(void);
 
 #endif // MINI_EXECUTIONG_H

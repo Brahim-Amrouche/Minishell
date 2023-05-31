@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   binaries.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:25:39 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/19 18:32:08 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/05/31 21:07:30 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 static char	*cmd_is_exect(char *cmd, char **paths)
 {
@@ -18,10 +18,10 @@ static char	*cmd_is_exect(char *cmd, char **paths)
 	t_boolean	is_a_path;
 
 	if (!access(cmd, X_OK))
-		return cmd;
+		return (cmd);
 	is_a_path = str_is_a_path(cmd);
 	if (is_a_path)
-		return cmd;
+		return (cmd);
 	while (paths && *paths)
 	{
 		joined_path = pro_strjoin(*paths, cmd);
@@ -30,19 +30,19 @@ static char	*cmd_is_exect(char *cmd, char **paths)
 		if (!access(joined_path, X_OK))
 		{
 			ft_free_node(1, cmd);
-			return joined_path;
+			return (joined_path);
 		}
 		ft_free_node(STRJOIN_SCOPE, joined_path);
 		paths++;
 	}
-	return cmd;
+	return (cmd);
 }
 
-static	t_boolean path_sep(char c)
+static t_boolean	path_sep(char c)
 {
 	if (c == ':')
-		return TRUE;
-	return FALSE;
+		return (TRUE);
+	return (FALSE);
 }
 
 static void	add_ending_slash(char *paths[])
@@ -88,7 +88,7 @@ static char	**parse_path(char *envp[])
 // 	size_t  i;
 
 // 	i = 0;
-// 	builtin_list[0] = ECHO;
+// 	builtin_list[0] = MINI_ECHO;
 // 	builtin_list[1] = CD;
 // 	builtin_list[2] = PWD;
 // 	builtin_list[3] = EXPORT;
@@ -108,7 +108,7 @@ static char	**parse_path(char *envp[])
 
 void	binary_parser(char **arg, t_minishell *mini)
 {
-	char **paths;
+	char	**paths;
 
 	paths = parse_path(mini->envp);
 	// if (cmd_is_builtin(*arg))
@@ -116,4 +116,3 @@ void	binary_parser(char **arg, t_minishell *mini)
 	// else
 	*arg = cmd_is_exect(*arg, paths);
 }
-
