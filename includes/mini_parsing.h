@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/28 19:24:47 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/28 19:30:52 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,15 +91,25 @@ str_tokenize(char *str, char *seperators);
 void					tokenize(char *input, t_minishell *mini);
 
 // new_parsing
+
+// parse_root.c
 t_exec_tree				*parsing_root(t_minishell *mini);
+
+// parentheses.c
 void					handle_parenthese(t_list *token_node,
 							t_minishell *mini);
 void					make_parenthese_tokens(t_list *parenthese_node,
 							t_minishell *new_mini);
+// redirs.c
 void					parse_redirections(t_list *redir_node, t_minishell *mini);
+
+// logical_operators.c
 void					parse_logical_operators(t_list *logical_node,
 							t_minishell *mini, char *token_content);
+// quotes.c
 char    				*unwrap_quotes(char *arg, t_minishell *mini);
+
+// replace_args.c
 char					*replace_args(char *arg, t_minishell *mini);
 
 //	main_parsing.c

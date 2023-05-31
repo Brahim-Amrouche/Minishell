@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:10:42 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/28 17:01:11 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:17:47 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void    handle_parenthese(t_list *token_node, t_minishell *mini)
 	t_minishell new_mini;
 	t_exec_tree	*handled_parentheses;
 	
+	if (mini->exec_root->type == LOGICAL_EXEC || mini->exec_root == LOGICAL_REDI)
+		exit_minishell(-1, "No sush things before a parenthese", TRUE);
 	ft_bzero(&new_mini, sizeof(t_minishell));
 	make_parenthese_tokens(token_node, &new_mini);
 	mini->tokens = new_mini.n_parser_helper.post_logic_token;

@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 19:06:57 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/28 17:01:15 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:19:00 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ static void    make_logical_tokens(t_list *post_logic_node, t_minishell *new_min
         new_mini->tokens = new_tokens;
     }
 }
-
 
 
 void	parse_logical_operators(t_list *logical_node, t_minishell *mini, char *token_content)
