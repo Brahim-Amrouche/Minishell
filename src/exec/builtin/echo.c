@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:55 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/01 15:32:57 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/01 19:25:53 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,7 @@ int	echo(t_minishell *minishell, char ** args)
 	while (*(args + i))
 	{
 		txt = *(args + i);
-		if (!ft_strncmp("$?", txt, 2))
-			printf("%d", minishell->cmd_status);
-		else
-			printf("%s", txt);
+		printf("%s", txt);
 		i++;
 		if (*(args + i))
 			printf(" ");

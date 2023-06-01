@@ -401,7 +401,8 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 	tree_redir = tree->redir;
 	while (tree_redir && *tree_redir)
 	{
-		handle_redirection(*tree_redir, minishell, tree_std);
+		if (handle_redirection(*tree_redir, minishell, tree_std))
+			return (status);
 		tree_redir++;
 	}
 	if ((*get_sigvar()).exec_stop)

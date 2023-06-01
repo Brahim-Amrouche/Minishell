@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/31 21:08:19 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/01 19:23:14 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,13 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 	env_name = protected_substr(arg, (*i) + 1, j);
 	if (!env_name)
 		exit_minishell(ENOMEM, "could't malloc env_name", TRUE);
-	env_val = find_env_var(mini->envp, env_name, FALSE);
+	if (!ft_strncmp("?", env_name, -1))
+	{
+		env_val = ft_itoa(mini->cmd_status);
+		ft_malloc(1, m_info(env_val, 1, NULL, 0));// check this broooo!
+	}
+	else
+		env_val = find_env_var(mini->envp, env_name, FALSE);
 	ft_free_node(1, env_name);
 	new_arg = replace_value_in_arg(arg, *i, (*i) + j + 1, env_val);
 	*i += ft_strlen(env_val) - 1;
@@ -64,6 +70,7 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 
 void	skip_quotes(char *arg, size_t *i)
 {
+	
 	char	quote_type;
 
 	if (*(arg + *i) == DOUBLE_QUOTE || *(arg + *i) == SINGLE_QUOTE)
