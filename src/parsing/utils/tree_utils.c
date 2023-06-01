@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tree_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 14:03:14 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/18 18:07:46 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/01 16:32:51 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ t_exec_tree	*exec_tree_node(int params_num, ...)
 		tree_node->left = va_arg(args, t_exec_tree *);
 	if (params_num >= 4)
 		tree_node->right = va_arg(args, t_exec_tree *);
-	if (params_num >= 5)
-		tree_node->info = va_arg(args, t_exec_info);
+	// if (params_num >= 5)
+	// 	tree_node->info = va_arg(args, t_exec_info);
 	va_end(args);
 	return (tree_node);
 }

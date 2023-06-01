@@ -38,9 +38,8 @@ int pow2(int n)
 	return (res);
 }
 
-int lunch_bin(t_exec_info *node, t_minishell *mini)
+int lunch_bin(char **args, t_minishell *mini)
 {
-	char	**cmd;
 	int		id;
 
 	id = fork();
@@ -50,14 +49,13 @@ int lunch_bin(t_exec_info *node, t_minishell *mini)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		cmd = node->content;
-		binary_parser(cmd, mini);
-		if (access(cmd[0], F_OK) && (cmd[0] || cmd))
+		binary_parser(args, mini);
+		if (access(args[0], F_OK) && (args[0] || args))
 			exit_minishell(127, "command not found", FALSE);
-		else if (access(cmd[0], X_OK))
+		else if (access(args[0], X_OK))
 			exit_minishell(126, "permission denied", FALSE);
 		else
-			execve(cmd[0], cmd, mini->envp);
+			execve(args[0], args, mini->envp);
 		exit(126);
 	}
 	return (id);
@@ -80,34 +78,34 @@ static void	wait_all(pid_t last_proc, int *status)
 		wait_all(last_proc, status);
 }
 
-int call_cmd(t_minishell *minishell, t_exec_info *node)
+int call_cmd(t_minishell *minishell, char **args)
 {
 	int		*status;
 	char	*cmd;
 	int		id;
 
-	if (!node || !node->content || !*node->content)
+	if (!args || !*args)
 		return (0); // check later
 	id = 0;
-	cmd = *node->content;
+	cmd = *args;
 	status = minishell->stat;
 	if (match_cmd(cmd, CD))
-		*status = change_dir(minishell, node);
+		*status = change_dir(minishell, args);
 	else if (match_cmd(cmd, PWD))
 		*status = get_dir();
 	else if (match_cmd(cmd, ENV))
 		*status = env(minishell);
 	else if (match_cmd(cmd, MINI_ECHO))
-		*status = echo(minishell, node);
+		*status = echo(minishell, args);
 	else if (match_cmd(cmd, EXPORT))
-		*status = export(minishell, node, 0);
+		*status = export(minishell, args, 0);
 	else if (match_cmd(cmd, UNSET))
-		*status = unset(minishell, node, 0);
+		*status = unset(minishell, args, 0);
 	else if (match_cmd(cmd, BASH_EXIT))
-		*status = exit_shell(node);
+		*status = exit_shell(args);
 	else
 	{
-		id = lunch_bin(node, minishell);
+		id = lunch_bin(args, minishell);
 		(*get_sigvar()).in_child = TRUE;
 	}
 	wait_all(id, status);
@@ -116,35 +114,36 @@ int call_cmd(t_minishell *minishell, t_exec_info *node)
 }
 
 
-t_stat handle_redir_fd(int fd, t_boolean low,
-					t_redirection_types type, int *std)
+t_stat handle_redir_fd(int fd, t_redirection_types type, int *std)
 {
 	int	std_fileno;
 
-	if (low || (type == INPUT_REDI && std[0] >= 0)
-		|| (type == OUTPUT_REDI && std[1] >= 0))
-	{
-		close(fd);
-		return (SUCCESS);
-	}
-	if (type == INPUT_REDI)
+	// if ((type == INPUT_REDI && std[0] >= 0)
+	// 	|| (type == OUTPUT_REDI && std[1] >= 0))
+	// {
+	// 	close(fd);
+	// 	return (SUCCESS);
+	// }
+	if (type == INPUT_REDI || type == HERE_DOC_REDI)
 		std_fileno = STDIN_FILENO;
-	else if (type == OUTPUT_REDI)
+	else
 		std_fileno = STDOUT_FILENO;
-	std[std_fileno] = dup(std_fileno);
+	if (std[std_fileno] < 0)
+	{
+		std[std_fileno] = dup(std_fileno);
+	}
 	dup2(fd, std_fileno);
 	close(fd);
 	return (SUCCESS);
 }
 
-int open_heredoc(char	*limiter, int *p)
+int open_heredoc(char	*limiter, int *p, int *tree_std)
 {
 	char	*line;
 
-	// if (!id)
-	// {
 	signal(SIGINT, SIG_DFL);
-	// signal(SIGQUIT, SIG_DFL);
+	if (tree_std[0] >= 0)
+		dup2(tree_std[0], STDIN_FILENO);
 	if (close(p[0]))
 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
 	while (TRUE)
@@ -164,32 +163,26 @@ int open_heredoc(char	*limiter, int *p)
 	if (close(p[1]))
 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
 	exit(0);
-	// }
-	// waitpid(id, minishell->stat, 0);
-	// if (close(p[1]))
-	// 	print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
-	// return (p[0]);
 }
 
-t_stat handle_heredoc(t_exec_info *input, t_minishell *minishell)
+t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell, int *tree_std)
 {
 	char	*limiter;
 	int		p[2];
 	int		id;
 
-	limiter = *(input->content);
+	limiter = redir->content;
 	if (pipe(p) == -1)
 		exit_minishell(1, "couldnt open pipe", TRUE);
 	id = fork();
 	if (!id)
-		open_heredoc(limiter, p);
+		open_heredoc(limiter, p, tree_std);
 	waitpid(id, minishell->stat, 0);
 	if (close(p[1]))
 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
-	if (input->redir_type == HERE_DOC_REDI)
-		input->redir_type = INPUT_REDI;
-	handle_redir_fd(p[0], input->low_prio_redir,
-					input->redir_type, minishell->redir->std);
+	if (redir->redir_type == HERE_DOC_REDI)
+		redir->redir_type = INPUT_REDI;
+	handle_redir_fd(p[0], redir->redir_type, tree_std);
 	return (SUCCESS);
 }
 
@@ -230,29 +223,28 @@ int get_redir_flag(t_redirection_types redir_type)
 	return (flag);
 }
 
-t_stat	handle_redirection(t_exec_info *input, t_minishell *minishell)
+t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree_std)
 {
 	int flag;
 	int fd;
 	int *stat;
 
 	stat = minishell->stat;
-	if (input->redir_type == HERE_DOC_REDI)
-		return (handle_heredoc(input, minishell));
-	flag = get_redir_flag(input->redir_type);
-	if (input->redir_type == APPEND_REDI)
-		input->redir_type = OUTPUT_REDI;// does it matter if i cahnge this here
-	if (check_redir_access(input->redir_type, *(input->content), stat))
+	if (redir->redir_type == HERE_DOC_REDI)
+		return (handle_heredoc(redir, minishell, tree_std));
+	flag = get_redir_flag(redir->redir_type);
+	if (redir->redir_type == APPEND_REDI)
+		redir->redir_type = OUTPUT_REDI;// does it matter if i cahnge this here
+	if (check_redir_access(redir->redir_type, redir->content, stat))
 		return (FAIL);
-	fd = open(*(input->content), flag, 0644);
+	fd = open(redir->content, flag, 0644);
 	if (fd < 0)
 	{
 		*(minishell->stat) = 1;
-		print_msg(2, "minishell: $: can't be open", *(input->content));
+		print_msg(2, "minishell: $: can't be open", *(redir->content));
 		return (FAIL);
 	}
-	handle_redir_fd(fd, input->low_prio_redir,
-						  input->redir_type, minishell->redir->std);
+	handle_redir_fd(fd, redir->redir_type, tree_std);
 	return (SUCCESS);
 }
 
@@ -287,45 +279,43 @@ char	**create_args_with_wildcard(char **args)
 
 void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {
-	t_exec_info *node;
 	char		**args;
 	int			i;
 
-	node = &tree->info;
-	args = create_args_with_wildcard(node->content);
+	if (!tree->argv)
+		return;
+	args = create_args_with_wildcard(tree->argv);
 	i = -1;
 	while (args[++i])
 		args[i] = replace_args(args[i], minishell);
-	node->content = args;
-	*(minishell->stat) = call_cmd(minishell, node);
+	tree->argv = args;
+	*(minishell->stat) = call_cmd(minishell, args);
 }
 
-void exec_redir(t_exec_tree *tree, t_minishell *minishell)
-{
-	t_exec_info *node;
-	int			*std;
-	int			*stat;
+// void exec_redir(t_exec_tree *tree, t_minishell *minishell)
+// {
+// 	int			*std;
+// 	int			*stat;
 
-	node = &tree->info;
-	stat = (minishell->stat);
-	if (!node || !(node->content) || *stat)
-		return ;
-	std = minishell->redir->std;
-	if (handle_redirection(node, minishell) == SUCCESS)
-		*stat = traverse_tree(tree->left, minishell);
-	if (std[0] >= 0)
-	{
-		dup2(std[0], STDIN_FILENO);
-		close(std[0]);
-		std[0] = -1;
-	}
-	if (std[1] >= 0)
-	{
-		dup2(std[1], STDOUT_FILENO);
-		close(std[1]);
-		std[1] = -1;
-	}
-}
+// 	stat = (minishell->stat);
+// 	if (!tree->argv || *stat)
+// 		return ;
+// 	std = minishell->redir->std;
+// 	// if (handle_redirection(node, minishell) == SUCCESS)
+// 		*stat = traverse_tree(tree->left, minishell);
+// 	// if (std[0] >= 0)
+// 	// {
+// 	// 	dup2(std[0], STDIN_FILENO);
+// 	// 	close(std[0]);
+// 	// 	std[0] = -1;
+// 	// }
+// 	// if (std[1] >= 0)
+// 	// {
+// 	// 	dup2(std[1], STDOUT_FILENO);
+// 	// 	close(std[1]);
+// 	// 	std[1] = -1;
+// 	// }
+// }
 
 void exec_and_or(t_exec_tree *tree, t_minishell *minishell)
 {
@@ -350,11 +340,7 @@ void exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 	int	f2;
 	int	p[2];
 	int	status;
-	t_redir		redir;
 
-	ft_memcpy(&redir, minishell->redir, sizeof(redir));
-	redir.in_pipe = TRUE;
-	minishell->redir = &redir;
 	pipe(p);
 	f1 = fork();
 	if (f1 == -1)
@@ -386,27 +372,47 @@ void exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 	wait_all(f2, minishell->stat);
 }
 
+void reset_std(int *std)
+{
+	if (std[STDIN_FILENO] >= 0)
+	{
+		dup2(std[STDIN_FILENO], STDIN_FILENO);
+		close(std[STDIN_FILENO]);
+	}
+	if (std[STDOUT_FILENO] >= 0)
+	{
+		dup2(std[STDOUT_FILENO], STDOUT_FILENO);
+		close(std[STDOUT_FILENO]);
+	}
+}
+
 int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 {
-	int			status;
-	t_redir		redir;
+	int				status;
+	t_redir_info	**tree_redir;
+	int 			tree_std[2];
 
 	if (!tree)
 		return (0);
-	ft_memcpy(&redir, minishell->redir, sizeof(redir));
-	minishell->redir = &redir;
+	tree_std[0] = -1;
+	tree_std[1] = -1;
 	status = 0;
 	minishell->stat = &status;
+	tree_redir = tree->redir;
+	while (tree_redir && *tree_redir)
+	{
+		handle_redirection(*tree_redir, minishell, tree_std);
+		tree_redir++;
+	}
 	if ((*get_sigvar()).exec_stop)
 		return (130);
 	if (tree->type == LOGICAL_PIPE)
 		exec_pipe(tree, minishell);
 	else if (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR)
 		exec_and_or(tree, minishell);
-	else if (tree->type == LOGICAL_REDI)
-		exec_redir(tree, minishell);
 	else if (tree->type == LOGICAL_EXEC)
 		exec_cmd(tree, minishell);
+	reset_std(tree_std);
 	return (status);
 }
 
@@ -491,13 +497,8 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 int main_execution(t_minishell *minishell)
 {
 	t_exec_tree *tree;
-	t_redir		redir;
 
 	tree = minishell->exec_root;
-	ft_bzero(&redir, sizeof(redir));
-	redir.std[0] = -1;
-	redir.std[1] = -1;
-	minishell->redir = &redir;
 	// // traverse_and_print_tree(tree);
 	minishell->cmd_status = traverse_tree(tree, minishell);
 	// printf("minishell status is %d\n", minishell->cmd_status);

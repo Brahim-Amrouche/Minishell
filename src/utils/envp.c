@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:27:22 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/28 21:19:26 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/01 16:27:07 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,7 @@ char	**export_envp(t_minishell *minishell, char **envp)
 {
 	char *cmd[5];
 	char *dir;
-	t_exec_info node;
 
-	node.content = (char **) &cmd;
 	ft_bzero(cmd, sizeof(cmd));
 	cmd[0] = "export";
 	if (!envp)
@@ -118,7 +116,7 @@ char	**export_envp(t_minishell *minishell, char **envp)
 	{
 		cmd[1] = *envp;
 		if (strncmp("_=", *envp, 2))
-			export(minishell, &node, 0);
+			export(minishell, cmd, 0);
 		envp++;
 	}
 	dir = getcwd(NULL, 0);
@@ -128,7 +126,7 @@ char	**export_envp(t_minishell *minishell, char **envp)
 	free(dir);
 	cmd[2] = "OLDPWD";
 	cmd[3] = calc_new_shell_lvl(minishell);
-	export(minishell, &node, 0);
+	export(minishell, cmd, 0);
 	minishell->envp = add_essentiel_env(minishell);
 	return (minishell->envp);
 }

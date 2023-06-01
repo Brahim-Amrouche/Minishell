@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:08 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/28 21:24:07 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/01 16:28:33 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ static int	change__update_pwds(t_minishell *minishell, char *path)
 {
 	char		*dir;
 	char		*cmd[2];
-	t_exec_info	node;
 
-	node.content = (char **) &cmd;
 	cmd[1] = NULL;
 	dir = getcwd(NULL, 0);
 	if (dir == NULL)
@@ -27,13 +25,13 @@ static int	change__update_pwds(t_minishell *minishell, char *path)
 	free(dir);
 	if (chdir(path) != 0)
 		return (1);
-	export(minishell, &node, 0);
+	export(minishell, cmd, 0);
 	dir = getcwd(NULL, 0);
 	if (dir == NULL)
 		exit_minishell(1, "cwd buffer is not enough", TRUE);
 	cmd[0] = pro_strjoin("PWD=", dir);
 	free(dir);
-	export(minishell, &node, 0);
+	export(minishell, cmd, 0);
 	return (0);
 }
 
@@ -66,15 +64,15 @@ static char	*go_to_weird_paths(t_minishell *minishell, char *path, int *stat)
 	return (path);
 }
 
-int	change_dir(t_minishell *minishell, t_exec_info *node)
+int	change_dir(t_minishell *minishell, char **args)
 {
 	char	*path;
 	int		status;
 
 	status = 0;
 	path = NULL;
-	if (*(node->content + 1))
-		path = *(node->content + 1);
+	if (*(args + 1))
+		path = *(args + 1);
 	if (path && (*path == '\0' || *path == '-'))
 		path = go_to_weird_paths(minishell, path, &status);
 	else if (path && *path != '/')

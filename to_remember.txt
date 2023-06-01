@@ -23,20 +23,13 @@ wtf is this echo ~/hello
 
 echo x$? // brahim do ur job
 
-increment shell lvl
-
 
 char    *get_var(char *arg, t_minishell *mini)
 
 
 sigfault on ->| < x (ls < x < y)
 
-____________________________________________________
- typo in : redirs.c   line 21 -> 24
-note : add replace "if" by "else if"
-----------------------------------------------------
-     else if (*redir_type == '<')
-        redir_node->info.redir_type = INPUT_REDI;
-    else if (*redir_type == '>')
-        redir_node->info.redir_type = OUTPUT_REDI;
-____________________________________________________
+minishell$ ()
+------------------------------
+node type : 0
+------------------------------
