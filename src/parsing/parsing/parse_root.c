@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 14:39:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/02 13:31:33 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/02 14:51:58 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	handle_args(char *token, t_minishell *mini)
 	t_exec_tree	*exec_node;
 
 	exec_node = mini->exec_root;
-	if (exec_node->type == LOGICAL_NONE || exec_node->type == LOGICAL_EXEC)
+	if (exec_node->type == LOGICAL_NONE || (exec_node->type == LOGICAL_EXEC
+			&& mini->n_parser_helper.parenthese_node == NULL))
 		exec_node->type = LOGICAL_EXEC;
 	else
 		exit_minishell(-1, "dont give me args like this", TRUE);
@@ -27,44 +28,30 @@ void	handle_args(char *token, t_minishell *mini)
 	if (!exec_node->argv)
 		exit_minishell(ENOMEM, "couldn't add a new arg to cmds array", TRUE);
 	ft_free_node(1, temp);
+	mini->tokens = mini->tokens->next;
 }
 
 t_exec_tree	*parsing_root(t_minishell *mini)
 {
-	t_list *tokens;
-	char *token_content;
+	char	*token_content;
 
-	tokens = mini->tokens;
 	mini->exec_root = exec_tree_node(1, LOGICAL_NONE);
 	if (!mini->exec_root)
 		exit_minishell(ENOMEM, "couldn't create a new node", TRUE);
-	while (tokens)
+	while (mini->tokens)
 	{
-		token_content = tokens->content;
+		token_content = mini->tokens->content;
 		if (*token_content == '(' || *token_content == ')')
-		{
-			handle_parenthese(tokens, mini);
-			tokens = mini->tokens;
-			continue ;
-		}
+			handle_parenthese(mini->tokens, mini);
 		else if (!ft_strncmp(token_content, "||", 2)
-				|| !ft_strncmp(token_content, "&&", 2) || *token_content == '|')
-		{
-			parse_logical_operators(tokens, mini, token_content);
-			tokens = mini->tokens;
-			continue ;
-		}
+			|| !ft_strncmp(token_content, "&&", 2) || *token_content == '|')
+			parse_logical_operators(mini->tokens, mini, token_content);
 		else if (!ft_strncmp(token_content, "<<", 2)
-				|| !ft_strncmp(token_content, ">>", 2) || *token_content == '<'
-				|| *token_content == '>')
-		{
-			parse_redirections(tokens, mini);
-			tokens = mini->tokens;
-			continue ;
-		}
+			|| !ft_strncmp(token_content, ">>", 2) || *token_content == '<'
+			|| *token_content == '>')
+			parse_redirections(mini->tokens, mini);
 		else
 			handle_args(token_content, mini);
-		tokens = tokens->next;
 	}
 	return (mini->exec_root);
 }

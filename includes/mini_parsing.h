@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/02 13:50:09 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/02 14:35:49 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_exec_tree
 typedef struct s_new_parser_helper
 {
 	t_list				*post_logic_token;
-	// t_exec_tree			*parenthese_node;
+	t_exec_tree			*parenthese_node;
 	int					parenthese_level;
 }						t_new_parser_helper;
 

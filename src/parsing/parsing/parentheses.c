@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:10:42 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/02 13:49:58 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/02 14:04:07 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	handle_parenthese(t_list *token_node, t_minishell *mini)
 	mini->tokens = new_mini.n_parser_helper.post_logic_token;
 	new_mini.n_parser_helper.parenthese_level = mini->n_parser_helper.parenthese_level + 1;
 	handled_parentheses = parsing_root(&new_mini);
-	// mini->n_parser_helper.parenthese_node = handled_parentheses;
+	mini->n_parser_helper.parenthese_node = handled_parentheses;
 	if (mini->exec_root->type)
 	{
 		handled_parentheses->parent = mini->exec_root;
