@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 14:39:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/31 20:45:17 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/02 13:31:33 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ void	handle_args(char *token, t_minishell *mini)
 	t_exec_tree	*exec_node;
 
 	exec_node = mini->exec_root;
-	if (exec_node->type == LOGICAL_NONE)
+	if (exec_node->type == LOGICAL_NONE || exec_node->type == LOGICAL_EXEC)
 		exec_node->type = LOGICAL_EXEC;
+	else
+		exit_minishell(-1, "dont give me args like this", TRUE);
 	temp = exec_node->argv;
 	exec_node->argv = add_element_to_array(temp, &token, sizeof(char *));
 	if (!exec_node->argv)

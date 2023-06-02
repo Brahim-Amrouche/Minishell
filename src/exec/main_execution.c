@@ -96,7 +96,7 @@ int call_cmd(t_minishell *minishell, char **args)
 	else if (match_cmd(cmd, ENV))
 		*status = env(minishell);
 	else if (match_cmd(cmd, MINI_ECHO))
-		*status = echo(minishell, args);
+		*status = echo(args);
 	else if (match_cmd(cmd, EXPORT))
 		*status = export(minishell, args, 0);
 	else if (match_cmd(cmd, UNSET))

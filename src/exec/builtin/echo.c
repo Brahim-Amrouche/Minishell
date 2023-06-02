@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:55 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/01 19:25:53 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/02 13:47:23 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	echo(t_minishell *minishell, char ** args)
+int	echo(char ** args)
 {
 	char		*txt;
 	t_boolean	new_line;

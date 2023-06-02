@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 19:06:57 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/31 21:09:56 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/02 13:49:52 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,5 @@ void	parse_logical_operators(t_list *logical_node, t_minishell *mini,
 	else
 		exit_minishell(-1, "these logical operators are not well formated",
 				TRUE);
-	mini->n_parser_helper.parenthese_node = NULL;
+	// mini->n_parser_helper.parenthese_node = NULL;
 }

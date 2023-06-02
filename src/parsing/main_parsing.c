@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/01 19:06:10 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/02 13:47:04 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,16 +79,16 @@ void	print_tree(t_exec_tree *node, t_minishell *mini)
 	redir = node->redir;
 	while (redir && *redir)
 	{
-		printf("redir :%s, type = %d\n", (*redir)->content, (*redir)->redir_type);
+		printf("redir :%s, type = %d , level = %d\n", (*redir)->content, (*redir)->redir_type, (*redir)->level);
 		redir++;
 	}
-	printf("------------------------------\n");
+printf("------------------------------\n");
 }
 
 void	main_parsing(char *cmd, t_minishell *mini)
 {
-	tokenize(cmd, mini);
-	strip_space_from_tokens(mini->tokens, mini);
-	parsing_root(mini);
-	// loop_exec_tree(mini->exec_root, mini, print_tree);
+tokenize(cmd, mini);
+strip_space_from_tokens(mini->tokens, mini);
+parsing_root(mini);
+loop_exec_tree(mini->exec_root, mini, print_tree);
 }

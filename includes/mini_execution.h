@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_execution.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/01 16:21:39 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/02 13:47:44 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char **get_env_var(char *name, char **env);
 t_stat	try_convert_strtoll(const char *str, long long *number);
 
 int	change_dir(t_minishell *minishell, char **args);
-int	echo(t_minishell *minishell, char ** args);
+int	echo(char ** args);
 int env(t_minishell *minishell);
 int get_dir(void);
 char ***fetch_export_data(void);

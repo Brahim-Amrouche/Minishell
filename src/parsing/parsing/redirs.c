@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:02:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/31 20:54:01 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/02 13:45:40 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	parse_redirections(t_list *redir_node, t_minishell *mini)
 		exit_minishell(-1, "give me a proper redirection", TRUE);
 	get_redir_type(redir_node->content, &redir_info->redir_type);
 	redir_info->content = redir_node->next->content;
+	redir_info->level = mini->n_parser_helper.parenthese_level;
 	old_redirs = mini->exec_root->redir;
 	mini->exec_root->redir = add_element_to_array(old_redirs, &redir_info,
 			sizeof(t_redir_info *));
