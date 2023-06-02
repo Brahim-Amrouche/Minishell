@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/02 13:50:09 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:16:10 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ typedef struct s_redir_info
 	char				*content;
 	t_redirection_types	redir_type;
 	int					level;
+	int					here_doc;
+	t_boolean			here_doc_open;
 }						t_redir_info;
 
 typedef struct s_exec_tree
@@ -66,7 +68,7 @@ typedef struct s_exec_tree
 	struct s_exec_tree	*right;
 	char				**argv;
 	t_redir_info		**redir;
-}						t_exec_tree;
+} t_exec_tree;
 
 typedef struct s_new_parser_helper
 {
@@ -83,6 +85,7 @@ typedef struct s_minishell
 	char				**envp;
 	int					cmd_status;
 	int					*stat;
+	int					std[2];
 }						t_minishell;
 
 // new_tokenization

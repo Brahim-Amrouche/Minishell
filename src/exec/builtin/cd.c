@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:08 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/01 16:28:33 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/02 12:43:01 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	change_dir(t_minishell *minishell, char **args)
 		return (1);
 	else if (access(path, F_OK) != 0) // is access protected against NULL?
 		print_msg(2, "minishell: cd: $: No such file or directory", path);
-	else if (access(path, X_OK) != 0)
+	else if (access(path, X_OK) != 0) // is X_OK the right flag for this?
 		print_msg(2, "minishell: cd: $/: Permission denied", path);
 	if (access(path, X_OK) != 0)
 	{
