@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:25:39 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/31 21:07:30 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/02 16:28:43 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,5 @@ void	binary_parser(char **arg, t_minishell *mini)
 	char	**paths;
 
 	paths = parse_path(mini->envp);
-	// if (cmd_is_builtin(*arg))
-	// 	;
-	// else
 	*arg = cmd_is_exect(*arg, paths);
 }
