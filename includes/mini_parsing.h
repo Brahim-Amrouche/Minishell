@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/02 21:04:38 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/03 16:19:49 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef enum e_logical_operators
 	LOGICAL_AND,
 	LOGICAL_OR,
 	LOGICAL_EXEC,
+	LOGICAL_PARENTHESE,
 }						t_logical_operators;
 
 typedef enum e_redirection_types
@@ -56,8 +57,6 @@ typedef struct s_redir_info
 	char				*content;
 	t_redirection_types	redir_type;
 	int					level;
-	int					here_doc;
-	t_boolean			here_doc_open;
 }						t_redir_info;
 
 typedef struct s_exec_tree
@@ -74,7 +73,6 @@ typedef struct s_new_parser_helper
 {
 	t_list				*post_logic_token;
 	t_exec_tree			*parenthese_node;
-	int					parenthese_level;
 }						t_new_parser_helper;
 
 typedef struct s_minishell
