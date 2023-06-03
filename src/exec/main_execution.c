@@ -132,20 +132,21 @@ t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std, int *lvl, t_minish
 		std[std_fileno] = dup(std_fileno);
 	if (minishell->std[std_fileno] < 0)
 		minishell->std[std_fileno] = std[std_fileno];
-	if (redir->level >=  *lvl)
-	{
-		*lvl = redir->level;
+	// if (redir->level >=  *lvl)
+	// {
+		// *lvl = redir->level;
 		dup2(fd, std_fileno);
 		close(fd);
-	}
-	else
-		close(fd);
+	// }
+	// else
+	// 	close(fd);
 	return (SUCCESS);
 }
 
 int  open_heredoc(char	*limiter, int *p, int *std, t_minishell *minishell)
 {
 	char	*line;
+	t_boolean expend;
 
 	signal(SIGINT, SIG_DFL);
 	if (std[0] >= 0)
@@ -153,6 +154,12 @@ int  open_heredoc(char	*limiter, int *p, int *std, t_minishell *minishell)
 	// fd = open("/dev/stdin", O_RDONLY);
 	// dup2(fd, STDIN_FILENO);
 	// close(fd);
+	expend = TRUE;
+	if (*limiter == SINGLE_QUOTE || *limiter == DOUBLE_QUOTE)
+	{
+		limiter = unwrap_quotes(limiter, minishell);
+		expend = FALSE;
+	}
 	if (close(p[0]))
 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
 	while (TRUE)
@@ -166,7 +173,8 @@ int  open_heredoc(char	*limiter, int *p, int *std, t_minishell *minishell)
 		}
 		if (match_cmd(line, limiter))
 			break;
-		line = replace_args(line, minishell);
+		if (expend)
+			line = replace_args(line, minishell);
 		write(p[1], line, ft_strlen(line));
 		write(p[1], "\n", 1);
 	}
@@ -239,12 +247,12 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree
 	int fd;
 	int *stat;
 
-	redir->content = unwrap_quotes(redir->content, minishell);
 	stat = minishell->stat;
 	// if (redir->redir_type == HERE_DOC_REDI)
 	// 	return (SUCCESS);
 	if (redir->redir_type == HERE_DOC_REDI)
 		return (handle_heredoc(redir, minishell, tree_std, lvl));
+	redir->content = replace_args(redir->content, minishell);
 	flag = get_redir_flag(redir->redir_type);
 	if (redir->redir_type == APPEND_REDI)
 		redir->redir_type = OUTPUT_REDI;// does it matter if i cahnge this here
@@ -347,6 +355,24 @@ void exec_and_or(t_exec_tree *tree, t_minishell *minishell)
 		*stat = traverse_tree(tree->right, minishell);
 }
 
+void exec_parentheses(t_exec_tree *tree, t_minishell *minishell)
+{
+	int	*stat;
+	int	id;
+
+	stat = (minishell->stat);
+	if (tree->left)
+	{
+		id = fork();
+		if (id == 0)
+		{
+			*stat = traverse_tree(tree->left, minishell);
+			exit(*stat);
+		}
+		wait_all(id, stat);
+	}
+}
+
 void exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 {
 	int	f1;
@@ -399,8 +425,23 @@ void reset_std(int *std)
 	}
 }
 
+void wait_for_final_heredoc(t_redir_info **tree_redir, t_logical_operators type)
+{
+	t_boolean is_not_final_heredoc;
+
+	is_not_final_heredoc = FALSE;
+	while (tree_redir && *tree_redir)
+	{
+		if ((*tree_redir)->redir_type == HERE_DOC_REDI)
+			is_not_final_heredoc = TRUE;
+		tree_redir++;
+	}
+	if (is_not_final_heredoc || type == LOGICAL_EXEC)
+		wait_all(0, NULL);
+}
+
 t_stat	open_all_redir(t_redir_info **tree_redir, t_minishell *minishell, int *tree_std,
-				int *lvl)
+				int *lvl, t_logical_operators type)
 {
 
 	while (tree_redir && *tree_redir)
@@ -411,6 +452,7 @@ t_stat	open_all_redir(t_redir_info **tree_redir, t_minishell *minishell, int *tr
 			return (FAIL);
 		}
 		tree_redir++;
+		wait_for_final_heredoc(tree_redir, type);
 	}
 	return (SUCCESS);
 }
@@ -437,7 +479,11 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 	minishell->stat = &status;
 	// tree_redir = tree->redir;
 
-	if (open_all_redir(tree->redir, minishell, tree_std, &lvl))
+	if (tree->type == LOGICAL_EXEC)
+	{
+		wait_all(0, NULL);
+	}
+	if (open_all_redir(tree->redir, minishell, tree_std, &lvl, tree->type))
 	{
 		if (origin_stdin)
 		{
@@ -446,10 +492,7 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 		}
 		return (status);
 	}
-	if (tree->type == LOGICAL_EXEC)
-	{
-		wait_all(0, NULL);
-	}
+
 	// while (tree_redir && *tree_redir)
 	// {
 	// 	if (handle_redirection(*tree_redir, minishell, tree_std, &lvl))
@@ -464,13 +507,16 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 	// 	}
 	// 	tree_redir++;
 	// }
-
+	// if (!tree->left && !tree->right) 
+	// 	exec_heredoc();
 	if ((*get_sigvar()).exec_stop)
 		return (130);
 	if (tree->type == LOGICAL_PIPE)
 		exec_pipe(tree, minishell);
 	else if (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR)
 		exec_and_or(tree, minishell);
+	else if (tree->type == LOGICAL_PARENTHESE)
+		exec_parentheses(tree, minishell);
 	else if (tree->type == LOGICAL_EXEC)
 		exec_cmd(tree, minishell);
 	reset_std(tree_std);
@@ -479,8 +525,18 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 		minishell->std[0] = -1;
 		minishell->std[1] = -1;
 	}
+	wait_all(0, NULL);
 	return (status);
 }
+
+// int read_heredocs(t_exec_tree *tree)
+// {
+// 	if (tree->left)
+
+// 	if (tree->right)
+
+	
+// }
 
 
 // void make_tree(t_exec_tree *tree, int depth, int offset, char **tree_d, int *tree_size, char **types)

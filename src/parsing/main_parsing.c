@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/03 16:26:32 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/03 21:01:44 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	print_tree(t_exec_tree *node, t_minishell *mini)
 	redir = node->redir;
 	while (redir && *redir)
 	{
-		printf("redir :%s, type = %d , level = %d\n", (*redir)->content, (*redir)->redir_type, (*redir)->level);
+		printf("redir :%s, type = %d\n", (*redir)->content, (*redir)->redir_type);
 		redir++;
 	}
 printf("------------------------------\n");

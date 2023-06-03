@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/01 16:05:44 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/03 21:08:17 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	handle_sigint(int sig)
 		(*get_sigvar()).exec_stop = TRUE;
 	else
 	{
+		write(0, "\0", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
