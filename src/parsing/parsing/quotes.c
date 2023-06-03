@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:27:20 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/31 21:15:25 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/03 13:35:33 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,10 @@ char	*unwrap_quotes(char *arg, t_minishell *mini)
 		if (*(arg + i) == SINGLE_QUOTE || *(arg + i) == DOUBLE_QUOTE)
 		{
 			j = i + 1;
-			while (*(arg + j) != *(arg + i))
+			while (*(arg + j) && *(arg + j) != *(arg + i))
 				j++;
-			arg = remove_quotes(arg, mini, &i, j);
+			if (*(arg + j) != '\0')
+				arg = remove_quotes(arg, mini, &i, j);
 		}
 		i++;
 	}

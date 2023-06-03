@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/01 19:23:14 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/03 13:31:11 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,18 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 
 void	skip_quotes(char *arg, size_t *i)
 {
-	
 	char	quote_type;
+	int		back_up;
 
+	back_up = *i;
 	if (*(arg + *i) == DOUBLE_QUOTE || *(arg + *i) == SINGLE_QUOTE)
 	{
 		quote_type = *(arg + *i);
 		(*i)++;
-		while (*(arg + *i) != quote_type)
+		while (*(arg + *i) && *(arg + *i) != quote_type)
 			(*i)++;
+		if (*(arg + *i) == '\0')
+			*i = back_up;
 	}
 }
 
