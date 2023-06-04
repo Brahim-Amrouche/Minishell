@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/04 17:05:08 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/04 19:02:56 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_redir_info
 	char				*content;
 	t_redirection_types	redir_type;
 	char				**heredoc_content;
+	t_boolean			has_quotes;
 }						t_redir_info;
 
 typedef struct s_exec_tree

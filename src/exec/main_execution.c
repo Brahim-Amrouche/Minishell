@@ -183,6 +183,19 @@ t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std, t_minishell *minis
 // 	exit(0);
 // }
 
+t_boolean has_quotes(char *str)
+{
+	if (!str)
+		return (FALSE);
+	while (*str)
+	{
+		if (*str == DOUBLE_QUOTE || *str == SINGLE_QUOTE)
+			return (TRUE);
+		str++;
+	}
+	return (FALSE);
+}
+
 t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell, int *tree_std)
 {
 	char	*limiter;
@@ -195,6 +208,8 @@ t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell, int *tree_std
 	heredoc_content = redir->heredoc_content;
 	while (heredoc_content && *heredoc_content)
 	{
+		if (redir->has_quotes == FALSE)
+			*heredoc_content = replace_args(*heredoc_content, minishell);
 		write(p[1], *heredoc_content, ft_strlen(*heredoc_content));
 		heredoc_content++;
 	}
@@ -654,6 +669,7 @@ t_stat save_heredoc_content(t_redir_info *redir, t_minishell *minishell)
 	int		id;
 
 	limiter = redir->content;
+	redir->has_quotes = has_quotes(limiter);
 	if (pipe(p) == -1)
 		exit_minishell(1, "couldnt open pipe", TRUE);
 	id = fork();
