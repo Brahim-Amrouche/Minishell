@@ -114,7 +114,7 @@ int call_cmd(t_minishell *minishell, char **args)
 }
 
 
-t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std, int *lvl, t_minishell *minishell)
+t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std, t_minishell *minishell)
 {
 	int	std_fileno;
 
@@ -143,64 +143,66 @@ t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std, int *lvl, t_minish
 	return (SUCCESS);
 }
 
-int  open_heredoc(char	*limiter, int *p, int *std, t_minishell *minishell)
-{
-	char	*line;
-	t_boolean expend;
+// int  open_heredoc(char	*limiter, int *p, int *std, t_minishell *minishell)
+// {
+// 	char	*line;
+// 	t_boolean expend;
 
-	signal(SIGINT, SIG_DFL);
-	if (std[0] >= 0)
-		dup2(std[0], STDIN_FILENO);
-	// fd = open("/dev/stdin", O_RDONLY);
-	// dup2(fd, STDIN_FILENO);
-	// close(fd);
-	expend = TRUE;
-	if (*limiter == SINGLE_QUOTE || *limiter == DOUBLE_QUOTE)
-	{
-		limiter = unwrap_quotes(limiter, minishell);
-		expend = FALSE;
-	}
-	if (close(p[0]))
-		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
-	while (TRUE)
-	{
-		line = readline("> ");
-		ft_malloc(1, m_info(line, 1, NULL, 0));
-		if (!line)
-		{
-			print_msg(2, "minishell: warning: here-document delimited by end-of-file (wanted `$')", limiter);
-			break ;
-		}
-		if (match_cmd(line, limiter))
-			break;
-		if (expend)
-			line = replace_args(line, minishell);
-		write(p[1], line, ft_strlen(line));
-		write(p[1], "\n", 1);
-	}
-	if (close(p[1]))
-		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
-	exit(0);
-}
+// 	signal(SIGINT, SIG_DFL);
+// 	if (std[0] >= 0)
+// 		dup2(std[0], STDIN_FILENO);
+// 	// fd = open("/dev/stdin", O_RDONLY);
+// 	// dup2(fd, STDIN_FILENO);
+// 	// close(fd);
+// 	expend = TRUE;
+// 	if (*limiter == SINGLE_QUOTE || *limiter == DOUBLE_QUOTE)
+// 	{
+// 		limiter = unwrap_quotes(limiter, minishell);
+// 		expend = FALSE;
+// 	}
+// 	if (close(p[0]))
+// 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+// 	while (TRUE)
+// 	{
+// 		line = readline("> ");
+// 		ft_malloc(1, m_info(line, 1, NULL, 0));
+// 		if (!line)
+// 		{
+// 			print_msg(2, "minishell: warning: here-document delimited by end-of-file (wanted `$')", limiter);
+// 			break ;
+// 		}
+// 		if (match_cmd(line, limiter))
+// 			break;
+// 		if (expend)
+// 			line = replace_args(line, minishell);
+// 		write(p[1], line, ft_strlen(line));
+// 		write(p[1], "\n", 1);
+// 	}
+// 	if (close(p[1]))
+// 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+// 	exit(0);
+// }
 
-t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell, int *tree_std, int *lvl)
+t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell, int *tree_std)
 {
 	char	*limiter;
+	char	**heredoc_content;
 	int		p[2];
-	int		id;
 
 	limiter = redir->content;
 	if (pipe(p) == -1)
 		exit_minishell(1, "couldnt open pipe", TRUE);
-id = fork();
-	if (!id)
-		open_heredoc(limiter, p, minishell->std, minishell);
-	// waitpid(id, minishell->stat, 0);
+	heredoc_content = redir->heredoc_content;
+	while (heredoc_content && *heredoc_content)
+	{
+		write(p[1], *heredoc_content, ft_strlen(*heredoc_content));
+		heredoc_content++;
+	}
 	if (close(p[1]))
 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
 	if (redir->redir_type == HERE_DOC_REDI)
 		redir->redir_type = INPUT_REDI;
-	handle_redir_fd(p[0], redir, tree_std, lvl, minishell);
+	handle_redir_fd(p[0], redir, tree_std, minishell);
 	return (SUCCESS);
 }
 
@@ -241,7 +243,7 @@ int get_redir_flag(t_redirection_types redir_type)
 	return (flag);
 }
 
-t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree_std, int *lvl)
+t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree_std)
 {
 	int flag;
 	int fd;
@@ -251,7 +253,7 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree
 	// if (redir->redir_type == HERE_DOC_REDI)
 	// 	return (SUCCESS);
 	if (redir->redir_type == HERE_DOC_REDI)
-		return (handle_heredoc(redir, minishell, tree_std, lvl));
+		return (handle_heredoc(redir, minishell, tree_std));
 	redir->content = replace_args(redir->content, minishell);
 	flag = get_redir_flag(redir->redir_type);
 	if (redir->redir_type == APPEND_REDI)
@@ -265,7 +267,7 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree
 		print_msg(2, "minishell: $: can't be open", *(redir->content));
 		return (FAIL);
 	}
-	handle_redir_fd(fd, redir, tree_std, lvl, minishell);
+	handle_redir_fd(fd, redir, tree_std, minishell);
 	return (SUCCESS);
 }
 
@@ -425,34 +427,33 @@ void reset_std(int *std)
 	}
 }
 
-void wait_for_final_heredoc(t_redir_info **tree_redir, t_logical_operators type)
-{
-	t_boolean is_not_final_heredoc;
+// void wait_for_final_heredoc(t_redir_info **tree_redir, t_logical_operators type)
+// {
+// 	t_boolean is_not_final_heredoc;
 
-	is_not_final_heredoc = FALSE;
+// 	is_not_final_heredoc = FALSE;
+// 	while (tree_redir && *tree_redir)
+// 	{
+// 		if ((*tree_redir)->redir_type == HERE_DOC_REDI)
+// 			is_not_final_heredoc = TRUE;
+// 		tree_redir++;
+// 	}
+// 	if (is_not_final_heredoc || type == LOGICAL_EXEC)
+// 		wait_all(0, NULL);
+// }
+
+t_stat	open_all_redir(t_redir_info **tree_redir, t_minishell *minishell, int *tree_std)
+{
+
 	while (tree_redir && *tree_redir)
 	{
-		if ((*tree_redir)->redir_type == HERE_DOC_REDI)
-			is_not_final_heredoc = TRUE;
-		tree_redir++;
-	}
-	if (is_not_final_heredoc || type == LOGICAL_EXEC)
-		wait_all(0, NULL);
-}
-
-t_stat	open_all_redir(t_redir_info **tree_redir, t_minishell *minishell, int *tree_std,
-				int *lvl, t_logical_operators type)
-{
-
-	while (tree_redir && *tree_redir)
-	{
-		if (handle_redirection(*tree_redir, minishell, tree_std, lvl))
+		if (handle_redirection(*tree_redir, minishell, tree_std))
 		{
 			reset_std(tree_std);
 			return (FAIL);
 		}
 		tree_redir++;
-		wait_for_final_heredoc(tree_redir, type);
+		// wait_for_final_heredoc(tree_redir, type);
 	}
 	return (SUCCESS);
 }
@@ -479,11 +480,11 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 	minishell->stat = &status;
 	// tree_redir = tree->redir;
 
-	if (tree->type == LOGICAL_EXEC)
-	{
-		wait_all(0, NULL);
-	}
-	if (open_all_redir(tree->redir, minishell, tree_std, &lvl, tree->type))
+	// if (tree->type == LOGICAL_EXEC)
+	// {
+	// 	wait_all(0, NULL);
+	// }
+	if (open_all_redir(tree->redir, minishell, tree_std))
 	{
 		if (origin_stdin)
 		{
@@ -596,7 +597,7 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 // 		}
 // 		printf("\n");
 // 		d++;
-// 		size = pow2(d + 1) - 1;
+// 		size = pow2(d + 1) - 1;dhjfdjskh
 // 	}
 // }
 
@@ -616,14 +617,93 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 // 	return (0);
 // }
 
+int  open_heredoc_first(char	*limiter, int *p, t_minishell *minishell)
+{
+	char	*line;
+
+	signal(SIGINT, SIG_DFL);
+	minishell->n_parser_helper.arg_replacing = TRUE;
+	limiter = unwrap_quotes(limiter, minishell);// bro check this
+	minishell->n_parser_helper.arg_replacing = FALSE;
+	if (close(p[0]))
+		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+	while (TRUE)
+	{
+		line = readline("> ");
+		ft_malloc(1, m_info(line, 1, NULL, 0));
+		if (!line)
+		{
+			print_msg(2, "minishell: warning: here-document delimited by end-of-file (wanted `$')", limiter);
+			break ;
+		}
+		if (match_cmd(line, limiter))
+			break;
+		write(p[1], line, ft_strlen(line));
+		write(p[1], "\n", 1);
+	}
+	if (close(p[1]))
+		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+	exit(0);
+}
+
+t_stat save_heredoc_content(t_redir_info *redir, t_minishell *minishell)
+{
+	char	*limiter;
+	char	*line;
+	int		p[2];
+	int		id;
+
+	limiter = redir->content;
+	if (pipe(p) == -1)
+		exit_minishell(1, "couldnt open pipe", TRUE);
+	id = fork();
+	if (!id)
+		open_heredoc_first(limiter, p, minishell);
+	waitpid(id, minishell->stat, 0);
+	if (close(p[1]))
+		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+	redir->heredoc_content = NULL;
+	while (TRUE)
+	{
+		line = get_next_line(p[0]);
+		if (!line)
+			break ;
+		redir->heredoc_content = add_element_to_array(redir->heredoc_content, &line, sizeof(char *));
+	}
+	close(p[0]);
+	return (SUCCESS);
+}
+
+void open_here_doc(t_redir_info **redir, t_minishell *minishell)
+{
+	while (redir && *redir)
+	{
+		if ((*redir)->redir_type == HERE_DOC_REDI)
+			save_heredoc_content(*redir, minishell);
+		redir++;
+	}
+}
+
+int read_here_docs(t_exec_tree *tree, t_minishell *minishell)
+{
+	if (!tree)
+		return (0);
+	read_here_docs(tree->left, minishell);
+	read_here_docs(tree->right, minishell);
+	open_here_doc(tree->redir, minishell);
+	return (0);
+}
+
 int main_execution(t_minishell *minishell)
 {
 	t_exec_tree *tree;
 	// minishell->std[0] = dup(0);
 
+
 	minishell->std[0] = -1;
 	minishell->std[1] = -1;
 	tree = minishell->exec_root;
+	read_here_docs(tree, minishell);
 	// // traverse_and_print_tree(tree);
 	minishell->cmd_status = traverse_tree(tree, minishell);
 	// printf("minishell status is %d\n", minishell->cmd_status);

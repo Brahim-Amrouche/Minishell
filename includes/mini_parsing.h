@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/04 15:19:48 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/04 17:05:08 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct s_new_parser_helper
 {
 	t_list				*post_logic_token;
 	t_exec_tree			*parenthese_node;
+	t_boolean			arg_replacing;
 }						t_new_parser_helper;
 
 typedef struct s_minishell
