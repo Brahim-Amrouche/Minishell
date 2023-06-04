@@ -670,12 +670,14 @@ t_stat save_heredoc_content(t_redir_info *redir, t_minishell *minishell)
 
 	limiter = redir->content;
 	redir->has_quotes = has_quotes(limiter);
+	// *get_sigvar()).in_child = TRUE;
 	if (pipe(p) == -1)
 		exit_minishell(1, "couldnt open pipe", TRUE);
 	id = fork();
 	if (!id)
 		open_heredoc_first(limiter, p, minishell);
 	waitpid(id, minishell->stat, 0);
+	// *get_sigvar()).in_child = FALSE;
 	if (close(p[1]))
 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
 	redir->heredoc_content = NULL;
