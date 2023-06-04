@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:10:42 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/03 16:26:03 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/03 16:41:39 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ void	make_parenthese_tokens(t_list *parenthese_node, t_minishell *new_mini)
 	new_mini->tokens = new_tokens;
 }
 
-void	handle_parenthese_node(t_exec_tree *handled_parentheses, t_minishell *mini)
+void	handle_parenthese_node(t_exec_tree *handled_parentheses,
+	t_minishell *mini)
 {
 	if (mini->exec_root->type)
 	{
@@ -84,10 +85,10 @@ void	handle_parenthese(t_list *token_node, t_minishell *mini)
 	make_parenthese_tokens(token_node, &new_mini);
 	mini->tokens = new_mini.n_parser_helper.post_logic_token;
 	handled_parentheses = parsing_root(&new_mini);
-	handled_parentheses =  exec_tree_node(3, LOGICAL_PARENTHESE, NULL, handled_parentheses);
+	handled_parentheses = exec_tree_node(3, LOGICAL_PARENTHESE,
+			NULL, handled_parentheses);
 	if (!handled_parentheses)
 		exit_minishell(ENOMEM, "couldnt add LOGICAL PARENTHESE node", TRUE);
 	mini->n_parser_helper.parenthese_node = handled_parentheses;
 	handle_parenthese_node(handled_parentheses, mini);
-
 }

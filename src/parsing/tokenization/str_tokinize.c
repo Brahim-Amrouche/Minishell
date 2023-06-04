@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   str_tokinize.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 00:47:00 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/31 21:14:44 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/04 15:13:39 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,73 +15,59 @@
 #define DOUBLE_QUOTE_SEP "\042\n"
 #define UNIQUE_QUOTE_SEP "\047\n"
 
-static int	check_if_sep(char *s, char *seprators)
+static t_boolean	found_a_token(char *s, char *seprators, size_t *i,
+		char **cancel_token)
 {
-	size_t	j;
-	size_t	i;
+	int	token_index;
 
-	j = 0;
-	while (seprators[j])
+	if (!*cancel_token && (check_if_sep(s + *i, DOUBLE_QUOTE_SEP) >= 0
+			|| check_if_sep(s + *i, UNIQUE_QUOTE_SEP) >= 0))
 	{
-		i = 0;
-		while (seprators[j] && seprators[j] != '\n' && s[i])
-		{
-			if (seprators[j] == s[i])
-			{
-				i++;
-				j++;
-			}
-			else
-				break ;
-		}
-		if (!seprators || seprators[j] == '\n')
-			return (i);
+		if (s[*i] == '\042')
+			*cancel_token = DOUBLE_QUOTE_SEP;
 		else
+			*cancel_token = UNIQUE_QUOTE_SEP;
+	}
+	else if (*cancel_token && check_if_sep(s + *i, *cancel_token) >= 0)
+		*cancel_token = NULL;
+	else if (!*cancel_token)
+	{
+		token_index = check_if_sep(s + *i, seprators);
+		if (token_index >= 0)
 		{
-			while (seprators[j] && seprators[j] != '\n')
-				j++;
-			if (seprators[j])
-				j++;
+			if (*i == 0)
+				*i += token_index;
+			return (TRUE);
 		}
 	}
-	return (-1);
+	(*i)++;
+	return (FALSE);
 }
 
 static size_t	index_str_chr(char *s, char *seprators)
 {
 	size_t	i;
-	int		token_index;
 	char	*cancel_token;
 
 	i = 0;
 	cancel_token = NULL;
-	while (s[i])
-	{
-		if (!cancel_token && (check_if_sep(s + i, DOUBLE_QUOTE_SEP) >= 0
-				|| check_if_sep(s + i, UNIQUE_QUOTE_SEP) >= 0))
-		{
-			if (s[i] == '\042')
-				cancel_token = DOUBLE_QUOTE_SEP;
-			else
-				cancel_token = UNIQUE_QUOTE_SEP;
-		}
-		else if (cancel_token && check_if_sep(s + i, cancel_token) >= 0)
-			cancel_token = NULL;
-		else if (!cancel_token)
-		{
-			token_index = check_if_sep(s + i, seprators);
-			if (token_index >= 0)
-			{
-				if (i == 0)
-					i += token_index;
-				break ;
-			}
-		}
-		i++;
-	}
+	while (s[i] && !found_a_token(s, seprators, &i, &cancel_token))
+		;
 	if (cancel_token)
 		exit_minishell(-1, "unclosed quotes", TRUE);
 	return (i);
+}
+
+static void	str_tokenize_helper(char **input, size_t token_pos, char **token)
+{
+	if (!token_pos)
+		token_pos++;
+	*token = protected_substr(*input, 0, token_pos);
+	if (!*token)
+		exit_minishell(ENOMEM, "could't malloc token node", TRUE);
+	*input += token_pos;
+	if (!**input)
+		*input = NULL;
 }
 
 char	*str_tokenize(char *str, char *seperators)
@@ -96,16 +82,7 @@ char	*str_tokenize(char *str, char *seperators)
 		return (NULL);
 	token_pos = index_str_chr(input, seperators);
 	if (*(input + token_pos))
-	{
-		if (!token_pos)
-			token_pos++;
-		token = protected_substr(input, 0, token_pos);
-		if (!token)
-			exit_minishell(ENOMEM, "could't malloc token node", TRUE);
-		input += token_pos;
-		if (!*input)
-			input = NULL;
-	}
+		str_tokenize_helper(&input, token_pos, &token);
 	else
 	{
 		token = protected_substr(input, 0, ft_strlen(input));

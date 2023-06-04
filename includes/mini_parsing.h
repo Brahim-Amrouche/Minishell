@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/03 16:19:49 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/04 15:15:21 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,13 @@ typedef struct s_minishell
 }						t_minishell;
 
 // new_tokenization
-char *
-str_tokenize(char *str, char *seperators);
+// check_if_sep.c
+int						check_if_sep(char *s, char *seprators);
+// str_tokenize.c
+char					*str_tokenize(char *str, char *seperators);
+// token.c
 void					tokenize(char *input, t_minishell *mini);
+
 
 // new_parsing
 
