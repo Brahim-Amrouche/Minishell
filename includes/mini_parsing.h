@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bamrouch <bamrouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/23 15:33:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/04 15:15:21 by bamrouch         ###   ########.fr       */
+/*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
+/*   Updated: 2023/06/04 15:19:48 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINI_PARSING_H
 # define MINI_PARSING_H
@@ -56,7 +57,7 @@ typedef struct s_redir_info
 {
 	char				*content;
 	t_redirection_types	redir_type;
-	int					level;
+	char				**heredoc_content;
 }						t_redir_info;
 
 typedef struct s_exec_tree

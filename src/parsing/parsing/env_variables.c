@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/02 16:29:20 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/03 16:41:05 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,17 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 void	skip_quotes(char *arg, size_t *i)
 {
 	char	quote_type;
+	int		back_up;
 
+	back_up = *i;
 	if (*(arg + *i) == DOUBLE_QUOTE || *(arg + *i) == SINGLE_QUOTE)
 	{
 		quote_type = *(arg + *i);
 		(*i)++;
-		while (*(arg + *i) != quote_type)
+		while (*(arg + *i) && *(arg + *i) != quote_type)
 			(*i)++;
+		if (*(arg + *i) == '\0')
+			*i = back_up;
 	}
 }
 
