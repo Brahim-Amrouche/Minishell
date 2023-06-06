@@ -88,9 +88,6 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 	return (status);
 }
 
-
-
-
 int main_execution(t_minishell *minishell)
 {
 	t_exec_tree *tree;

@@ -50,7 +50,7 @@ devflag :
 
 lin : linuxflag $(NAME)
 
-alinuxflag :
+linuxflag :
 	$(eval FLAGS := -Wall -Wextra -fsanitize=address -DLINUX $(INCLUDES))
 
 clean :
