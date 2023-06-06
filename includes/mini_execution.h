@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_execution.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/02 14:30:34 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:44:53 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,16 @@ char	**export_envp(t_minishell *minishell, char **envp);
 char	**add_elem_to_arr(char **arr, char *new_elem);
 char	**rm_elem_from_arr(char **arr, char **elem);
 char	**create_wildcard_arr(char *pattern);
+int		read_here_docs(t_exec_tree *tree, t_minishell *minishell);
+t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree_std);
+void	wait_all(pid_t last_proc, int *status);
+t_boolean	match_str(const char *s1, const char *s2);
+t_boolean	has_quotes(char *str);
+int		traverse_tree(t_exec_tree *tree, t_minishell *minishell);
+void	exec_cmd(t_exec_tree *tree, t_minishell *minishell);
+void exec_and_or(t_exec_tree *tree, t_minishell *minishell);
+void exec_parentheses(t_exec_tree *tree, t_minishell *minishell);
+void exec_pipe(t_exec_tree *tree, t_minishell *minishell);
 
 // # ifndef t_bool
 // #  define t_bool

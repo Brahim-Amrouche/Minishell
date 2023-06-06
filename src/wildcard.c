@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/30 10:40:23 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:21:42 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int check_wildcard(char *str, char *input)
 {
 	if (!str || !input)
 		return (1);
-	if (!ft_strncmp(str, "..", -1))
+	if (match_str(str, ".."))
 		return (1);
 	if (*str == '.' && *input != '.')
 		return (1);

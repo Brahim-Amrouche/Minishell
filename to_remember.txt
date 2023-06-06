@@ -35,3 +35,9 @@ node type : 0
 ------------------------------
 
 (sleep  5 |  > x && sleep 4 |  > y) > z  |-> &&  wait for all proc
+
+why is wildcard not sorted alphabetecally
+
+should we follow simbolic links
+
+<> error

@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/04 19:17:24 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:22:50 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 	env_name = protected_substr(arg, (*i) + 1, j);
 	if (!env_name)
 		exit_minishell(ENOMEM, "could't malloc env_name", TRUE);
-	if (!ft_strncmp("?", env_name, -1))
+	if (match_str("?", env_name))
 	{
 		env_val = ft_itoa(mini->cmd_status);
 		ft_malloc(1, m_info(env_val, 1, NULL, 0));// check this broooo!
