@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redir.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/06 15:18:45 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/08 14:09:42 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ static t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std, t_minishell
 		std_fileno = STDOUT_FILENO;
 	if (std[std_fileno] < 0)
 		std[std_fileno] = dup(std_fileno);
-	if (minishell->std[std_fileno] < 0)
-		minishell->std[std_fileno] = std[std_fileno];
+	// if (minishell->std[std_fileno] < 0)
+	// 	minishell->std[std_fileno] = std[std_fileno];
     dup2(fd, std_fileno);
     close(fd);
 	return (SUCCESS);

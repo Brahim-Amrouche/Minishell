@@ -41,3 +41,7 @@ why is wildcard not sorted alphabetecally
 should we follow simbolic links
 
 <> error
+
+replace wildcard everywhere not just in cmd
+bash: *.x: ambiguous redirect
+

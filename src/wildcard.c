@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/06 15:21:42 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/08 15:43:16 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	sort_wildcard(char **wildcard)
 	i = 0;
 	while (wildcard[i])
 	{
-		j = i;
+		j = 0;
 		while (wildcard[j] && wildcard[j + 1])
 		{
 			if (ft_strncmp(wildcard[j], wildcard[j + 1], -1) > 0)
