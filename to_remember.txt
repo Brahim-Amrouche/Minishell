@@ -45,3 +45,6 @@ should we follow simbolic links
 replace wildcard everywhere not just in cmd
 bash: *.x: ambiguous redirect
 
+export hi=*
+echo "$hi" // enjoy ^^
+

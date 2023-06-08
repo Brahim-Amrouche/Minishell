@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/06 15:38:41 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/08 23:00:18 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	**create_args_with_wildcard(char **args)
 	i = 0;
 	while (args[i])
 	{
-		if (*(args[i]) == '\"' || *(args[i]) == '\''
+		if (*(args[i]) == '\"' || *(args[i]) == '\'' //is this condition safe // echo ""*
 			|| !ft_strchr(args[i], '*'))
 		{
 			new_elem = pro_str_dup(args[i]);
@@ -98,17 +98,54 @@ char	**create_args_with_wildcard(char **args)
 	return (new_args);
 }
 
+// t_boolean has_wildcard(char *arg)
+// {
+// 	size_t	i;
+// 	int quote_type;
+
+// 	i = 0;
+// 	while (arg[i])
+// 	{
+// 		if (arg[i] == '\'')
+// 			while (arg[i] && arg[i] != '\'')
+// 		i++;
+// 	}
+	
+// }
+
+// char	**expend_args(char **args, t_minishell *minishell)
+// {
+// 	char		**expended;
+// 	char		*arg;
+// 	int			i;
+
+// 	expended = NULL;
+// 	i = -1;
+// 	while (args[++i])
+// 	{
+// 		arg = args[i];
+// 		arg = get_var(arg, mini);
+
+
+// 		add_element_to_array()
+// 		arg = unwrap_quotes(arg, mini);
+// 	}
+// 	args = create_args_with_wildcard(args);
+// }
+
 void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {
 	char		**args;
+	// t_boolean	*has_wildcard;
 	int			i;
 
 	if (!tree->argv)
 		return;
-	args = create_args_with_wildcard(tree->argv);
+	args = tree->argv;
 	i = -1;
 	while (args[++i])
 		args[i] = replace_args(args[i], minishell);
+	args = create_args_with_wildcard(args);
 	tree->argv = args;
 	*(minishell->stat) = call_cmd(minishell, args);
 }

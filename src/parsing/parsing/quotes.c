@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:27:20 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/04 17:05:00 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/08 23:00:00 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*remove_quotes(char *arg, t_minishell *mini, size_t *i, size_t j)
 	if (!removed_quotes)
 		exit_minishell(ENOMEM, "could'nt remove quotes", TRUE);
 	if (*(arg + (*i)) == DOUBLE_QUOTE && !mini->n_parser_helper.arg_replacing)
-		removed_quotes = get_var(removed_quotes, mini);
+		removed_quotes = get_var(removed_quotes, mini);// why geting env here?
 	removed_quotes_len = ft_strlen(removed_quotes);
 	new_arg = replace_value_in_arg(arg, *i, j + 1, removed_quotes);
 	ft_free_node(1, arg);

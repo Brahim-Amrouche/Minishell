@@ -6,7 +6,7 @@
 /*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/08 14:09:42 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/08 19:27:42 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,27 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree
 	int flag;
 	int fd;
 	int *stat;
+	char **wildcard_arr;
+	int i;
 
 	stat = minishell->stat;
 	if (redir->redir_type == HERE_DOC_REDI)
 		return (handle_heredoc(redir, minishell, tree_std));
+
+	if (*(redir->content) != '\"' && *(redir->content) != '\''
+			&& ft_strchr(redir->content, '*'))
+		wildcard_arr = create_wildcard_arr(redir->content);
+	i = 0;
+	while (wildcard_arr[i])
+		i++;
+	if (i > 1)
+	{
+		*(minishell->stat) = 1;
+		print_msg(2, "minishell: $: ambiguous redirect", redir->content);
+		return (FAIL);
+	}
+	redir->content = wildcard_arr[0];
+
 	redir->content = replace_args(redir->content, minishell);
 	flag = get_redir_flag(redir->redir_type);
 	if (redir->redir_type == APPEND_REDI)
@@ -114,7 +131,7 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree
 	if (fd < 0)
 	{
 		*(minishell->stat) = 1;
-		print_msg(2, "minishell: $: can't be open", *(redir->content));
+		print_msg(2, "minishell: $: can't be open", redir->content);
 		return (FAIL);
 	}
 	handle_redir_fd(fd, redir, tree_std, minishell);
