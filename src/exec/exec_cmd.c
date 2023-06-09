@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/08 23:00:18 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/09 16:39:57 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,25 +113,30 @@ char	**create_args_with_wildcard(char **args)
 	
 // }
 
-// char	**expend_args(char **args, t_minishell *minishell)
-// {
-// 	char		**expended;
-// 	char		*arg;
-// 	int			i;
+char	**expend_args(char **args, t_minishell *minishell)
+{
+	char		**expended;
+	char		**wildcard;
+	int			i;
 
-// 	expended = NULL;
-// 	i = -1;
-// 	while (args[++i])
-// 	{
-// 		arg = args[i];
-// 		arg = get_var(arg, mini);
-
-
-// 		add_element_to_array()
-// 		arg = unwrap_quotes(arg, mini);
-// 	}
-// 	args = create_args_with_wildcard(args);
-// }
+	expended = NULL;
+	i = -1;
+	while (args[++i])
+	{
+		args[i] = get_var(args[i], minishell);
+		wildcard = create_wildcard_arr(args[i]);
+		// if (wildcard)
+			add_arr_to_array(expended, wildcard, sizeof(char *));
+		// else
+		// 	add_element_to_array(expended, args + i, sizeof(char *));
+	}
+	i = -1;
+	while (expended[++i])
+	{
+		expended[i] = unwrap_quotes(expended[i], minishell);
+	}
+	return (expended);
+}
 
 void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {

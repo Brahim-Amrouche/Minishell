@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/08 15:43:16 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/09 21:14:31 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,55 @@ static int check_wildcard(char *str, char *input)
 	return (0);
 }
 
+char **create_pattern_arr(char *pattern)
+{
+	char **arr;
+	char *elem;
+	int i;
+	int j;
+
+	arr = NULL;
+	i = 0;
+	j = 0;
+	while (pattern[i])
+	{
+		if (pattern[i] == "\"")
+		{
+			while (pattern[++i] && pattern[i] != "\"")
+				;
+		}
+		else if (pattern[i] == "\'")
+		{
+			while (pattern[++i] && pattern[i] != "\'")
+				;
+		}
+		else if (pattern[i] == '*')
+		{
+			if (j == 0 && i > 0)
+			{
+				elem = protected_substr(pattern, 0, i);
+				arr = add_element_to_array(arr, &elem, sizeof(char *));
+			}
+			while (pattern[++i] && pattern[i] == "*")
+				;
+			elem = pro_str_dup("*");
+			arr = add_element_to_array(arr, &elem, sizeof(char *));
+			j = i;
+		}
+		else
+			i++;
+	}
+	elem = pro_str_dup(pattern + j);
+	arr = add_element_to_array(arr, &elem, sizeof(char *));
+	return (arr);
+}
+
 static int get_wildcard(char *str, char *in)
 {
 	char *match;
 	char *next_in;
 	char *input;
+	char *s_pattern;
 
 	if (check_wildcard(str, in))
 		return (0);
@@ -65,6 +109,7 @@ static int get_wildcard(char *str, char *in)
 		if (!*input)
 			return (1);
 		next_in = terminate_curr__get_next_input(input);
+		s_pattern = pro_str_dup(input);
 		match = ft_strnstr(str, input, -1);
 		if (!match)
 				return (0);

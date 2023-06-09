@@ -48,3 +48,9 @@ bash: *.x: ambiguous redirect
 export hi=*
 echo "$hi" // enjoy ^^
 
+Quit: 3 on process still runing
+
+  export LDFLAGS="-L/goinfre/maboulkh/homebrew/opt/readline/lib"
+  export CPPFLAGS="-I/goinfre/maboulkh/homebrew/opt/readline/include"
+==> Summary
+🍺  /goinfre/maboulkh/homebrew/Cellar/readline/8.2.1: 50 files, 1.6MB, built in 19 seconds
