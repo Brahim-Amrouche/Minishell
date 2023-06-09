@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/06 15:18:45 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/06 17:51:39 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static t_stat check_redir_access(t_redirection_types redir_type, char *path, int
 		if ((redir_type == INPUT_REDI && access(path, R_OK))
 			|| (redir_type == OUTPUT_REDI && access(path, W_OK)))
 		{
-			*stat = ERR_NO_P;
+			*stat = ERR_NO_RED_P;
 			print_msg(2, "minishell: $: Permission denied", path);
 			return (FAIL);
 		}

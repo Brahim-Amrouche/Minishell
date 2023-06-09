@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/06 15:44:53 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/06 17:51:18 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #define STOP_WITH_SIGINT 130
 #define ERR_NO_F 126
 #define ERR_NO_P 127
+#define ERR_NO_RED_P 1
 
 typedef struct s_signal_var
 {

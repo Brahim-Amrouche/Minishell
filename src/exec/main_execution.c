@@ -84,22 +84,21 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 		minishell->std[0] = -1;
 		minishell->std[1] = -1;
 	}
-	wait_all(0, NULL);
+	// wait_all(0, NULL);
 	return (status);
 }
 
 int main_execution(t_minishell *minishell)
 {
 	t_exec_tree *tree;
-	// minishell->std[0] = dup(0);
 
 
+	// // traverse_and_print_tree(tree);
 	minishell->std[0] = -1;
 	minishell->std[1] = -1;
 	tree = minishell->exec_root;
 	read_here_docs(tree, minishell);
-	// // traverse_and_print_tree(tree);
 	minishell->cmd_status = traverse_tree(tree, minishell);
-	// printf("minishell status is %d\n", minishell->cmd_status);
+	printf("minishell status is %d\n", minishell->cmd_status);
 	return (0);
 }
