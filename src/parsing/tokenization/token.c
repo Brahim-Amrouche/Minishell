@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 23:46:46 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/05/16 19:18:35 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/08 13:53:07 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ static void	add_token_to_cmd(char *token, t_list **cmd_tokens)
 
 void	tokenize(char *input, t_minishell *mini)
 {
-	t_list	*cmd_tokens;
+	// t_list	*cmd_tokens;
 	char	*token;
-	char	*cancler_token;
+	// char	*cancler_token;
 
 	token = str_tokenize(input, TOKEN_SEPERATORS);
-	cancler_token = NULL;
-	cmd_tokens = NULL;
+	// cancler_token = NULL;
+	// cmd_tokens = NULL;
 	while (token)
 	{
 		add_token_to_cmd(token, &mini->tokens);

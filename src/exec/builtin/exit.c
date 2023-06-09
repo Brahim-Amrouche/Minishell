@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:07 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/01 15:34:48 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/08 15:39:52 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,32 +42,24 @@ t_stat	try_convert_strtoll(const char *str, long long *number)
 int exit_shell(char **args)
 {
 	long long	status;
-	char		*arg;
-	t_boolean	err;
+	t_boolean	do_exit;
 
-	err = FALSE;
-	printf("exit\n");
-	arg = args[1];
-	if (!arg)
+	if ((*get_sigvar()).in_child == FALSE)
+		printf("exit\n");
+	do_exit = TRUE;
+	if (args[1] && try_convert_strtoll(args[1], &status))
 	{
-		ft_free(0, TRUE);
-		exit(0);
-	}
-	if (try_convert_strtoll(arg, &status))
-	{
-		err = TRUE;
+		print_msg(2, "exit: $: numeric argument required", args[1]);
 		status = 2;
 	}
-	arg = args[2];
-	if (!err && arg)
+	else if (args[1] && args[2])
+		do_exit = FALSE;
+	if (do_exit)
 	{
-		print_msg(2, "exit: too many arguments");
-		return (1);
+		ft_free(0, TRUE);
+		exit(status % 256);
 	}
-	if (err)
-		print_msg(2, "exit: $: numeric argument required", args[1]);
-	status = status % 256;
-	ft_free(0, TRUE);
-	exit(status);
-	return (status);
+	else
+		print_msg(2, "exit: too many arguments");
+	return (1);
 }
