@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/04 20:08:42 by codespace        ###   ########.fr       */
+/*   Updated: 2023/06/10 01:09:17 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,3 +120,20 @@ int	main(int argc, char *argv[], char *envp[])
 	rl_clear_history();
 	return 0;
 }
+
+// int main(int argc, char *argv[], char **envp)
+// {
+// 	// make_wildcard_str(argv[1]);
+// 	char **pattern;
+
+// 	printf("input is |%s|\n", argv[1]);
+// 	// pattern = create_pattern_arr(argv[1]);
+// 	pattern = create_wildcard_arr(argv[1]);
+// 	while (pattern && *pattern)
+// 	{
+// 		printf("pattern = |%s|\n", *pattern);
+// 		pattern++;
+// 	}
+// 	return (0);
+// }
+

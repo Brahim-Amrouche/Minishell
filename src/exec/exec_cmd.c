@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/09 16:39:57 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/10 01:48:02 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,32 +71,32 @@ int call_cmd(t_minishell *minishell, char **args)
 }
 
 
-char	**create_args_with_wildcard(char **args)
-{
-	char		**new_args;
-	char		**wildcard_arr;
-	char		*new_elem;
-	int			i;
+// char	**create_args_with_wildcard(char **args)
+// {
+// 	char		**new_args;
+// 	char		**wildcard_arr;
+// 	char		*new_elem;
+// 	int			i;
 
-	new_args = NULL;
-	i = 0;
-	while (args[i])
-	{
-		if (*(args[i]) == '\"' || *(args[i]) == '\'' //is this condition safe // echo ""*
-			|| !ft_strchr(args[i], '*'))
-		{
-			new_elem = pro_str_dup(args[i]);
-			new_args = add_element_to_array(new_args, &new_elem, sizeof(char *));
-		}
-		else
-		{
-			wildcard_arr = create_wildcard_arr(args[i]);
-			new_args = add_arr_to_array(new_args, wildcard_arr, sizeof(char *));
-		}
-		i++;
-	}
-	return (new_args);
-}
+// 	new_args = NULL;
+// 	i = 0;
+// 	while (args[i])
+// 	{
+// 		if (*(args[i]) == '\"' || *(args[i]) == '\'' //is this condition safe // echo ""*
+// 			|| !ft_strchr(args[i], '*'))
+// 		{
+// 			new_elem = pro_str_dup(args[i]);
+// 			new_args = add_element_to_array(new_args, &new_elem, sizeof(char *));
+// 		}
+// 		else
+// 		{
+// 			wildcard_arr = create_wildcard_arr(args[i]);
+// 			new_args = add_arr_to_array(new_args, wildcard_arr, sizeof(char *));
+// 		}
+// 		i++;
+// 	}
+// 	return (new_args);
+// }
 
 // t_boolean has_wildcard(char *arg)
 // {
@@ -124,9 +124,10 @@ char	**expend_args(char **args, t_minishell *minishell)
 	while (args[++i])
 	{
 		args[i] = get_var(args[i], minishell);
-		wildcard = create_wildcard_arr(args[i]);
+		wildcard = create_wildcard_arr(args[i], minishell);
+		// printf("wildcard = %s\n", wildcard[1]);
 		// if (wildcard)
-			add_arr_to_array(expended, wildcard, sizeof(char *));
+			expended = add_arr_to_array(expended, wildcard, sizeof(char *));
 		// else
 		// 	add_element_to_array(expended, args + i, sizeof(char *));
 	}
@@ -134,6 +135,7 @@ char	**expend_args(char **args, t_minishell *minishell)
 	while (expended[++i])
 	{
 		expended[i] = unwrap_quotes(expended[i], minishell);
+		// printf("expended = %s\n", expended[i]);
 	}
 	return (expended);
 }
@@ -142,15 +144,16 @@ void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {
 	char		**args;
 	// t_boolean	*has_wildcard;
-	int			i;
+	// int			i;
 
 	if (!tree->argv)
 		return;
-	args = tree->argv;
-	i = -1;
-	while (args[++i])
-		args[i] = replace_args(args[i], minishell);
-	args = create_args_with_wildcard(args);
-	tree->argv = args;
+	// args = tree->argv;
+	// i = -1;
+	// while (args[++i])
+	// 	args[i] = replace_args(args[i], minishell);
+	// args = create_args_with_wildcard(args);
+	// tree->argv = args;
+	args = expend_args(tree->argv, minishell);
 	*(minishell->stat) = call_cmd(minishell, args);
 }

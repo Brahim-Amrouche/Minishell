@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_execution.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/06 17:51:18 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/10 01:54:47 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	**copy_envp(char **envp);
 char	**export_envp(t_minishell *minishell, char **envp);
 char	**add_elem_to_arr(char **arr, char *new_elem);
 char	**rm_elem_from_arr(char **arr, char **elem);
-char	**create_wildcard_arr(char *pattern);
+char	**create_wildcard_arr(char *pattern, t_minishell *mini);
 int		read_here_docs(t_exec_tree *tree, t_minishell *minishell);
 t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree_std);
 void	wait_all(pid_t last_proc, int *status);
