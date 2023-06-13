@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 06:56:23 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/05 09:45:33 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/13 20:39:47 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 	kill(id, SIGKILL);
 	kill(id2, SIGKILL);
 	waitpid(id, NULL, 0);
+	system("sed -i 's/\033[0;32mminishell$ \033[0m//g' tests/std1");
 	printf("\ndiff stdout :_________________________\n");
 	system("diff tests/std1 tests/bash1");
 	printf("\ndiff stderr :_________________________\n");

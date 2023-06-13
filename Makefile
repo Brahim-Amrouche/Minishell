@@ -36,7 +36,7 @@ $(NAME) : $(OBJ_FILES) ./libft/libft.a
 
 TEST_OBJ = tests/test
 
-test : 
+test :
 	gcc tests/test.c -o tests/test
 	./tests/test
 
