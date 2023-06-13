@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:08 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/02 12:43:01 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/13 18:27:16 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 static int	change__update_pwds(t_minishell *minishell, char *path)
 {
 	char		*dir;
-	char		*cmd[2];
+	char		*cmd[3];
 
-	cmd[1] = NULL;
+	cmd[0] = "export";
+	cmd[2] = NULL;
 	dir = getcwd(NULL, 0);
 	if (dir == NULL)
-		exit_minishell(1, "cwd buffer is not enough", TRUE);
-	cmd[0] = pro_strjoin("OLDPWD=", dir);
+		exit_minishell(1, "cwd buffer is not enough", TRUE);// should i exit here bash doesn t 
+	cmd[1] = pro_strjoin("OLDPWD=", dir);
 	free(dir);
 	if (chdir(path) != 0)
 		return (1);
@@ -29,7 +30,7 @@ static int	change__update_pwds(t_minishell *minishell, char *path)
 	dir = getcwd(NULL, 0);
 	if (dir == NULL)
 		exit_minishell(1, "cwd buffer is not enough", TRUE);
-	cmd[0] = pro_strjoin("PWD=", dir);
+	cmd[1] = pro_strjoin("PWD=", dir);
 	free(dir);
 	export(minishell, cmd, 0);
 	return (0);

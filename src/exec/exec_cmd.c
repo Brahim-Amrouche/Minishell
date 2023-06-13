@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/10 01:48:02 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/13 18:48:12 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,15 @@ int lunch_bin(char **args, t_minishell *mini)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
+		while (match_str(args[0], ""))
+			args++;
+		if (!*args)
+			exit(0);
 		binary_parser(args, mini);
 		if (access(args[0], F_OK) && (args[0] || args))
-			exit_minishell(127, "command not found", FALSE);
+			exit(return_msg(127, "minishell: $: command not found", args[0]));
 		else if (access(args[0], X_OK))
-			exit_minishell(126, "permission denied", FALSE);
+			exit(return_msg(127, "minishell: $: permission denied", args[0]));
 		else
 			execve(args[0], args, mini->envp);
 		exit(126);

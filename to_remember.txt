@@ -36,8 +36,6 @@ node type : 0
 
 (sleep  5 |  > x && sleep 4 |  > y) > z  |-> &&  wait for all proc
 
-why is wildcard not sorted alphabetecally
-
 should we follow simbolic links
 
 <> error
@@ -54,3 +52,17 @@ Quit: 3 on process still runing
   export CPPFLAGS="-I/goinfre/maboulkh/homebrew/opt/readline/include"
 ==> Summary
 🍺  /goinfre/maboulkh/homebrew/Cellar/readline/8.2.1: 50 files, 1.6MB, built in 19 seconds
+
+
+bash sets PATH to /usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:. if unavailable
+_ variable hold last arg except when executing echo $_
+
+IFS bash env :
+  if ifs is not in env then default value is : space, tab, newline
+  else if ifs is in env : split by its values
+  then if split result has more than 1 word it's ambigious redirection
+
+  example : a="ls -ls" and ifs is not in env then split result by spaces tabs and new lines has more than 1 word --> ambigious redirection
+
+
+  handle expand ~ in cd : get user home from HOME, if no HOME then get username from USER or LOGNAME and assume home dir will be in /Users/?username

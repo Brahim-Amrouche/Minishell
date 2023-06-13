@@ -50,10 +50,10 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 	ft_memset(tree_std, 255, sizeof(tree_std));
 	status = 0;
 	minishell->stat = &status;
-	if (open_all_redir(tree->redir, minishell, tree_std))
-		return (status);
 	if ((*get_sigvar()).exec_stop)
 		return (STOP_WITH_SIGINT);
+	if (open_all_redir(tree->redir, minishell, tree_std))
+		return (status);
 	if (tree->type == LOGICAL_PIPE)
 		exec_pipe(tree, minishell);
 	else if (tree->type == LOGICAL_AND || tree->type == LOGICAL_OR)
@@ -74,7 +74,12 @@ int main_execution(t_minishell *minishell)
 	// minishell->std[0] = -1;
 	// minishell->std[1] = -1;
 	tree = minishell->exec_root;
-	read_here_docs(tree, minishell);
+	if (read_here_docs(tree, minishell))
+	{
+		minishell->cmd_status = 1;
+		(*get_sigvar()).exec_stop = FALSE;
+		return (0);
+	}
 	minishell->cmd_status = traverse_tree(tree, minishell);
 	// printf("minishell status is %d\n", minishell->cmd_status);
 	return (0);

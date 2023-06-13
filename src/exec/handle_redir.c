@@ -6,13 +6,13 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/09 15:40:09 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/13 18:20:10 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std, t_minishell *minishell)
+static t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std)
 {
 	int	std_fileno;
 
@@ -56,7 +56,7 @@ static t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell, int *t
 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
 	if (redir->redir_type == HERE_DOC_REDI)
 		redir->redir_type = INPUT_REDI;
-	handle_redir_fd(p[0], redir, tree_std, minishell);
+	handle_redir_fd(p[0], redir, tree_std);
 	return (SUCCESS);
 }
 
@@ -103,15 +103,16 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree
 	char **wildcard_arr;
 	int i;
 
+	wildcard_arr = NULL;
 	stat = minishell->stat;
 	if (redir->redir_type == HERE_DOC_REDI)
 		return (handle_heredoc(redir, minishell, tree_std));
 
 	if (*(redir->content) != '\"' && *(redir->content) != '\''
 			&& ft_strchr(redir->content, '*'))
-		wildcard_arr = create_wildcard_arr(redir->content);
+		wildcard_arr = create_wildcard_arr(redir->content, minishell);
 	i = 0;
-	while (wildcard_arr[i])
+	while (wildcard_arr && wildcard_arr[i])
 		i++;
 	if (i > 1)
 	{
@@ -134,6 +135,6 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree
 		print_msg(2, "minishell: $: can't be open", redir->content);
 		return (FAIL);
 	}
-	handle_redir_fd(fd, redir, tree_std, minishell);
+	handle_redir_fd(fd, redir, tree_std);
 	return (SUCCESS);
 }

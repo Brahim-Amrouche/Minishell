@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:28:26 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/27 17:28:52 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/13 18:44:42 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include "errno.h"
 
 void		print_msg(int fd, char *msg, ...);
+int         return_msg(int stat, char *msg, ...);
 void		exit_minishell(int err_n, char *message, t_boolean purge);
 
 #endif

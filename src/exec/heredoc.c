@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 14:13:35 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/08 13:50:57 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/13 20:09:56 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,28 +43,29 @@ static int  open_heredoc(char	*limiter, int *p, t_minishell *minishell)
 
 static t_stat save_heredoc_content(t_redir_info *redir, t_minishell *minishell)
 {
-	char	*limiter;
+	// char	*limiter;
 	char	*line;
 	int		p[2];
 	int		id;
 
-	limiter = redir->content;
-	redir->has_quotes = has_quotes(limiter);
+	// limiter = redir->content;
+	redir->has_quotes = has_quotes(redir->content);
 	if (pipe(p) == -1)
 		exit_minishell(1, "couldnt open pipe", TRUE);
 	id = fork();
 	if (!id)
-		open_heredoc(limiter, p, minishell);
+		open_heredoc(redir->content, p, minishell);
 	waitpid(id, minishell->stat, 0);
 	if (close(p[1]))
-		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);
+		print_msg(2, "minishell: $: can't be closed", redir->content);
 	redir->heredoc_content = NULL;
 	while (TRUE)
 	{
 		line = get_next_line(p[0]);
 		if (!line)
 			break ;
-		redir->heredoc_content = add_element_to_array(redir->heredoc_content, &line, sizeof(char *));
+		redir->heredoc_content = add_element_to_array(redir->heredoc_content,
+									&line, sizeof(char *));
 	}
 	close(p[0]);
 	return (SUCCESS);
@@ -91,10 +92,12 @@ int read_here_docs(t_exec_tree *tree, t_minishell *minishell)
     redir = tree->redir;
     while (redir && *redir)
 	{
-		if ((*redir)->redir_type == HERE_DOC_REDI)
+		if ((*redir)->redir_type == HERE_DOC_REDI && !(*get_sigvar()).exec_stop)
 			save_heredoc_content(*redir, minishell);
 		redir++;
 	}
+	if ((*get_sigvar()).exec_stop)
+		return (1);
 	// open_here_doc(tree->redir, minishell);
 	return (0);
 }
