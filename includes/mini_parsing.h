@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/04 19:02:56 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/14 19:27:50 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
 # define STRJOIN_SCOPE 1
 # define SUBSTR_SCOPE 1
 # define STRDUP_SCOPE 1
-
 
 #define	DOLLAR_SIGN '$'
 #define SINGLE_QUOTE '\047'
@@ -118,7 +117,8 @@ void					parse_logical_operators(t_list *logical_node,
 char    				*unwrap_quotes(char *arg, t_minishell *mini);
 
 // replace_args.c
-char					*replace_args(char *arg, t_minishell *mini);
+// char					*replace_args(char *arg, t_minishell *mini);
+char					**replace_args(char **args, t_minishell *mini);
 
 //	main_parsing.c
 void					main_parsing(char *cmd, t_minishell *mini);
@@ -127,6 +127,8 @@ void					main_parsing(char *cmd, t_minishell *mini);
 char					*get_var(char *arg, t_minishell *mini);
 char					*find_env_var(char **envp, char *needle,
 							t_boolean get_og);
+t_boolean				ft_is_space(char c);
+void					skip_quotes(char *arg, size_t *i);
 
 //	binaries.c
 t_boolean				cmd_is_builtin(char *cmd);

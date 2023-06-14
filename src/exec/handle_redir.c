@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redir.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/13 18:20:10 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/14 19:28:35 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ static t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell, int *t
 	heredoc_content = redir->heredoc_content;
 	while (heredoc_content && *heredoc_content)
 	{
-		if (redir->has_quotes == FALSE)
-			*heredoc_content = replace_args(*heredoc_content, minishell);
+		// if (redir->has_quotes == FALSE)
+			// *heredoc_content = replace_args(*heredoc_content, minishell);
 		write(p[1], *heredoc_content, ft_strlen(*heredoc_content));
 		heredoc_content++;
 	}
@@ -122,7 +122,7 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree
 	}
 	redir->content = wildcard_arr[0];
 
-	redir->content = replace_args(redir->content, minishell);
+	// redir->content = replace_args(redir->content, minishell);
 	flag = get_redir_flag(redir->redir_type);
 	if (redir->redir_type == APPEND_REDI)
 		redir->redir_type = OUTPUT_REDI;// does it matter if i cahnge this here
