@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redir.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/14 19:28:35 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/15 16:44:45 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,15 @@ static t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std)
 	return (SUCCESS);
 }
 
-static t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell, int *tree_std)
+static char	*expend_heredoc(char *arg, t_minishell *mini)
+{
+	arg = get_var(arg, mini);
+	arg = unwrap_quotes(arg, mini);
+	return (arg);
+}
+
+static t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell,
+					int *tree_std)
 {
 	char	*limiter;
 	char	**heredoc_content;
@@ -47,8 +55,8 @@ static t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell, int *t
 	heredoc_content = redir->heredoc_content;
 	while (heredoc_content && *heredoc_content)
 	{
-		// if (redir->has_quotes == FALSE)
-			// *heredoc_content = replace_args(*heredoc_content, minishell);
+		if (redir->has_quotes == FALSE)
+			*heredoc_content = expend_heredoc(*heredoc_content, minishell);
 		write(p[1], *heredoc_content, ft_strlen(*heredoc_content));
 		heredoc_content++;
 	}
@@ -60,7 +68,8 @@ static t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell, int *t
 	return (SUCCESS);
 }
 
-static t_stat check_redir_access(t_redirection_types redir_type, char *path, int *stat)
+static t_stat check_redir_access(t_redirection_types redir_type,
+					char *path, int *stat)
 {
 	if (access(path, F_OK) == 0)
 	{
@@ -95,34 +104,43 @@ static int get_redir_flag(t_redirection_types redir_type)
 	return (flag);
 }
 
-t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree_std)
+t_stat	replace_redir_args(t_redir_info *redir, t_minishell *minishell)
+{
+	char **redir_arr;
+	int i;
+
+	redir_arr = NULL;
+	redir_arr = add_element_to_array(redir_arr,
+					&(redir->content), sizeof(char *));
+	redir_arr = replace_args(redir_arr, minishell);
+	i = 0;
+	while (redir_arr && redir_arr[i])
+		i++;
+	if (i > 1)
+	{
+		*(minishell->stat) = return_msg(1,
+			"minishell: $: ambiguous redirect", redir->content);
+		return (FAIL);
+	}
+	redir->content = redir_arr[0];
+	return (SUCCESS);
+}
+
+t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell,
+			int *tree_std)
 {
 	int flag;
 	int fd;
 	int *stat;
-	char **wildcard_arr;
-	int i;
+	// char **wildcard_arr;
+	// int i;
 
-	wildcard_arr = NULL;
+	// wildcard_arr = NULL;
 	stat = minishell->stat;
 	if (redir->redir_type == HERE_DOC_REDI)
 		return (handle_heredoc(redir, minishell, tree_std));
-
-	if (*(redir->content) != '\"' && *(redir->content) != '\''
-			&& ft_strchr(redir->content, '*'))
-		wildcard_arr = create_wildcard_arr(redir->content, minishell);
-	i = 0;
-	while (wildcard_arr && wildcard_arr[i])
-		i++;
-	if (i > 1)
-	{
-		*(minishell->stat) = 1;
-		print_msg(2, "minishell: $: ambiguous redirect", redir->content);
+	if (replace_redir_args(redir, minishell) == FAIL)
 		return (FAIL);
-	}
-	redir->content = wildcard_arr[0];
-
-	// redir->content = replace_args(redir->content, minishell);
 	flag = get_redir_flag(redir->redir_type);
 	if (redir->redir_type == APPEND_REDI)
 		redir->redir_type = OUTPUT_REDI;// does it matter if i cahnge this here
@@ -137,4 +155,19 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree
 	}
 	handle_redir_fd(fd, redir, tree_std);
 	return (SUCCESS);
+
+	// if (*(redir->content) != '\"' && *(redir->content) != '\''
+	// 		&& ft_strchr(redir->content, '*'))
+	// 	wildcard_arr = create_wildcard_arr(redir->content, minishell);
+	// i = 0;
+	// while (wildcard_arr && wildcard_arr[i])
+	// 	i++;
+	// if (i > 1)
+	// {
+	// 	*(minishell->stat) = return_msg(1, "minishell: $: ambiguous redirect", redir->content);
+	// 	return (FAIL);
+	// }
+	// redir->content = wildcard_arr[0];
+
+	// redir->content = replace_args(redir->content, minishell);
 }

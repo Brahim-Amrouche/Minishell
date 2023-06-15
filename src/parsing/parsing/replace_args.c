@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   replace_args.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/14 19:29:19 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/15 16:04:53 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// char	*replace_args(char *arg, t_minishell *mini)
+// char	*replace_arg(char *arg, t_minishell *mini)
 // {
 // 	arg = get_var(arg, mini);
 // 	arg = unwrap_quotes(arg, mini);
@@ -27,7 +27,7 @@ static char	**replace_argv(char *argv, size_t *i, size_t *j, t_minishell *mini)
 
 	new_arg = protected_substr(argv,*j, *i);
 	new_args = create_wildcard_arr(new_arg, mini);
-	n = 0;	
+	n = 0;
 	while (new_args[n])
 	{
 		new_args[n] = unwrap_quotes(new_args[n], mini);
@@ -52,8 +52,8 @@ static char	**split_argv_if_space(char *argv, t_minishell *mini)
 	args = NULL;
 	j = 0;
 	while(argv[i])
-	{	
-		if(ft_is_space(argv[i]) || !argv[i + 1])
+	{
+		if(ft_is_space(argv[i]))
 		{
 			new_argv = replace_argv(argv, &i, &j, mini);
 			temp = args;
@@ -65,6 +65,10 @@ static char	**split_argv_if_space(char *argv, t_minishell *mini)
 			skip_quotes(argv, &i);
 		i++;
 	}
+	new_argv = replace_argv(argv, &i, &j, mini);
+	temp = args;
+	args = add_arr_to_array(temp, new_argv, sizeof(char *));
+	ft_free_node(1, temp);
 	return args;
 }
 
