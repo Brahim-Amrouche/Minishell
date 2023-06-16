@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redir.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/15 16:44:45 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/16 01:15:25 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,6 @@ static t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std)
 	return (SUCCESS);
 }
 
-static char	*expend_heredoc(char *arg, t_minishell *mini)
-{
-	arg = get_var(arg, mini);
-	arg = unwrap_quotes(arg, mini);
-	return (arg);
-}
-
 static t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell,
 					int *tree_std)
 {
@@ -56,7 +49,7 @@ static t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell,
 	while (heredoc_content && *heredoc_content)
 	{
 		if (redir->has_quotes == FALSE)
-			*heredoc_content = expend_heredoc(*heredoc_content, minishell);
+			*heredoc_content = get_var(*heredoc_content, minishell, FALSE);
 		write(p[1], *heredoc_content, ft_strlen(*heredoc_content));
 		heredoc_content++;
 	}

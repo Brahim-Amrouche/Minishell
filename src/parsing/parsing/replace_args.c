@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replace_args.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/15 16:04:53 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/16 01:13:55 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ char	**replace_args(char **args, t_minishell *mini)
 	new_args = NULL;
 	while (*args)
 	{
-		*args = get_var(*args, mini);
+		*args = get_var(*args, mini, TRUE);
 		temp_args = new_args;
 		new_args = add_arr_to_array(temp_args, split_argv_if_space(*args, mini), sizeof(char *));
 		ft_free_node(1, temp_args);

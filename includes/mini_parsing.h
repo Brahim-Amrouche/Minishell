@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/14 19:27:50 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/16 01:13:17 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ char					**replace_args(char **args, t_minishell *mini);
 void					main_parsing(char *cmd, t_minishell *mini);
 
 // env_variables.c
-char					*get_var(char *arg, t_minishell *mini);
+char					*get_var(char *arg, t_minishell *mini, t_boolean skip);
 char					*find_env_var(char **envp, char *needle,
 							t_boolean get_og);
 t_boolean				ft_is_space(char c);
