@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/10 01:49:17 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/16 16:40:59 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ char **create_pattern_arr(char *pattern)
 	return (arr);
 }
 
-static int get_wildcard(char *str, char *in, t_minishell *mini)
+static int get_wildcard(char *str, char *in)
 {
 	// t_minishell mini;
 	char *match;
@@ -106,7 +106,7 @@ static int get_wildcard(char *str, char *in, t_minishell *mini)
 		if (!(pattern_arr[i][0] == '*' && pattern_arr[i][1] == '\0'))
 		{
 			// printf("b|%s\n", pattern_arr[i]);
-			pattern_arr[i] = unwrap_quotes(pattern_arr[i], mini);
+			pattern_arr[i] = unwrap_quotes(pattern_arr[i]);
 			// printf("a|%s\n", pattern_arr[i]);
 			if (i == 0 && *pattern_arr[i] != *str)
 				return (0);
@@ -171,7 +171,7 @@ static int get_wildcard(char *str, char *in, t_minishell *mini)
 // 	return (0);
 // }
 
-char		**make_wildcard_arr(DIR *dir, char *pattern, t_minishell *mini)
+static char		**make_wildcard_arr(DIR *dir, char *pattern)
 {
 	struct	dirent *direntf;
 	char	*new_elem;
@@ -185,7 +185,7 @@ char		**make_wildcard_arr(DIR *dir, char *pattern, t_minishell *mini)
 		direntf = readdir(dir);
 		if (!direntf)
 			break;
-		if (get_wildcard(direntf->d_name, pattern, mini))
+		if (get_wildcard(direntf->d_name, pattern))
 		{
 			new_elem = pro_str_dup(direntf->d_name);
 			args = add_element_to_array(args, &new_elem, sizeof(new_elem));
@@ -227,7 +227,7 @@ void	sort_wildcard(char **wildcard)
 	return ;
 }
 
-char	**create_wildcard_arr(char *pattern, t_minishell *mini)
+char	**create_wildcard_arr(char *pattern)
 {
 	char	**args;
 	char	*cwd;
@@ -238,7 +238,7 @@ char	**create_wildcard_arr(char *pattern, t_minishell *mini)
 		exit(1);
 	dir = opendir(cwd);
 	free(cwd);
-	args = make_wildcard_arr(dir, pattern, mini);
+	args = make_wildcard_arr(dir, pattern);
 	sort_wildcard(args);
 	closedir(dir);
 	return (args);

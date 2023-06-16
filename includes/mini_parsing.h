@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/16 01:13:17 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/16 16:35:51 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void					parse_redirections(t_list *redir_node, t_minishell *mini);
 void					parse_logical_operators(t_list *logical_node,
 							t_minishell *mini, char *token_content);
 // quotes.c
-char    				*unwrap_quotes(char *arg, t_minishell *mini);
+char    				*unwrap_quotes(char *arg);
 
 // replace_args.c
 // char					*replace_args(char *arg, t_minishell *mini);

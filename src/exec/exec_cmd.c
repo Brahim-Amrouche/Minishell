@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/15 16:33:09 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/16 16:34:12 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,15 @@ int lunch_bin(char **args, t_minishell *mini)
 		if (!*args)
 			exit(0);
 		binary_parser(args, mini);
-		if (access(args[0], F_OK) && (args[0] || args))
+		if (access(args[0], F_OK) || !str_is_a_path(args[0]))
 			exit(return_msg(127, "minishell: $: command not found", args[0]));
 		else if (access(args[0], X_OK))
 			exit(return_msg(127, "minishell: $: permission denied", args[0]));
 		else
 			execve(args[0], args, mini->envp);
-		exit(126);
+		if (args && args[0] && str_is_a_path(args[0]))
+			exit(return_msg(126, "minishell: $: is a directory", args[0]));
+		exit(return_msg(126, "minishell: $: command not found", args[0]));
 	}
 	return (id);
 }

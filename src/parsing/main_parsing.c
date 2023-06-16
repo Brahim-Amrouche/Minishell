@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/04 15:20:45 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/16 16:37:13 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	strip_space_from_tokens(t_list *tokens, t_minishell *mini)
 	token_space_striper_helper(root, tokens, mini);
 }
 
-void	print_tree(t_exec_tree *node, t_minishell *mini)
+void	print_tree(t_exec_tree *node)
 {
 	char	**cmd;
 	t_redir_info **redir;
@@ -71,7 +71,7 @@ void	print_tree(t_exec_tree *node, t_minishell *mini)
 		cmd = node->argv;
 		while (cmd && *cmd)
 		{
-			*cmd = unwrap_quotes(*cmd, mini);
+			*cmd = unwrap_quotes(*cmd);
 			printf("command args :%s\n", *cmd);
 			cmd++;
 		}

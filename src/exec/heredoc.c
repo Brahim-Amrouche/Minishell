@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 14:13:35 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/13 20:09:56 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/16 16:36:16 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int  open_heredoc(char	*limiter, int *p, t_minishell *minishell)
 
 	signal(SIGINT, SIG_DFL);
 	minishell->n_parser_helper.arg_replacing = TRUE;
-	limiter = unwrap_quotes(limiter, minishell);// bro check this
+	limiter = unwrap_quotes(limiter);// bro check this
 	minishell->n_parser_helper.arg_replacing = FALSE;
 	if (close(p[0]))
 		print_msg(2, "minishell: $ (heredoc): can't be closed", limiter);

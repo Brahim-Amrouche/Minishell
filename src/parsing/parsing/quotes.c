@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:27:20 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/16 14:40:30 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/16 16:35:43 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*remove_quotes(char *arg, t_minishell *mini, size_t *i, size_t j)
+static char	*remove_quotes(char *arg, size_t *i, size_t j)
 {
 	char	*removed_quotes;
 	size_t	removed_quotes_len;
@@ -28,7 +28,7 @@ char	*remove_quotes(char *arg, t_minishell *mini, size_t *i, size_t j)
 	return (new_arg);
 }
 
-char	*unwrap_quotes(char *arg, t_minishell *mini)
+char	*unwrap_quotes(char *arg)
 {
 	size_t	i;
 	size_t	j;
@@ -42,7 +42,7 @@ char	*unwrap_quotes(char *arg, t_minishell *mini)
 			while (*(arg + j) && *(arg + j) != *(arg + i))
 				j++;
 			if (*(arg + j) != '\0')
-				arg = remove_quotes(arg, mini, &i, j);
+				arg = remove_quotes(arg, &i, j);
 		}
 		i++;
 	}
