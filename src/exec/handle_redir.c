@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redir.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/16 01:15:25 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/16 17:01:05 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,10 @@ static int get_redir_flag(t_redirection_types redir_type)
 t_stat	replace_redir_args(t_redir_info *redir, t_minishell *minishell)
 {
 	char **redir_arr;
+	char *redir_name;
 	int i;
 
+	redir_name = pro_str_dup(redir->content);
 	redir_arr = NULL;
 	redir_arr = add_element_to_array(redir_arr,
 					&(redir->content), sizeof(char *));
@@ -112,9 +114,10 @@ t_stat	replace_redir_args(t_redir_info *redir, t_minishell *minishell)
 	if (i > 1)
 	{
 		*(minishell->stat) = return_msg(1,
-			"minishell: $: ambiguous redirect", redir->content);
+			"minishell: $: ambiguous redirect", redir_name);
 		return (FAIL);
 	}
+	ft_free_node(1, redir_name);
 	redir->content = redir_arr[0];
 	return (SUCCESS);
 }
