@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/16 01:12:59 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/16 16:32:07 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_boolean	ft_is_space(char c)
 {
-	if (c == ' ' || c == '\t' || c == '\n')// is this right
+	if (c == ' ' || c == '\t' || c == '\n')
 		return (TRUE);
 	return (FALSE);
 }
@@ -51,18 +51,16 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 	char	*new_arg;
 
 	env_name = protected_substr(arg, (*i) + 1, j - (*i));
-	// printf("the env name = %s|\n", env_name);
 	if (!env_name)
 		exit_minishell(ENOMEM, "could't malloc env_name", TRUE);
 	if (match_str("?", env_name))
 	{
 		env_val = ft_itoa(mini->cmd_status);
-		ft_malloc(1, m_info(env_val, 1, NULL, 0));// check this broooo!
+		ft_malloc(1, m_info(env_val, 1, NULL, 0));
 	}
 	else
 		env_val = find_env_var(mini->envp, env_name, FALSE);
 	ft_free_node(1, env_name);
-	// printf("++++++++++++++++++arg is |%s| , start at |%s|", arg, arg + j);
 	new_arg = replace_value_in_arg(arg, *i, j + 1, env_val);
 	*i += ft_strlen(env_val) - 1;
 	ft_free_node(1, arg);
@@ -70,60 +68,36 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 	return (new_arg);
 }
 
-void	skip_quotes(char *arg, size_t *i)
+static t_boolean	is_dollar_breaker(char c)
 {
-	char	quote_type;
-	int		back_up;
-
-	back_up = *i;
-	if (*(arg + *i) == DOUBLE_QUOTE || *(arg + *i) == SINGLE_QUOTE)
-	{
-		quote_type = *(arg + *i);
-		(*i)++;
-		while (*(arg + *i) && *(arg + *i) != quote_type)
-			(*i)++;
-		if (*(arg + *i) == '\0')
-			*i = back_up;
-	}
+	if (c == DOLLAR_SIGN || ft_is_space(c) || c == DOUBLE_QUOTE
+		|| c == SINGLE_QUOTE)
+		return (TRUE);
+	return (FALSE);
 }
 
 char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
 {
 	size_t	i;
 	size_t	j;
-	t_boolean in_quote;
 
-	in_quote = FALSE;
 	i = 0;
 	while (*(arg + i))
 	{
-		if (*(arg + i) == DOUBLE_QUOTE && (i++ || i))
-		{
-			in_quote = !in_quote;
-			continue ;
-		}
-		if (skip && (in_quote || *(arg + i) == SINGLE_QUOTE))
+		if (skip && *(arg + i) == SINGLE_QUOTE)
 			skip_quotes(arg, &i);
 		j = i + 1;
-		if (*(arg + i) == DOLLAR_SIGN && *(arg + j) && !ft_is_space(*(arg + j)))
+		while (*(arg + i) == DOLLAR_SIGN && *(arg + j) && (j != i + 1
+				|| !is_dollar_breaker(*(arg + j))))
 		{
-			while (*(arg + j))
-			{
-				if (*(arg + j) == DOLLAR_SIGN || ft_is_space(*(arg + j))
-					|| *(arg + j) == SINGLE_QUOTE || *(arg + j) == DOUBLE_QUOTE)
-				{
-					j--;
-					break ;
-				}
-				j++;
-			}
-			arg = replace_env_var(arg, mini, &i, j);
+			if (is_dollar_breaker(*(arg + j + 1)))
+				break ;
+			j++;
 		}
-		if (ft_isalnum(*(arg + i)))
-			while (ft_isalnum(*(arg + i)))
-				i++;
-		else
-			i++;
+		j--;
+		if (j != i)
+			arg = replace_env_var(arg, mini, &i, ++j);
+		i++;
 	}
 	return (arg);
 }

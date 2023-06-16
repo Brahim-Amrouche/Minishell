@@ -97,3 +97,5 @@ minishell$ echo "$PWD""hi""""""""""$PWD"
 /home/elasce/1337/Minishellhi/home/elasce/1337/Minishell
 minishell$ echo "$PWD""hi""$PWD"
 /home/elasce/1337/Minishellhi$PWD
+
+SYMBOLIC LINKS FOLLOW
