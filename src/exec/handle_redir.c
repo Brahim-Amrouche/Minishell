@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/16 17:01:05 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/17 17:54:41 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,12 @@
 static t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std)
 {
 	int	std_fileno;
-
-	// if ((type == INPUT_REDI && std[0] >= 0)
-	// 	|| (type == OUTPUT_REDI && std[1] >= 0))
-	// {
-	// 	close(fd);
-	// 	return (SUCCESS);
-	// }
 	if (redir->redir_type == INPUT_REDI || redir->redir_type == HERE_DOC_REDI)
 		std_fileno = STDIN_FILENO;
 	else
 		std_fileno = STDOUT_FILENO;
 	if (std[std_fileno] < 0)
 		std[std_fileno] = dup(std_fileno);
-	// if (minishell->std[std_fileno] < 0)
-	// 	minishell->std[std_fileno] = std[std_fileno];
     dup2(fd, std_fileno);
     close(fd);
 	return (SUCCESS);
@@ -89,11 +80,11 @@ static int get_redir_flag(t_redirection_types redir_type)
 
 	flag = 0;
 	if (redir_type == INPUT_REDI)
-		flag = O_RDONLY;
+		flag = O_RDONLY | O_SYMLINK;
 	else if (redir_type == OUTPUT_REDI)
-		flag = O_WRONLY | O_CREAT | O_TRUNC;
+		flag = O_WRONLY | O_CREAT | O_TRUNC | O_SYMLINK;
 	else if (redir_type ==  APPEND_REDI)
-		flag = O_WRONLY | O_CREAT | O_APPEND;
+		flag = O_WRONLY | O_CREAT | O_APPEND | O_SYMLINK;
 	return (flag);
 }
 
@@ -128,10 +119,7 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell,
 	int flag;
 	int fd;
 	int *stat;
-	// char **wildcard_arr;
-	// int i;
 
-	// wildcard_arr = NULL;
 	stat = minishell->stat;
 	if (redir->redir_type == HERE_DOC_REDI)
 		return (handle_heredoc(redir, minishell, tree_std));
@@ -151,19 +139,4 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell,
 	}
 	handle_redir_fd(fd, redir, tree_std);
 	return (SUCCESS);
-
-	// if (*(redir->content) != '\"' && *(redir->content) != '\''
-	// 		&& ft_strchr(redir->content, '*'))
-	// 	wildcard_arr = create_wildcard_arr(redir->content, minishell);
-	// i = 0;
-	// while (wildcard_arr && wildcard_arr[i])
-	// 	i++;
-	// if (i > 1)
-	// {
-	// 	*(minishell->stat) = return_msg(1, "minishell: $: ambiguous redirect", redir->content);
-	// 	return (FAIL);
-	// }
-	// redir->content = wildcard_arr[0];
-
-	// redir->content = replace_args(redir->content, minishell);
 }
