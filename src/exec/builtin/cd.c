@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:08 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/13 18:27:16 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/22 18:35:03 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,15 @@
 
 static int	change__update_pwds(t_minishell *minishell, char *path)
 {
-	char		*dir;
-	char		*cmd[3];
+	char	*dir;
+	char	*cmd[3];
 
 	cmd[0] = "export";
 	cmd[2] = NULL;
 	dir = getcwd(NULL, 0);
 	if (dir == NULL)
-		exit_minishell(1, "cwd buffer is not enough", TRUE);// should i exit here bash doesn t 
+		exit_minishell(1, "cwd buffer is not enough", TRUE);
+			// should i exit here bash doesn t
 	cmd[1] = pro_strjoin("OLDPWD=", dir);
 	free(dir);
 	if (chdir(path) != 0)
@@ -35,7 +36,6 @@ static int	change__update_pwds(t_minishell *minishell, char *path)
 	export(minishell, cmd, 0);
 	return (0);
 }
-
 
 static char	*go_to_weird_paths(t_minishell *minishell, char *path, int *stat)
 {
@@ -87,11 +87,7 @@ int	change_dir(t_minishell *minishell, char **args)
 	else if (access(path, X_OK) != 0) // is X_OK the right flag for this?
 		print_msg(2, "minishell: cd: $/: Permission denied", path);
 	if (access(path, X_OK) != 0)
-	{
-		// free(path);
 		return (1);
-	}
 	status = change__update_pwds(minishell, path);
-	// free(path);
 	return (status);
 }

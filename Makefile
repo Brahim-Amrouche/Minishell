@@ -8,7 +8,7 @@ CC = cc
 
 OBJ_FILES = ${SRC_FILES:%.c=%.o}
 
-FLAGS = -Wall -Werror -Wextra $(INCLUDES) -fsanitize=address
+FLAGS = -Wall -Werror -Wextra $(INCLUDES)
 
 NAME = minishell
 

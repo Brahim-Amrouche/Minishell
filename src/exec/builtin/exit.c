@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:07 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/08 15:39:52 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/22 18:35:28 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_stat	try_convert_strtoll(const char *str, long long *number)
 	return (SUCCESS);
 }
 
-int exit_shell(char **args)
+int	exit_shell(char **args)
 {
 	long long	status;
 	t_boolean	do_exit;

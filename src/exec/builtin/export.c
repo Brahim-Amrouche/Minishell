@@ -3,30 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:11 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/01 15:57:40 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/22 18:35:49 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char **add_or_replace_elem(char **arr, char *new_elem, char *var_name)
+static char	**add_or_replace_elem(char **arr, char *new_elem, char *var_name)
 {
-	char **old_elem;
+	char	**old_elem;
 
 	old_elem = get_env_var(var_name, arr);
 	if (!new_elem)
 		return (arr);
 	if (!old_elem)
 		return (add_elem_to_arr(arr, new_elem));
-	// ft_free_node(ENV_SCOPE, *old_elem);
 	*old_elem = new_elem;
 	return (arr);
 }
 
-static t_export check_export_type(char *token)
+static t_export	check_export_type(char *token)
 {
 	if (!token)
 		return (ERROR);
@@ -52,15 +51,15 @@ static char	*get_next_string_alphabetically(char **pool, char *drop)
 	next_drop = "\255";
 	while (*pool)
 	{
-		if (ft_strncmp(*pool, drop, -1) > 0
-				&& ft_strncmp(*pool, next_drop, -1) < 0)
+		if (ft_strncmp(*pool, drop, -1) > 0 && ft_strncmp(*pool, next_drop,
+				-1) < 0)
 			next_drop = *pool;
 		pool++;
 	}
 	return (next_drop);
 }
 
-static int print_export_data(void)
+static int	print_export_data(void)
 {
 	char	**env_var;
 	char	*var;
@@ -89,9 +88,9 @@ static int print_export_data(void)
 	return (0);
 }
 
-char *get_export_variable_name(char *var, t_export type)
+char	*get_export_variable_name(char *var, t_export type)
 {
-	size_t		len;
+	size_t	len;
 
 	if (!var)
 		return (NULL);
@@ -103,9 +102,9 @@ char *get_export_variable_name(char *var, t_export type)
 	return (protected_substr(var, 0, len));
 }
 
-char *export_append(char **old_var_ptr , char *var, t_export type)
+char	*export_append(char **old_var_ptr, char *var, t_export type)
 {
-	char *old_var;
+	char	*old_var;
 
 	old_var = NULL;
 	if (old_var_ptr)
@@ -126,23 +125,23 @@ char *export_append(char **old_var_ptr , char *var, t_export type)
 	return (NULL);
 }
 
-char ***fetch_export_data(void)
+char	***fetch_export_data(void)
 {
-	static char **export_data;
+	static char	**export_data;
 
 	return (&export_data);
 }
 
-static void exporting(t_minishell *minishell, char *arg,
-					char *var_name, t_export export_type)
+static void	exporting(t_minishell *minishell, char *arg, char *var_name,
+		t_export export_type)
 {
-	char		***export_data;
-	char		**existing_var;
-	char		*var;
-	
+	char	***export_data;
+	char	**existing_var;
+	char	*var;
+
 	export_data = fetch_export_data();
 	existing_var = get_env_var(var_name, *export_data);
-	var = export_append(existing_var , arg, export_type);
+	var = export_append(existing_var, arg, export_type);
 	if (export_type == DECLARE && existing_var)
 		return ;
 	*export_data = add_or_replace_elem(*export_data, var, var_name);
@@ -166,7 +165,8 @@ int	export(t_minishell *minishell, char **args, int index)
 	else
 	{
 		minishell->cmd_status = 1;
-		print_msg(2, "minishell: export: `$': not a valid identifier", var_name);
+		print_msg(2, "minishell: export: `$': not a valid identifier",
+				var_name);
 	}
 	ft_free_node(SUBSTR_SCOPE, var_name);
 	if (*(args + (index + 1)))
@@ -174,37 +174,3 @@ int	export(t_minishell *minishell, char **args, int index)
 	//  waht about in case of error
 	return (0);
 }
-
-// char *str_join_f(char *format, ...)
-// {
-// 	va_list	ap;
-// 	char	**strings;
-// 	char	*res;
-// 	int		i;
-// 	size_t	size;
-
-// 	if (!format)
-// 		return (NULL);
-// 	va_start(ap, format);
-// 	strings = NULL;
-// 	i = 0;
-// 	while (format[i])
-// 		if (format[i++] == '$')
-// 			strings = add_element_to_array(strings, va_arg(ap, char *), sizeof(char *));
-// 	size = ft_strlen(format) - i;
-// 	i = 0;
-// 	while (strings && strings[i])
-// 		size += ft_strlen(strings[i++]);
-// 	ft_malloc(size + 1, m_info(NULL, STRJOIN_SCOPE, NULL, 0));
-// 	i = 0;
-// 	while (*format)
-// 	{
-// 		if (*format == '$')
-// 		{
-// 			while (*(*strings))
-// 			{
-// 				res[i++] = 'f';
-// 			}
-// 		}
-// 	}
-// }
