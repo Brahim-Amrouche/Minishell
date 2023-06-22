@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/16 16:32:07 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/22 16:12:03 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,9 @@ static t_boolean	is_dollar_breaker(char c)
 
 char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
 {
-	size_t	i;
-	size_t	j;
+	size_t		i;
+	size_t		j;
+	t_boolean	replace;
 
 	i = 0;
 	while (*(arg + i))
@@ -87,16 +88,17 @@ char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
 		if (skip && *(arg + i) == SINGLE_QUOTE)
 			skip_quotes(arg, &i);
 		j = i + 1;
+		replace = FALSE;
 		while (*(arg + i) == DOLLAR_SIGN && *(arg + j) && (j != i + 1
 				|| !is_dollar_breaker(*(arg + j))))
 		{
+			replace = TRUE;
 			if (is_dollar_breaker(*(arg + j + 1)))
 				break ;
 			j++;
 		}
-		j--;
-		if (j != i)
-			arg = replace_env_var(arg, mini, &i, ++j);
+		if (replace)
+			arg = replace_env_var(arg, mini, &i, j);
 		i++;
 	}
 	return (arg);

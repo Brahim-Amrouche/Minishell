@@ -63,39 +63,5 @@ IFS bash env :
   then if split result has more than 1 word it's ambigious redirection
 
 
-  minishell$ cat << l
-> $pwd
-> $PWD
-> "PWD"
-> "$PWD"
-> '$PWD'
-> l
-
-/Users/maboulkh/Desktop/Minishell
-PWD
-/Users/maboulkh/Desktop/Minishell
-$PWD
-minishell$ bash
-bash: no job control in this shell
-bash-3.2$ cat << l
-> $pwd
-> $PWD
-> "PWD"
-> "$PWD"
-> '$PWD'
-> l
-
-/Users/maboulkh/Desktop/Minishell
-"PWD"
-"/Users/maboulkh/Desktop/Minishell"
-'/Users/maboulkh/Desktop/Minishell'
-bash-3.2$ 
-
-minishell$ echo "$PWD""hi""""""""$PWD"
-/home/elasce/1337/Minishellhi/home/elasce/1337/Minishell
-minishell$ echo "$PWD""hi""""""""""$PWD"
-/home/elasce/1337/Minishellhi/home/elasce/1337/Minishell
-minishell$ echo "$PWD""hi""$PWD"
-/home/elasce/1337/Minishellhi$PWD
 
 SYMBOLIC LINKS FOLLOW

@@ -6,14 +6,17 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:02:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/03 16:17:33 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/22 16:11:33 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	get_redir_type(char *redir_type, t_redirection_types *type)
+static t_boolean	get_redir_type(char *redir_type, t_redirection_types *type)
 {
+	t_boolean	parsed;
+
+	parsed = TRUE;
 	if (!ft_strncmp(redir_type, "<<", 2))
 		*type = HERE_DOC_REDI;
 	else if (!ft_strncmp(redir_type, ">>", 2))
@@ -22,6 +25,9 @@ static void	get_redir_type(char *redir_type, t_redirection_types *type)
 		*type = INPUT_REDI;
 	else if (*redir_type == '>')
 		*type = OUTPUT_REDI;
+	else
+		parsed = FALSE;
+	return (parsed);
 }
 
 void	parse_redirections(t_list *redir_node, t_minishell *mini)
@@ -36,6 +42,8 @@ void	parse_redirections(t_list *redir_node, t_minishell *mini)
 		exit_minishell(ENOMEM, "couldn't malloc new redirection", TRUE);
 	if (!redir_node->next)
 		exit_minishell(-1, "give me a proper redirection", TRUE);
+	if (get_redir_type(redir_node->next->content, &redir_info->redir_type))
+		exit_minishell(-1, "unproper redirection", TRUE);
 	get_redir_type(redir_node->content, &redir_info->redir_type);
 	redir_info->content = redir_node->next->content;
 	old_redirs = mini->exec_root->redir;
