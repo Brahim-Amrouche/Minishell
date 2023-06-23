@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/22 18:37:05 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/23 20:15:43 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int call_cmd(t_minishell *minishell, char **args)
 	if (match_str(cmd, CD))
 		*status = change_dir(minishell, args);
 	else if (match_str(cmd, PWD))
-		*status = get_dir();
+		*status = get_dir(minishell);
 	else if (match_str(cmd, ENV))
 		*status = env(minishell);
 	else if (match_str(cmd, MINI_ECHO))

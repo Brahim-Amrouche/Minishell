@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/22 18:51:58 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/23 14:03:24 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ static int	get_redir_flag(t_redirection_types redir_type)
 t_stat	replace_redir_args(t_redir_info *redir, t_minishell *minishell)
 {
 	char	**redir_arr;
-	char	**temp;
 	char	*redir_name;
 	int		i;
 

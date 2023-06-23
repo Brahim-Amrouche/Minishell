@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/16 16:48:52 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/23 18:40:22 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,6 @@ static char	**replace_argv(char *argv, size_t *i, size_t *j)
 	*i = *j;
 	return (new_args);
 }
-
-// typedef struct s_wrapper
-// {
-// 	char		*argv;
-// 	char		***args;
-// 	size_t		*i;
-// 	size_t		*j;
-// }				t_wrapper;
 
 static void	add_argv(char *argv, char ***args, size_t *i, size_t *j)
 {
@@ -87,13 +79,15 @@ char	**replace_args(char **args, t_minishell *mini)
 {
 	char	**new_args;
 	char	**temp_args;
+	char	**splited_args;
 
 	new_args = NULL;
 	while (*args)
 	{
 		*args = get_var(*args, mini, TRUE);
 		temp_args = new_args;
-		new_args = add_arr_to_array(temp_args, split_argv_if_space(*args),
+		splited_args = split_argv_if_space(*args);
+		new_args = add_arr_to_array(temp_args, splited_args,
 				sizeof(char *));
 		ft_free_node(1, temp_args);
 		args++;

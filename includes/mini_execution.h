@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/16 16:51:15 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/23 17:45:49 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <signal.h>
 # include <termios.h>
 # include <dirent.h>
+# include <sys/stat.h>
 
 # ifndef O_SYMLINK
 # define O_SYMLINK 0
@@ -96,7 +97,7 @@ t_stat	try_convert_strtoll(const char *str, long long *number);
 int	change_dir(t_minishell *minishell, char **args);
 int	echo(char ** args);
 int env(t_minishell *minishell);
-int get_dir(void);
+int get_dir(t_minishell *minishell);
 char ***fetch_export_data(void);
 int export(t_minishell *minishell, char **args, int index);
 int unset(t_minishell *minishell, char **args, int index);
