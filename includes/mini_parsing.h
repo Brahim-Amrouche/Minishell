@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/16 16:35:51 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:10:36 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINI_PARSING_H
 # define MINI_PARSING_H
@@ -29,9 +28,9 @@
 # define SUBSTR_SCOPE 1
 # define STRDUP_SCOPE 1
 
-#define	DOLLAR_SIGN '$'
-#define SINGLE_QUOTE '\047'
-#define DOUBLE_QUOTE '\042'
+# define DOLLAR_SIGN '$'
+# define SINGLE_QUOTE '\047'
+# define DOUBLE_QUOTE '\042'
 
 typedef enum e_logical_operators
 {
@@ -50,7 +49,7 @@ typedef enum e_redirection_types
 	OUTPUT_REDI,
 	HERE_DOC_REDI,
 	APPEND_REDI,
-}	t_redirection_types;
+}						t_redirection_types;
 
 typedef struct s_redir_info
 {
@@ -68,7 +67,7 @@ typedef struct s_exec_tree
 	struct s_exec_tree	*right;
 	char				**argv;
 	t_redir_info		**redir;
-} t_exec_tree;
+}						t_exec_tree;
 
 typedef struct s_new_parser_helper
 {
@@ -84,6 +83,7 @@ typedef struct s_minishell
 	t_new_parser_helper	n_parser_helper;
 	char				**envp;
 	int					cmd_status;
+	int					parsing_err_code;
 	int					*stat;
 	int					std[2];
 }						t_minishell;
@@ -96,25 +96,26 @@ char					*str_tokenize(char *str, char *seperators);
 // token.c
 void					tokenize(char *input, t_minishell *mini);
 
-
 // new_parsing
 
 // parse_root.c
 t_exec_tree				*parsing_root(t_minishell *mini);
 
 // parentheses.c
-void					handle_parenthese(t_list *token_node,
-							t_minishell *mini);
-void					make_parenthese_tokens(t_list *parenthese_node,
+void	handle_parenthese(t_list *token_node,
+						t_minishell *mini);
+void	make_parenthese_tokens(t_list *parenthese_node,
 							t_minishell *new_mini);
 // redirs.c
-void					parse_redirections(t_list *redir_node, t_minishell *mini);
+void					parse_redirections(t_list *redir_node,
+							t_minishell *mini);
 
 // logical_operators.c
-void					parse_logical_operators(t_list *logical_node,
-							t_minishell *mini, char *token_content);
+void	parse_logical_operators(t_list *logical_node,
+								t_minishell *mini,
+								char *token_content);
 // quotes.c
-char    				*unwrap_quotes(char *arg);
+char					*unwrap_quotes(char *arg);
 
 // replace_args.c
 // char					*replace_args(char *arg, t_minishell *mini);
@@ -166,6 +167,7 @@ void					*add_arr_to_array(void *dest_arr, void *src_arr,
 
 // tree_utils.c
 t_exec_tree				*exec_tree_node(int params_num, ...);
-void					loop_exec_tree(t_exec_tree *root, t_minishell *mini ,void (*exec)(t_exec_tree *, t_minishell *));
+void					loop_exec_tree(t_exec_tree *root, t_minishell *mini,
+							void (*exec)(t_exec_tree *, t_minishell *));
 
 #endif

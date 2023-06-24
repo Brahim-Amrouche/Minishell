@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/13 20:01:53 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:18:07 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,23 @@ void	reset_minishell(t_minishell *minishell, t_signal_var *sigvar)
 	char	**envp;
 
 	envp = minishell->envp;
-	status = minishell->cmd_status;
+	if (minishell->parsing_err_code)
+		status = minishell->parsing_err_code;
+	else
+		status = minishell->cmd_status;
 	ft_bzero(minishell, sizeof(t_minishell));
 	ft_bzero(sigvar, sizeof(t_signal_var));
 	minishell->envp = envp;
 	minishell->cmd_status = status;
+}
+
+t_minishell *get_minishell(t_minishell *mini)
+{
+	static	t_minishell *minishell;
+
+	if (mini)
+		minishell = mini;
+	return minishell;
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -96,6 +108,7 @@ int	main(int argc, char *argv[], char *envp[])
 	signal(SIGQUIT, &handle_sigquit);
 	ft_bzero(&minishell, sizeof(t_minishell));
 	envp = export_envp(&minishell, envp);
+	get_minishell(&minishell);
 	while (TRUE)
 	{
 		reset_minishell(&minishell, get_sigvar());
@@ -112,7 +125,8 @@ int	main(int argc, char *argv[], char *envp[])
 		// here comes the parsing
 		main_parsing(cmd, &minishell);
 		// here comes execution
-		main_execution(&minishell);
+		if (!minishell.parsing_err_code)
+			main_execution(&minishell);
 		// ft_free(1, FALSE);
 		if ((*get_sigvar()).exec_stop)
 			minishell.cmd_status = STOP_WITH_SIGINT;

@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 23:46:46 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/16 16:31:51 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:03:44 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,13 @@ void	tokenize(char *input, t_minishell *mini)
 	char	*token;
 
 	token = str_tokenize(input, TOKEN_SEPERATORS);
+	if (!token)
+		return ;
 	while (token)
 	{
 		add_token_to_cmd(token, &mini->tokens);
 		token = str_tokenize(NULL, TOKEN_SEPERATORS);
+		if (!token)
+			return ;
 	}
 }
