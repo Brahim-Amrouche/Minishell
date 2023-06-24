@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:59 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/18 20:40:17 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/22 18:35:19 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	env(t_minishell *minishell)
 {
-	char		**envp;
+	char	**envp;
 
 	envp = minishell->envp;
 	if (!envp)

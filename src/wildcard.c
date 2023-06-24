@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/16 16:40:59 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/23 18:39:32 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,7 @@ char	**create_wildcard_arr(char *pattern)
 
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
-		exit(1);
+		return (add_element_to_array(NULL, &pattern, sizeof(char *)));
 	dir = opendir(cwd);
 	free(cwd);
 	args = make_wildcard_arr(dir, pattern);

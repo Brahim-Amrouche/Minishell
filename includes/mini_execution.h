@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_execution.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/16 16:51:15 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/24 21:28:24 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <dirent.h>
 # include <signal.h>
 # include <termios.h>
+# include <dirent.h>
 
 # ifndef O_SYMLINK
 #  define O_SYMLINK 0
@@ -89,6 +90,7 @@ int				main_execution(t_minishell *minishell);
 
 # define DEFAULT_FILE_PERMISSIONS 0666
 
+
 char			**get_env_var(char *name, char **env);
 t_stat			try_convert_strtoll(const char *str, long long *number);
 
@@ -101,5 +103,6 @@ int				export(t_minishell *minishell, char **args, int index);
 int				unset(t_minishell *minishell, char **args, int index);
 int				exit_shell(char **args);
 int				*id_fetcher(void);
+
 
 #endif // MINI_EXECUTIONG_H

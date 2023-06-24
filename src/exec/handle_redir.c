@@ -6,28 +6,29 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/17 17:54:41 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/23 14:03:24 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_stat handle_redir_fd(int fd, t_redir_info *redir, int *std)
+static t_stat	handle_redir_fd(int fd, t_redir_info *redir, int *std)
 {
 	int	std_fileno;
+
 	if (redir->redir_type == INPUT_REDI || redir->redir_type == HERE_DOC_REDI)
 		std_fileno = STDIN_FILENO;
 	else
 		std_fileno = STDOUT_FILENO;
 	if (std[std_fileno] < 0)
 		std[std_fileno] = dup(std_fileno);
-    dup2(fd, std_fileno);
-    close(fd);
+	dup2(fd, std_fileno);
+	close(fd);
 	return (SUCCESS);
 }
 
-static t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell,
-					int *tree_std)
+static t_stat	handle_heredoc(t_redir_info *redir, t_minishell *minishell,
+		int *tree_std)
 {
 	char	*limiter;
 	char	**heredoc_content;
@@ -52,8 +53,9 @@ static t_stat handle_heredoc(t_redir_info *redir, t_minishell *minishell,
 	return (SUCCESS);
 }
 
-static t_stat check_redir_access(t_redirection_types redir_type,
-					char *path, int *stat)
+static t_stat	check_redir_access(t_redirection_types redir_type,
+									char *path,
+									int *stat)
 {
 	if (access(path, F_OK) == 0)
 	{
@@ -74,30 +76,30 @@ static t_stat check_redir_access(t_redirection_types redir_type,
 	return (SUCCESS);
 }
 
-static int get_redir_flag(t_redirection_types redir_type)
+static int	get_redir_flag(t_redirection_types redir_type)
 {
-	int flag;
+	int	flag;
 
 	flag = 0;
 	if (redir_type == INPUT_REDI)
 		flag = O_RDONLY | O_SYMLINK;
 	else if (redir_type == OUTPUT_REDI)
 		flag = O_WRONLY | O_CREAT | O_TRUNC | O_SYMLINK;
-	else if (redir_type ==  APPEND_REDI)
+	else if (redir_type == APPEND_REDI)
 		flag = O_WRONLY | O_CREAT | O_APPEND | O_SYMLINK;
 	return (flag);
 }
 
 t_stat	replace_redir_args(t_redir_info *redir, t_minishell *minishell)
 {
-	char **redir_arr;
-	char *redir_name;
-	int i;
+	char	**redir_arr;
+	char	*redir_name;
+	int		i;
 
 	redir_name = pro_str_dup(redir->content);
 	redir_arr = NULL;
-	redir_arr = add_element_to_array(redir_arr,
-					&(redir->content), sizeof(char *));
+	redir_arr = add_element_to_array(redir_arr, &(redir->content),
+										sizeof(char *));
 	redir_arr = replace_args(redir_arr, minishell);
 	i = 0;
 	while (redir_arr && redir_arr[i])
@@ -105,7 +107,8 @@ t_stat	replace_redir_args(t_redir_info *redir, t_minishell *minishell)
 	if (i > 1)
 	{
 		*(minishell->stat) = return_msg(1,
-			"minishell: $: ambiguous redirect", redir_name);
+										"minishell: $: ambiguous redirect",
+										redir_name);
 		return (FAIL);
 	}
 	ft_free_node(1, redir_name);
@@ -114,11 +117,11 @@ t_stat	replace_redir_args(t_redir_info *redir, t_minishell *minishell)
 }
 
 t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell,
-			int *tree_std)
+		int *tree_std)
 {
-	int flag;
-	int fd;
-	int *stat;
+	int	flag;
+	int	fd;
+	int	*stat;
 
 	stat = minishell->stat;
 	if (redir->redir_type == HERE_DOC_REDI)
@@ -127,7 +130,7 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell,
 		return (FAIL);
 	flag = get_redir_flag(redir->redir_type);
 	if (redir->redir_type == APPEND_REDI)
-		redir->redir_type = OUTPUT_REDI;// does it matter if i cahnge this here
+		redir->redir_type = OUTPUT_REDI; // does it matter if i cahnge this here
 	if (check_redir_access(redir->redir_type, redir->content, stat))
 		return (FAIL);
 	fd = open(redir->content, flag, 0644);

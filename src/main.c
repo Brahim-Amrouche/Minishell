@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/23 16:18:07 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/24 21:26:59 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void) argc;
 	(void) argv;
-	// tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);
 	tcgetattr(STDIN_FILENO, &term);
 	term.c_lflag &= ~(ECHOCTL);
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
@@ -126,28 +125,11 @@ int	main(int argc, char *argv[], char *envp[])
 		main_parsing(cmd, &minishell);
 		// here comes execution
 		if (!minishell.parsing_err_code)
-			main_execution(&minishell);
-		// ft_free(1, FALSE);
+		main_execution(&minishell);
+		ft_free(1, FALSE);
 		if ((*get_sigvar()).exec_stop)
 			minishell.cmd_status = STOP_WITH_SIGINT;
 	}
 	rl_clear_history();
 	return 0;
 }
-
-// int main(int argc, char *argv[], char **envp)
-// {
-// 	// make_wildcard_str(argv[1]);
-// 	char **pattern;
-
-// 	printf("input is |%s|\n", argv[1]);
-// 	// pattern = create_pattern_arr(argv[1]);
-// 	pattern = create_wildcard_arr(argv[1]);
-// 	while (pattern && *pattern)
-// 	{
-// 		printf("pattern = |%s|\n", *pattern);
-// 		pattern++;
-// 	}
-// 	return (0);
-// }
-

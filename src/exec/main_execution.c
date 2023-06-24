@@ -1,18 +1,18 @@
-// /* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_cmd.c                                         :+:      :+:    :+:   */
+/*   main_execution.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/05/20 17:25:05 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/22 18:33:38 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void reset_std(int *std)
+static void	reset_std(int *std)
 {
 	if (std[STDIN_FILENO] >= 0)
 	{
@@ -26,7 +26,8 @@ static void reset_std(int *std)
 	}
 }
 
-static t_stat	open_all_redir(t_redir_info **tree_redir, t_minishell *minishell, int *tree_std)
+static t_stat	open_all_redir(t_redir_info **tree_redir,
+		t_minishell *minishell, int *tree_std)
 {
 	while (tree_redir && *tree_redir)
 	{
@@ -40,10 +41,10 @@ static t_stat	open_all_redir(t_redir_info **tree_redir, t_minishell *minishell, 
 	return (SUCCESS);
 }
 
-int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
+int	traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 {
-	int				status;
-	int 			tree_std[2];
+	int	status;
+	int	tree_std[2];
 
 	if (!tree)
 		return (0);
@@ -63,16 +64,13 @@ int traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 	else if (tree->type == LOGICAL_EXEC)
 		exec_cmd(tree, minishell);
 	reset_std(tree_std);
-	// wait_all(0, NULL);
 	return (status);
 }
 
-int main_execution(t_minishell *minishell)
+int	main_execution(t_minishell *minishell)
 {
-	t_exec_tree *tree;
+	t_exec_tree	*tree;
 
-	// minishell->std[0] = -1;
-	// minishell->std[1] = -1;
 	tree = minishell->exec_root;
 	if (read_here_docs(tree, minishell))
 	{
@@ -81,6 +79,5 @@ int main_execution(t_minishell *minishell)
 		return (0);
 	}
 	minishell->cmd_status = traverse_tree(tree, minishell);
-	// printf("minishell status is %d\n", minishell->cmd_status);
 	return (0);
 }

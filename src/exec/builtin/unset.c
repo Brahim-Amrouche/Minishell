@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:20 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/01 15:59:28 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/22 18:36:11 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **rm_elem_from_arr(char **arr, char **elem)
+char	**rm_elem_from_arr(char **arr, char **elem)
 {
 	char	**new_arr;
 	size_t	size;
@@ -24,7 +24,8 @@ char **rm_elem_from_arr(char **arr, char **elem)
 	size = 0;
 	while (arr && arr[size])
 		size++;
-	new_arr = ft_malloc(size *  sizeof(char *), m_info(NULL, ENV_SCOPE, NULL, 0));
+	new_arr = ft_malloc(size * sizeof(char *), m_info(NULL, ENV_SCOPE, NULL,
+				0));
 	i = 0;
 	j = 0;
 	while (arr && arr[j] && arr + j != elem)
@@ -38,11 +39,11 @@ char **rm_elem_from_arr(char **arr, char **elem)
 	return (new_arr);
 }
 
-int unset(t_minishell *minishell, char **args, int index)
+int	unset(t_minishell *minishell, char **args, int index)
 {
-	char	**to_be_unset;
-	char	***export_data;
-	char	*arg;
+	char **to_be_unset;
+	char ***export_data;
+	char *arg;
 
 	arg = *(args + (++index));
 	if (!arg)

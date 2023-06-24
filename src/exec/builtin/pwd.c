@@ -3,22 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:16 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/04/18 07:34:01 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/06/23 20:10:12 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	get_dir(void)
+int	get_dir(t_minishell *minishell)
 {
 	char	*cwd;
+	char	**env_pwd;
 
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
-		exit_minishell(1, "cwd error", TRUE);
+	{
+		env_pwd = get_env_var("PWD", minishell->envp);
+		printf("got here\n");
+		if (!env_pwd || !*env_pwd)
+			return (return_msg(1, "can 't find current working dir"));
+		printf("%s\n", *(env_pwd) + ft_strlen("PWD="));
+	}
 	else
 		printf("%s\n", cwd);
 	free(cwd);

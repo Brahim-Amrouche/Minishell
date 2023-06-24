@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_logic.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:43:44 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/08 15:14:06 by elasce           ###   ########.fr       */
+/*   Updated: 2023/06/22 18:32:21 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void exec_and_or(t_exec_tree *tree, t_minishell *minishell)
+void	exec_and_or(t_exec_tree *tree, t_minishell *minishell)
 {
 	int	*stat;
 
@@ -22,14 +22,14 @@ void exec_and_or(t_exec_tree *tree, t_minishell *minishell)
 	while (wait(NULL) != -1)
 		;
 	if (*stat && tree->type == LOGICAL_AND)
-		return;
+		return ;
 	else if (!*stat && tree->type == LOGICAL_OR)
-		return;
+		return ;
 	if (tree->right)
 		*stat = traverse_tree(tree->right, minishell);
 }
 
-void exec_parentheses(t_exec_tree *tree, t_minishell *minishell)
+void	exec_parentheses(t_exec_tree *tree, t_minishell *minishell)
 {
 	int	*stat;
 	int	id;
@@ -48,15 +48,39 @@ void exec_parentheses(t_exec_tree *tree, t_minishell *minishell)
 		}
 		wait_all(id, stat);
 	}
-		(*get_sigvar()).in_child = FALSE;
+	(*get_sigvar()).in_child = FALSE;
 }
 
-void exec_pipe(t_exec_tree *tree, t_minishell *minishell)
+static void	first_pipe(t_minishell *minishell, t_exec_tree *tree, int *p)
 {
-	int	f1;
-	int	f2;
-	int	p[2];
 	int	status;
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	close(p[0]);
+	dup2(p[1], 1);
+	close(p[1]);
+	status = traverse_tree(tree->left, minishell);
+	exit(status);
+}
+
+static void	second_pipe(t_minishell *minishell, t_exec_tree *tree, int *p)
+{
+	int	status;
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	dup2(p[0], 0);
+	close(p[0]);
+	status = traverse_tree(tree->right, minishell);
+	exit(status);
+}
+
+void	exec_pipe(t_exec_tree *tree, t_minishell *minishell)
+{
+	int f1;
+	int f2;
+	int p[2];
 
 	(*get_sigvar()).in_child = TRUE;
 	pipe(p);
@@ -64,28 +88,13 @@ void exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 	if (f1 == -1)
 		exit_minishell(1, "couldn't fork", TRUE);
 	if (!f1)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		close(p[0]);
-		dup2(p[1], 1);
-		close(p[1]);
-		status = traverse_tree(tree->left,minishell);
-		exit(status);
-	}
+		first_pipe(minishell, tree, p);
 	close(p[1]);
 	f2 = fork();
 	if (f2 == -1)
 		exit_minishell(1, "couldn't fork", TRUE);
-	if(!f2)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		dup2(p[0], 0);
-		close(p[0]);
-		status = traverse_tree(tree->right, minishell);
-		exit(status);
-	}
+	if (!f2)
+		second_pipe(minishell, tree, p);
 	close(p[0]);
 	wait_all(f2, minishell->stat);
 	(*get_sigvar()).in_child = FALSE;
