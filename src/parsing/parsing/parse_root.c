@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 14:39:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/02 14:51:58 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/24 14:05:14 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_exec_tree	*parsing_root(t_minishell *mini)
 	mini->exec_root = exec_tree_node(1, LOGICAL_NONE);
 	if (!mini->exec_root)
 		exit_minishell(ENOMEM, "couldn't create a new node", TRUE);
-	while (mini->tokens)
+	while (mini->tokens && !mini->parsing_err_code)
 	{
 		token_content = mini->tokens->content;
 		if (*token_content == '(' || *token_content == ')')

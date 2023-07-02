@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 19:06:57 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/02 15:16:18 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/24 21:22:43 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ static void	make_logical_tokens(t_list *post_logic_node, t_minishell *new_mini,
 	char	*content;
 
 	if (!post_logic_node)
-		exit_minishell(-1, "i mean could u give another logical command", TRUE);
+		return (new_mini->parsing_err_code = return_msg(258,
+				"minishell: logical command needs another command"), (void) 0);
 	content = post_logic_node->content;
 	if (*content == '(' || *content == ')')
 		make_parenthese_tokens(post_logic_node, new_mini);
@@ -79,15 +80,21 @@ void	parse_logical_operators(t_list *logical_node, t_minishell *mini,
 	if (mini->exec_root->type)
 	{
 		make_logical_tokens(logical_node->next, &new_mini, token_len < 2);
+		if (new_mini.parsing_err_code)
+			return (mini->parsing_err_code = new_mini.parsing_err_code,
+				(void) 0);
 		mini->tokens = new_mini.n_parser_helper.post_logic_token;
 		make_new_root(token_content, mini, &new_mini, &new_root);
 		if (!new_root)
 			exit_minishell(ENOMEM, "couldn't malloc a new pipe", TRUE);
+		if (new_mini.parsing_err_code)
+			return (mini->parsing_err_code = new_mini.parsing_err_code,
+				(void) 0);
 		mini->exec_root->parent = new_root;
 		mini->exec_root = new_root;
 	}
 	else
-		exit_minishell(-1, "these logical operators are not well formated",
-			TRUE);
+		mini->parsing_err_code = return_msg(258,
+				"minishell: wrong usage of logical operators");
 	mini->n_parser_helper.parenthese_node = NULL;
 }

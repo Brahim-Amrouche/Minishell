@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   str_tokinize.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 00:47:00 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/04 15:13:39 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/06/24 21:25:33 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ static t_boolean	found_a_token(char *s, char *seprators, size_t *i,
 	return (FALSE);
 }
 
+#define UNCLOSED_QUOTES "minishell: unclosed quotes"
+
 static size_t	index_str_chr(char *s, char *seprators)
 {
 	size_t	i;
@@ -52,9 +54,9 @@ static size_t	index_str_chr(char *s, char *seprators)
 	i = 0;
 	cancel_token = NULL;
 	while (s[i] && !found_a_token(s, seprators, &i, &cancel_token))
-		;
+		continue ;
 	if (cancel_token)
-		exit_minishell(-1, "unclosed quotes", TRUE);
+		get_minishell(NULL)->parsing_err_code = return_msg(258, UNCLOSED_QUOTES);
 	return (i);
 }
 
@@ -81,6 +83,8 @@ char	*str_tokenize(char *str, char *seperators)
 	if (!input)
 		return (NULL);
 	token_pos = index_str_chr(input, seperators);
+	if (get_minishell(NULL)->parsing_err_code)
+		return NULL;
 	if (*(input + token_pos))
 		str_tokenize_helper(&input, token_pos, &token);
 	else
