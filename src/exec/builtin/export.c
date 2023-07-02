@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:11 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/22 18:35:49 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/02 23:30:52 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,8 @@ static void	exporting(t_minishell *minishell, char *arg, char *var_name,
 	var = export_append(existing_var, arg, export_type);
 	if (export_type == DECLARE && existing_var)
 		return ;
-	*export_data = add_or_replace_elem(*export_data, var, var_name);
+	if (ft_strncmp(var, "_=", 2))
+		*export_data = add_or_replace_elem(*export_data, var, var_name);
 	if (export_type != DECLARE)
 		minishell->envp = add_or_replace_elem(minishell->envp, var, var_name);
 }
@@ -172,5 +173,16 @@ int	export(t_minishell *minishell, char **args, int index)
 	if (*(args + (index + 1)))
 		export(minishell, args, index);
 	//  waht about in case of error
+	return (0);
+}
+
+int mini_export(t_minishell *minishell, char *var)
+{
+	char	*cmd[3];
+
+	cmd[0] = "export";
+	cmd[2] = NULL;
+	cmd[1] = var;
+	export(minishell, cmd, 0);
 	return (0);
 }

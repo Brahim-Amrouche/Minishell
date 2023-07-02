@@ -6,13 +6,13 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/23 20:15:43 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/02 23:49:04 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int lunch_bin(char **args, t_minishell *mini)
+static int lunch_bin(char **args, t_minishell *mini)
 {
 	int		id;
 
@@ -41,15 +41,39 @@ int lunch_bin(char **args, t_minishell *mini)
 	return (id);
 }
 
+static void	lunch_bin_wraper(char **args, t_minishell *mini, int *status)
+{
+	int		id;
+
+	id = lunch_bin(args, mini);
+	(*get_sigvar()).in_child = TRUE;
+	wait_all(id, status);
+	(*get_sigvar()).in_child = FALSE;
+}
+
+static void update_underscore(t_minishell *minishell, char **args)
+{
+	int i;
+	char *underscore;
+
+	if (!args || !*args)
+		return ;
+	i = 0;
+	while (args[i])
+		i++;
+	underscore = pro_strjoin("_=", args[i - 1]);
+	mini_export(minishell, underscore);
+	return ;
+}
+
 int call_cmd(t_minishell *minishell, char **args)
 {
 	int		*status;
 	char	*cmd;
-	int		id;
 
 	if (!args || !*args)
 		return (0); // check later
-	id = 0;
+	update_underscore(minishell, args);
 	cmd = *args;
 	status = minishell->stat;
 	if (match_str(cmd, CD))
@@ -67,13 +91,15 @@ int call_cmd(t_minishell *minishell, char **args)
 	else if (match_str(cmd, BASH_EXIT))
 		*status = exit_shell(args);
 	else
-	{
-		id = lunch_bin(args, minishell);
-		(*get_sigvar()).in_child = TRUE;
-	}
-	wait_all(id, status);
-	(*get_sigvar()).in_child = FALSE;
+		lunch_bin_wraper(args, minishell, status);
 	return (*status);
+	// {
+	// 	id = lunch_bin(args, minishell);
+	// 	(*get_sigvar()).in_child = TRUE;
+	// 	wait_all(id, status);
+	// 	(*get_sigvar()).in_child = FALSE;
+	// }
+	// return (*status);
 }
 
 void exec_cmd(t_exec_tree *tree, t_minishell *minishell)

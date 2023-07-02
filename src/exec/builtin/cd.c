@@ -6,84 +6,85 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:08 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/23 20:00:53 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/02 22:50:54 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *remove_dotdot(char *path)
+static char	*save_oldpwd(t_minishell *minishell)
 {
-	int		dot_dot;
-	int		len;
+	char	*old_pwd;
+	char	*env_pwd;
+	char	*pwd_value;
+	char	*temp;
 
-	dot_dot = 0;
-	len = ft_strlen(path);
-	while (len > 3 && path[len - 1] == '.' && path[len - 2] == '.' && path[len - 3] == '/')
+	pwd_value = getcwd(NULL, 0);
+	temp = pwd_value;
+	if (!pwd_value)
+		env_pwd = *get_env_var("PWD", minishell->envp);
+	if (!pwd_value && !env_pwd)
 	{
-		len -= 3;
-		dot_dot++;
+		free(temp);
+		return (NULL);
 	}
-	while (dot_dot && path[len])
-	{
-		if (path[len] != '/')
-			dot_dot--;
-		len--;
-	}
-	return (protected_substr(path, 0, len));
+	if (!pwd_value)
+		pwd_value = env_pwd + ft_strlen("PWD=");
+	old_pwd = pro_strjoin("OLDPWD=", pwd_value);
+	free(temp);
+	return (old_pwd);
 }
 
-static int	change_dir_on_error(t_minishell *minishell, char *path)
+static char	*save_pwd(t_minishell *minishell, char *path)
 {
-	char	*cmd[3];
+	char	*pwd;
 	char	*env_pwd;
-	char	*new_pwd;
-	char	*clean_path;
+	char	*pwd_value;
+	char	*temp;
 
-	cmd[0] = "export";
-	cmd[2] = NULL;
-	env_pwd = *get_env_var("PWD", minishell->envp);
-	if (!env_pwd)
-		return (return_msg(1, "can 't find current working dir"));
-	cmd[1] = pro_strjoin("OLDPWD=", env_pwd + ft_strlen("PWD="));
-	export(minishell, cmd, 0);
-	if (*path == '.')
-		path++;
-	new_pwd = pro_strjoin(env_pwd, path);
-	cmd[1] = pro_strjoin("PWD=", new_pwd);
-	export(minishell, cmd, 0);
-	clean_path = remove_dotdot(path);
-	if (chdir(clean_path) != 0)
-		return_msg(1, "cd: error retrieving current directory");
-	ft_free_node(1, clean_path);
-	return (0);
+	pwd_value = getcwd(NULL, 0);
+	temp = pwd_value;
+	if (!pwd_value)
+	{
+		print_msg(2, "cd: error retrieving current directory: getcwd: $",
+			"cannot access parent directories: No such file or directory");
+		env_pwd = *get_env_var("PWD", minishell->envp);
+		if (!env_pwd)
+		{
+			free(temp);
+			return (NULL);
+		}
+		if (*path == '.')
+			pwd_value = pro_strjoin(env_pwd + ft_strlen("PWD="), path + 1);
+		else if (*path == '/')
+			pwd_value = path;
+	}
+	pwd = pro_strjoin("PWD=", pwd_value);
+	free(temp);
+	return (pwd);
 }
 
 static int	change__update_pwds(t_minishell *minishell, char *path)
 {
-	char	*dir;
-	char	*cmd[3];
+	char	*old_pwd;
+	char	*pwd;
+	char	*cmd[4];
 
 	cmd[0] = "export";
-	cmd[2] = NULL;
-	dir = getcwd(NULL, 0);
-	if (dir == NULL)
-		return (change_dir_on_error(minishell, path));
-	cmd[1] = pro_strjoin("OLDPWD=", dir);
-	free(dir);
+	cmd[3] = NULL;
+	old_pwd = save_oldpwd(minishell);
 	if (chdir(path) != 0)
 		return (1);
-	export(minishell, cmd, 0);
-	dir = getcwd(NULL, 0);
-	if (dir == NULL)
-		return (return_msg(1, "cd: error retrieving next directory"));
-	cmd[1] = pro_strjoin("PWD=", dir);
-	free(dir);
+	pwd = save_pwd(minishell, path);
+	mem_move(m_info(0, 1, pwd, ENV_SCOPE));
+	mem_move(m_info(0, 1, old_pwd, ENV_SCOPE));
+	cmd[1] = pwd;
+	cmd[2] = old_pwd;
 	export(minishell, cmd, 0);
 	return (0);
 }
 
-static char	*go_to_weird_paths(t_minishell *minishell, char *path, int *stat)
+static char	*go_big_or_go_home(t_minishell *minishell, char *path, int *stat)
 {
 	char	*env_path;
 	char	**home_env;
@@ -103,21 +104,6 @@ static char	*go_to_weird_paths(t_minishell *minishell, char *path, int *stat)
 	return (path);
 }
 
-static t_boolean is_directory(char *path)
-{
-	struct stat	file_stat;
-
-	if (stat(path, &file_stat) == 0)
-	{
-		if ((((file_stat.st_mode) & S_IFMT) == S_IFDIR))
-			return (TRUE);
-		else
-			return (FALSE);
-	}
-	print_msg(2, "couldn' t retrive file stat");
-	return (FALSE);
-}
-
 int	change_dir(t_minishell *minishell, char **args)
 {
 	char	*path;
@@ -128,7 +114,7 @@ int	change_dir(t_minishell *minishell, char **args)
 	if (*(args + 1))
 		path = *(args + 1);
 	if (!path)
-		path = go_to_weird_paths(minishell, path, &status);
+		path = go_big_or_go_home(minishell, path, &status);
 	else if (*path == '/')
 		path = ft_strdup(path);
 	else

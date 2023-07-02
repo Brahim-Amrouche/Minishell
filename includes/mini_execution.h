@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/23 17:45:49 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/02 23:31:12 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ t_stat	handle_redirection(t_redir_info *redir, t_minishell *minishell, int *tree
 void	wait_all(pid_t last_proc, int *status);
 t_boolean	match_str(const char *s1, const char *s2);
 t_boolean	has_quotes(char *str);
+t_boolean	is_directory(char *path);
 int		traverse_tree(t_exec_tree *tree, t_minishell *minishell);
 void	exec_cmd(t_exec_tree *tree, t_minishell *minishell);
 void exec_and_or(t_exec_tree *tree, t_minishell *minishell);
@@ -100,6 +101,7 @@ int env(t_minishell *minishell);
 int get_dir(t_minishell *minishell);
 char ***fetch_export_data(void);
 int export(t_minishell *minishell, char **args, int index);
+int	mini_export(t_minishell *minishell, char *var);
 int unset(t_minishell *minishell, char **args, int index);
 int exit_shell(char **args);
  int *id_fetcher(void);
