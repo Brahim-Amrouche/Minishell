@@ -6,13 +6,13 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 14:41:39 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 16:54:26 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int lunch_bin(char **args, t_minishell *mini)
+static int	lunch_bin(char **args, t_minishell *mini)
 {
 	int		id;
 
@@ -51,10 +51,10 @@ static void	lunch_bin_wraper(char **args, t_minishell *mini, int *status)
 	(*get_sigvar()).in_child = FALSE;
 }
 
-static void update_underscore(t_minishell *minishell, char **args)
+static void	update_underscore(t_minishell *minishell, char **args)
 {
-	int i;
-	char *underscore;
+	int		i;
+	char	*underscore;
 
 	if (!args || !*args)
 		return ;
@@ -66,7 +66,7 @@ static void update_underscore(t_minishell *minishell, char **args)
 	return ;
 }
 
-int call_cmd(t_minishell *minishell, char **args)
+int	call_cmd(t_minishell *minishell, char **args)
 {
 	int		*status;
 	char	*cmd;
@@ -85,9 +85,9 @@ int call_cmd(t_minishell *minishell, char **args)
 	else if (match_str(cmd, MINI_ECHO))
 		*status = echo(args);
 	else if (match_str(cmd, EXPORT))
-		*status = export(minishell, args, 0);
+		*status = export(minishell, args);
 	else if (match_str(cmd, UNSET))
-		*status = unset(minishell, args, 0);
+		*status = unset(minishell, args);
 	else if (match_str(cmd, BASH_EXIT))
 		*status = exit_shell(args);
 	else
@@ -95,12 +95,12 @@ int call_cmd(t_minishell *minishell, char **args)
 	return (*status);
 }
 
-void exec_cmd(t_exec_tree *tree, t_minishell *minishell)
+void	exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {
 	char		**args;
 
 	if (!tree->argv)
-		return;
+		return ;
 	args = replace_args(tree->argv, minishell);
 	*(minishell->stat) = call_cmd(minishell, args);
 }

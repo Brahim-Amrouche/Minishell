@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/03 14:11:14 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 15:21:04 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ int	main(int argc, char *argv[], char *envp[])
 		ft_free(1, FALSE);
 		if ((*get_sigvar()).exec_stop)
 			minishell.cmd_status = STOP_WITH_SIGINT;
-		ft_print_memory();
+		// ft_print_memory();
 	}
 	rl_clear_history();
 	return 0;

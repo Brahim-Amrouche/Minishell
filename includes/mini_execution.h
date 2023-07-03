@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 12:55:07 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 18:11:19 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,9 @@ char			**add_elem_to_arr(char **arr, char *new_elem);
 char			**rm_elem_from_arr(char **arr, char **elem);
 char			**create_wildcard_arr(char *pattern);
 int				read_here_docs(t_exec_tree *tree, t_minishell *minishell);
+t_stat			handle_redir_fd(int fd, t_redir_info *redir, int *std);
+t_stat			handle_heredoc(t_redir_info *redir, t_minishell *minishell,
+					int *tree_std);
 t_stat			handle_redirection(t_redir_info *redir, t_minishell *minishell,
 					int *tree_std);
 void			wait_all(pid_t last_proc, int *status);
@@ -92,10 +95,10 @@ int				env(t_minishell *minishell);
 int				get_dir(t_minishell *minishell);
 char			***fetch_export_data(void);
 int				exit_shell(char **args);
-int				unset(t_minishell *minishell, char **args, int index);
-int				export(t_minishell *minishell, char **args, int index);
+int				unset(t_minishell *minishell, char **args);
+int				export(t_minishell *minishell, char **args);
 // export_utils.c
-char			**add_or_replace_elem(char **arr, char *new_elem, char *var_name);
+char			**add_or_replace_elem(char **arr, char *new_elem, char *var_name, t_boolean free);
 int				mini_export(t_minishell *minishell, char *var);
 int				print_export_data(t_minishell *minishell);
 

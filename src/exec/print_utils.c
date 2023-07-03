@@ -6,11 +6,12 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 13:55:20 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/06 15:19:14 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 18:45:13 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// void make_tree(t_exec_tree *tree, int depth, int offset, char **tree_d, int *tree_size, char **types)
+// void make_tree(t_exec_tree *tree, int depth, int offset, char **tree_d
+//             , int *tree_size, char **types)
 // {
 // 	t_exec_info *node;
 
@@ -33,7 +34,8 @@
 // 	}
 // 	if (tree->right)
 // 	{
-// 		make_tree(tree->right, depth + 1, 2 * offset + 1, tree_d, tree_size, types);
+// 		make_tree(tree->right, depth + 1, 2 * offset + 1
+//             , tree_d, tree_size, types);
 // 	}
 // }
 

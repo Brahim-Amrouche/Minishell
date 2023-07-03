@@ -6,13 +6,13 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:27:22 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 13:29:13 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 19:13:32 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
-char **add_elem_to_arr(char **arr, char *new_elem)
+char	**add_elem_to_arr(char **arr, char *new_elem)
 {
 	char	**new_arr;
 	size_t	size;
@@ -23,7 +23,8 @@ char **add_elem_to_arr(char **arr, char *new_elem)
 	size = 0;
 	while (arr && arr[size])
 		size++;
-	new_arr = ft_malloc((size + 2) *  sizeof(char *), m_info(NULL, ENV_SCOPE, NULL, 0));
+	new_arr = ft_malloc((size + 2) * sizeof(char *),
+			m_info(NULL, ENV_SCOPE, NULL, 0));
 	i = 0;
 	while (arr && arr[i])
 	{
@@ -37,11 +38,11 @@ char **add_elem_to_arr(char **arr, char *new_elem)
 	return (new_arr);
 }
 
-char *make_shell_lvl(int shell_lvl)
+char	*make_shell_lvl(int shell_lvl)
 {
-	char *res;
-	char shell_lvl_str[100];
-	int i;
+	char	*res;
+	char	shell_lvl_str[100];
+	int		i;
 
 	ft_bzero(shell_lvl_str, sizeof(shell_lvl_str));
 	ft_memcpy(shell_lvl_str, "SHLVL=", 6);
@@ -71,7 +72,8 @@ char	*calc_new_shell_lvl(t_minishell *minishell)
 		shell_lvl = 0;
 	else if (shell_lvl > 1000)
 	{
-		print_msg(2, "minishell: warning: shell level (%) too high, resetting to 1", shell_lvl);
+		print_msg(2, "minishell: warning: shell level (%)$",
+			shell_lvl, " too high, resetting to 1");
 		shell_lvl = 1;
 	}
 	var = make_shell_lvl(shell_lvl);
@@ -80,8 +82,8 @@ char	*calc_new_shell_lvl(t_minishell *minishell)
 
 char	**export_envp(t_minishell *minishell, char **envp)
 {
-	char *cmd[5];
-	char *dir;
+	char	*cmd[5];
+	char	*dir;
 
 	ft_bzero(cmd, sizeof(cmd));
 	cmd[0] = "export";
@@ -90,7 +92,7 @@ char	**export_envp(t_minishell *minishell, char **envp)
 	while (*envp)
 	{
 		cmd[1] = *envp;
-		export(minishell, cmd, 0);
+		export(minishell, cmd);
 		envp++;
 	}
 	dir = getcwd(NULL, 0);
@@ -100,7 +102,6 @@ char	**export_envp(t_minishell *minishell, char **envp)
 	free(dir);
 	cmd[2] = "OLDPWD";
 	cmd[3] = calc_new_shell_lvl(minishell);
-	export(minishell, cmd, 0);
+	export(minishell, cmd);
 	return (minishell->envp);
-
 }

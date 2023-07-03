@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:08 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 12:56:53 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 18:50:28 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,7 @@ static int	change__update_pwds(t_minishell *minishell, char *path)
 {
 	char	*old_pwd;
 	char	*pwd;
-	// char	*cmd[4];
 
-	// cmd[0] = "export";
-	// cmd[3] = NULL;
 	old_pwd = save_oldpwd(minishell);
 	if (chdir(path) != 0)
 		return (1);
@@ -80,9 +77,6 @@ static int	change__update_pwds(t_minishell *minishell, char *path)
 	mem_move(m_info(0, 1, old_pwd, ENV_SCOPE));
 	mini_export(minishell, pwd);
 	mini_export(minishell, old_pwd);
-	// cmd[1] = pwd;
-	// cmd[2] = old_pwd;
-	// export(minishell, cmd, 0);
 	return (0);
 }
 
@@ -124,11 +118,11 @@ int	change_dir(t_minishell *minishell, char **args)
 	if (status)
 		return (1);
 	if (access(path, F_OK) == 0 && !is_directory(path))
-		return(return_msg(1, "minishell: cd: $: Not a directory", *(args + 1)));
+		return (return_msg(1, "#cd: $: Not a directory", *(args + 1)));
 	else if (access(path, F_OK) != 0)
-		print_msg(2, "minishell: cd: $: No such file or directory", *(args + 1));
+		print_msg(2, "#cd: $: No such file or directory", *(args + 1));
 	else if (access(path, X_OK) != 0)
-		print_msg(2, "minishell: cd: $/: Permission denied", *(args + 1));
+		print_msg(2, "#cd: $/: Permission denied", *(args + 1));
 	if (access(path, X_OK) != 0)
 		return (1);
 	status = change__update_pwds(minishell, path);

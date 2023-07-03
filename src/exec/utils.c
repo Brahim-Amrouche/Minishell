@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 14:22:17 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/02 21:33:47 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 18:45:38 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	**get_env_var(char *name, char **env)
 	while (*env)
 	{
 		if (!ft_strncmp(*env, name, len) && ((*env)[len] == '='
-				|| !(*env)[len]))
+			|| !(*env)[len]))
 			return (env);
 		env++;
 	}
