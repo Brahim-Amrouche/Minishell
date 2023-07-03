@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/03 00:00:21 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 14:11:14 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,19 @@ void	reset_minishell(t_minishell *minishell, t_signal_var *sigvar)
 {
 	int		status;
 	char	**envp;
+	char	**export_data;
 
 	envp = minishell->envp;
 	if (minishell->parsing_err_code)
 		status = minishell->parsing_err_code;
 	else
 		status = minishell->cmd_status;
+	export_data = minishell->export_data;
 	ft_bzero(minishell, sizeof(t_minishell));
 	ft_bzero(sigvar, sizeof(t_signal_var));
 	minishell->envp = envp;
 	minishell->cmd_status = status;
+	minishell->export_data = export_data;
 }
 
 t_minishell *get_minishell(t_minishell *mini)
@@ -129,6 +132,7 @@ int	main(int argc, char *argv[], char *envp[])
 		ft_free(1, FALSE);
 		if ((*get_sigvar()).exec_stop)
 			minishell.cmd_status = STOP_WITH_SIGINT;
+		ft_print_memory();
 	}
 	rl_clear_history();
 	return 0;

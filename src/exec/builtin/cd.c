@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:08 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/02 22:50:54 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 12:56:53 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,21 @@ static int	change__update_pwds(t_minishell *minishell, char *path)
 {
 	char	*old_pwd;
 	char	*pwd;
-	char	*cmd[4];
+	// char	*cmd[4];
 
-	cmd[0] = "export";
-	cmd[3] = NULL;
+	// cmd[0] = "export";
+	// cmd[3] = NULL;
 	old_pwd = save_oldpwd(minishell);
 	if (chdir(path) != 0)
 		return (1);
 	pwd = save_pwd(minishell, path);
 	mem_move(m_info(0, 1, pwd, ENV_SCOPE));
 	mem_move(m_info(0, 1, old_pwd, ENV_SCOPE));
-	cmd[1] = pwd;
-	cmd[2] = old_pwd;
-	export(minishell, cmd, 0);
+	mini_export(minishell, pwd);
+	mini_export(minishell, old_pwd);
+	// cmd[1] = pwd;
+	// cmd[2] = old_pwd;
+	// export(minishell, cmd, 0);
 	return (0);
 }
 

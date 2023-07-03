@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:20 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/22 18:36:11 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 12:39:32 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ char	**rm_elem_from_arr(char **arr, char **elem)
 int	unset(t_minishell *minishell, char **args, int index)
 {
 	char **to_be_unset;
-	char ***export_data;
 	char *arg;
 
 	arg = *(args + (++index));
@@ -51,11 +50,9 @@ int	unset(t_minishell *minishell, char **args, int index)
 	to_be_unset = get_env_var(arg, minishell->envp);
 	if (to_be_unset)
 		minishell->envp = rm_elem_from_arr(minishell->envp, to_be_unset);
-	export_data = fetch_export_data();
-	to_be_unset = get_env_var(arg, *export_data);
+	to_be_unset = get_env_var(arg, minishell->export_data);
 	if (to_be_unset)
-		*export_data = rm_elem_from_arr(*export_data, to_be_unset);
-	// what about export_data
+		minishell->export_data = rm_elem_from_arr(minishell->export_data, to_be_unset);
 	unset(minishell, args, index);
 	return (0);
 }

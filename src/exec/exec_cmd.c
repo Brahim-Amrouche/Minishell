@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 00:00:31 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 14:41:39 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int call_cmd(t_minishell *minishell, char **args)
 	char	*cmd;
 
 	if (!args || !*args)
-		return (0); // check later
+		return (0);
 	update_underscore(minishell, args);
 	cmd = *args;
 	status = minishell->stat;
@@ -93,13 +93,6 @@ int call_cmd(t_minishell *minishell, char **args)
 	else
 		lunch_bin_wraper(args, minishell, status);
 	return (*status);
-	// {
-	// 	id = lunch_bin(args, minishell);
-	// 	(*get_sigvar()).in_child = TRUE;
-	// 	wait_all(id, status);
-	// 	(*get_sigvar()).in_child = FALSE;
-	// }
-	// return (*status);
 }
 
 void exec_cmd(t_exec_tree *tree, t_minishell *minishell)

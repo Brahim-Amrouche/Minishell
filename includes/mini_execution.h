@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/02 23:59:40 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 12:55:07 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,6 @@ void			exec_and_or(t_exec_tree *tree, t_minishell *minishell);
 void			exec_parentheses(t_exec_tree *tree, t_minishell *minishell);
 void			exec_pipe(t_exec_tree *tree, t_minishell *minishell);
 
-// # ifndef t_bool
-// #  define t_bool
-
-// typedef enum e_bool
-// {
-// 	FALSE = 0,
-// 	TRUE = 1
-// }				t_bool;
-// # endif // t_bool
 
 int				main_execution(t_minishell *minishell);
 
@@ -98,12 +89,14 @@ t_stat			try_convert_strtoll(const char *str, long long *number);
 int				change_dir(t_minishell *minishell, char **args);
 int				echo(char **args);
 int				env(t_minishell *minishell);
-int				get_dir(void);
+int				get_dir(t_minishell *minishell);
 char			***fetch_export_data(void);
-int				export(t_minishell *minishell, char **args, int index);
-int				mini_export(t_minishell *minishell, char *var);
-int				unset(t_minishell *minishell, char **args, int index);
 int				exit_shell(char **args);
-int				*id_fetcher(void);
+int				unset(t_minishell *minishell, char **args, int index);
+int				export(t_minishell *minishell, char **args, int index);
+// export_utils.c
+char			**add_or_replace_elem(char **arr, char *new_elem, char *var_name);
+int				mini_export(t_minishell *minishell, char *var);
+int				print_export_data(t_minishell *minishell);
 
 #endif // MINI_EXECUTIONG_H
