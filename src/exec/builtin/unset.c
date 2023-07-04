@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:20 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/22 18:36:11 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 18:53:06 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,23 +39,22 @@ char	**rm_elem_from_arr(char **arr, char **elem)
 	return (new_arr);
 }
 
-int	unset(t_minishell *minishell, char **args, int index)
+int	unset(t_minishell *minishell, char **args)
 {
-	char **to_be_unset;
-	char ***export_data;
-	char *arg;
+	char	**to_be_unset;
+	int		i;
 
-	arg = *(args + (++index));
-	if (!arg)
-		return (0);
-	to_be_unset = get_env_var(arg, minishell->envp);
-	if (to_be_unset)
-		minishell->envp = rm_elem_from_arr(minishell->envp, to_be_unset);
-	export_data = fetch_export_data();
-	to_be_unset = get_env_var(arg, *export_data);
-	if (to_be_unset)
-		*export_data = rm_elem_from_arr(*export_data, to_be_unset);
-	// what about export_data
-	unset(minishell, args, index);
+	i = 1;
+	while (args[i])
+	{
+		to_be_unset = get_env_var(args[i], minishell->envp);
+		if (to_be_unset)
+			minishell->envp = rm_elem_from_arr(minishell->envp, to_be_unset);
+		to_be_unset = get_env_var(args[i], minishell->export_data);
+		if (to_be_unset)
+			minishell->export_data = rm_elem_from_arr(minishell->export_data,
+					to_be_unset);
+		i++;
+	}
 	return (0);
 }

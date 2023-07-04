@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 14:22:17 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/22 18:33:56 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 18:45:38 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,24 @@ char	**get_env_var(char *name, char **env)
 	while (*env)
 	{
 		if (!ft_strncmp(*env, name, len) && ((*env)[len] == '='
-				|| !(*env)[len]))
+			|| !(*env)[len]))
 			return (env);
 		env++;
 	}
 	return (NULL);
+}
+
+t_boolean	is_directory(char *path)
+{
+	struct stat	file_stat;
+
+	if (stat(path, &file_stat) == 0)
+	{
+		if ((((file_stat.st_mode) & S_IFMT) == S_IFDIR))
+			return (TRUE);
+		else
+			return (FALSE);
+	}
+	print_msg(2, "couldn' t retrive file stat");
+	return (FALSE);
 }

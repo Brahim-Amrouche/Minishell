@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:43:44 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/22 18:32:21 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 16:54:52 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ static void	second_pipe(t_minishell *minishell, t_exec_tree *tree, int *p)
 
 void	exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 {
-	int f1;
-	int f2;
-	int p[2];
+	int	f1;
+	int	f2;
+	int	p[2];
 
 	(*get_sigvar()).in_child = TRUE;
 	pipe(p);

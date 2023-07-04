@@ -6,24 +6,11 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:11 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/22 18:35:49 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 18:51:44 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	**add_or_replace_elem(char **arr, char *new_elem, char *var_name)
-{
-	char	**old_elem;
-
-	old_elem = get_env_var(var_name, arr);
-	if (!new_elem)
-		return (arr);
-	if (!old_elem)
-		return (add_elem_to_arr(arr, new_elem));
-	*old_elem = new_elem;
-	return (arr);
-}
 
 static t_export	check_export_type(char *token)
 {
@@ -40,52 +27,6 @@ static t_export	check_export_type(char *token)
 	else if (*token == '+' && *(token + 1) == '=')
 		return (APPEND);
 	return (ERROR);
-}
-
-static char	*get_next_string_alphabetically(char **pool, char *drop)
-{
-	char	*next_drop;
-
-	if (!pool)
-		return (NULL);
-	next_drop = "\255";
-	while (*pool)
-	{
-		if (ft_strncmp(*pool, drop, -1) > 0 && ft_strncmp(*pool, next_drop,
-				-1) < 0)
-			next_drop = *pool;
-		pool++;
-	}
-	return (next_drop);
-}
-
-static int	print_export_data(void)
-{
-	char	**env_var;
-	char	*var;
-	int		i;
-	int		j;
-	int		fd;
-
-	env_var = *fetch_export_data();
-	fd = 1;
-	if (!env_var)
-		return (0);
-	i = 0;
-	var = "\0";
-	while (env_var[i])
-	{
-		var = get_next_string_alphabetically(env_var, var);
-		j = 0;
-		ft_putstr_fd("declare -x  ", fd);
-		while (var[j] && var[j] != '=')
-			ft_putchar_fd(var[j++], fd);
-		if (var[j] == '=')
-			printf("=\"%s\"", var + j + 1);
-		printf("\n");
-		i++;
-	}
-	return (0);
 }
 
 char	*get_export_variable_name(char *var, t_export type)
@@ -125,52 +66,52 @@ char	*export_append(char **old_var_ptr, char *var, t_export type)
 	return (NULL);
 }
 
-char	***fetch_export_data(void)
-{
-	static char	**export_data;
-
-	return (&export_data);
-}
-
 static void	exporting(t_minishell *minishell, char *arg, char *var_name,
 		t_export export_type)
 {
-	char	***export_data;
-	char	**existing_var;
-	char	*var;
+	char		**existing_var;
+	char		*var;
+	t_boolean	data_changed;
 
-	export_data = fetch_export_data();
-	existing_var = get_env_var(var_name, *export_data);
+	existing_var = get_env_var(var_name, minishell->export_data);
 	var = export_append(existing_var, arg, export_type);
+	mem_move(m_info(0, 1, var, ENV_SCOPE));
 	if (export_type == DECLARE && existing_var)
 		return ;
-	*export_data = add_or_replace_elem(*export_data, var, var_name);
+	data_changed = FALSE;
+	if (ft_strncmp(var, "_=", 2))
+		minishell->export_data = add_or_replace_elem(minishell->export_data,
+				var, var_name, FALSE);
 	if (export_type != DECLARE)
-		minishell->envp = add_or_replace_elem(minishell->envp, var, var_name);
+		minishell->envp = add_or_replace_elem(minishell->envp,
+				var, var_name, TRUE);
 }
 
-int	export(t_minishell *minishell, char **args, int index)
+int	export(t_minishell *minishell, char **args)
 {
 	char		*var_name;
 	char		*arg;
 	t_export	export_type;
+	int			i;
 
-	arg = *(args + (++index));
-	if (!arg)
-		return (print_export_data());
-	export_type = check_export_type(arg);
-	var_name = get_export_variable_name(arg, export_type);
-	if (export_type)
-		exporting(minishell, arg, var_name, export_type);
-	else
+	i = 1;
+	if (!(args[i]))
+		return (print_export_data(minishell));
+	while ((args[i]))
 	{
-		minishell->cmd_status = 1;
-		print_msg(2, "minishell: export: `$': not a valid identifier",
+		arg = args[i];
+		export_type = check_export_type(arg);
+		var_name = get_export_variable_name(arg, export_type);
+		if (export_type)
+			exporting(minishell, arg, var_name, export_type);
+		else
+		{
+			minishell->cmd_status = 1;
+			print_msg(2, "minishell: export: `$': not a valid identifier",
 				var_name);
+		}
+		ft_free_node(SUBSTR_SCOPE, var_name);
+		i++;
 	}
-	ft_free_node(SUBSTR_SCOPE, var_name);
-	if (*(args + (index + 1)))
-		export(minishell, args, index);
-	//  waht about in case of error
 	return (0);
 }

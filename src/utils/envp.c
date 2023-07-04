@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:27:22 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/01 16:27:07 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:01:00 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ char	**add_elem_to_arr(char **arr, char *new_elem)
 	size = 0;
 	while (arr && arr[size])
 		size++;
-	new_arr = ft_malloc((size + 2) * sizeof(char *), m_info(NULL, ENV_SCOPE,
-				NULL, 0));
+	new_arr = ft_malloc((size + 2) * sizeof(char *),
+			m_info(NULL, ENV_SCOPE, NULL, 0));
 	i = 0;
 	while (arr && arr[i])
 	{
@@ -36,20 +36,6 @@ char	**add_elem_to_arr(char **arr, char *new_elem)
 	new_arr[i] = NULL;
 	ft_free_node(ENV_SCOPE, arr);
 	return (new_arr);
-}
-
-static char	**add_or_replace_elem(char **arr, char *new_elem, char *var_name)
-{
-	char	**old_elem;
-
-	old_elem = get_env_var(var_name, arr);
-	if (!new_elem)
-		return (arr);
-	if (!old_elem)
-		return (add_elem_to_arr(arr, new_elem));
-	// ft_free_node(ENV_SCOPE, *old_elem);
-	*old_elem = new_elem;
-	return (arr);
 }
 
 char	*make_shell_lvl(int shell_lvl)
@@ -68,7 +54,7 @@ char	*make_shell_lvl(int shell_lvl)
 	if (shell_lvl > 0)
 		shell_lvl_str[i++] = (shell_lvl % 10) + '0';
 	shell_lvl_str[i] = '\0';
-	res = ft_strdup(shell_lvl_str);
+	res = pro_str_dup(shell_lvl_str);
 	return (res);
 }
 
@@ -96,12 +82,11 @@ char	*calc_new_shell_lvl(t_minishell *minishell)
 		shell_lvl = 0;
 	else if (shell_lvl > 1000)
 	{
-		print_msg(2, "minishell: warning: shell level (%) too high,
-				resetting to 1", shell_lvl);
+		print_msg(2, "minishell: warning: shell level (%)$",
+			shell_lvl, " too high, resetting to 1");
 		shell_lvl = 1;
 	}
 	var = make_shell_lvl(shell_lvl);
-	ft_malloc(1, m_info(var, 1, NULL, 0));
 	return (var);
 }
 
@@ -117,8 +102,7 @@ char	**export_envp(t_minishell *minishell, char **envp)
 	while (*envp)
 	{
 		cmd[1] = *envp;
-		if (strncmp("_=", *envp, 2))
-			export(minishell, cmd, 0);
+		export(minishell, cmd);
 		envp++;
 	}
 	dir = getcwd(NULL, 0);
@@ -128,7 +112,6 @@ char	**export_envp(t_minishell *minishell, char **envp)
 	free(dir);
 	cmd[2] = "OLDPWD";
 	cmd[3] = calc_new_shell_lvl(minishell);
-	export(minishell, cmd, 0);
-	minishell->envp = add_essentiel_env(minishell);
+	export(minishell, cmd);
 	return (minishell->envp);
 }

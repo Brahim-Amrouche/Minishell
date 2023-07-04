@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:23:48 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/13 18:43:52 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 18:50:05 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	return_msg(int stat, char *msg, ...)
 			ft_putnbr_fd(va_arg(ap, int), 2);
 		else if (*msg == '$')
 			ft_putstr_fd(va_arg(ap, char *), 2);
+		else if (*msg == '#')
+			ft_putstr_fd("minishell: ", 2);
 		else
 			ft_putchar_fd(*msg, 2);
 		msg++;

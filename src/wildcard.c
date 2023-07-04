@@ -6,31 +6,13 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/23 18:39:32 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/03 19:21:05 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// static char	*terminate_curr__get_next_input(char *input)
-// {
-// 	if (!input)
-// 		return (NULL);
-// 	while (*input && *input != '*')
-// 		input++;
-// 	if (*input == '*')
-// 	{
-// 		*(input++) = '\0';
-// 		while (*input == '*')
-// 			input++;
-// 		if (*input)
-// 			return (input);
-// 		return (NULL);
-// 	}
-// 	return (NULL);
-// }
-
-static int check_wildcard(char *str, char *input)
+static int	check_wildcard(char *str, char *input)
 {
 	if (!str || !input)
 		return (1);
@@ -38,17 +20,17 @@ static int check_wildcard(char *str, char *input)
 		return (1);
 	if (*str == '.' && *input != '.')
 		return (1);
-	if (!ft_strchr(input, '*'))//is this enough?
+	if (!ft_strchr(input, '*'))
 		return (1);
 	return (0);
 }
 
-char **create_pattern_arr(char *pattern)
+char	**create_pattern_arr(char *pattern)
 {
-	char **arr;
-	char *elem;
-	int i;
-	int j;
+	char	**arr;
+	char	*elem;
+	int		i;
+	int		j;
 
 	arr = NULL;
 	i = 0;
@@ -85,98 +67,41 @@ char **create_pattern_arr(char *pattern)
 	return (arr);
 }
 
-static int get_wildcard(char *str, char *in)
+static int	get_wildcard(char *str, char *in)
 {
-	// t_minishell mini;
-	char *match;
-	char **pattern_arr;
-	int i;
+	char	*match;
+	char	**p_arr;
+	int		i;
 
-	// ft_bzero(&mini, sizeof(t_minishell));
-	pattern_arr = create_pattern_arr(in);
-	if (!pattern_arr)
+	p_arr = create_pattern_arr(in);
+	if (!p_arr || check_wildcard(str, in))
 		return (0);
-
-	if (check_wildcard(str, in))
-		return (0);
-	
-	i = 0;
-	while (pattern_arr[i])
+	i = -1;
+	while (p_arr[++i])
 	{
-		if (!(pattern_arr[i][0] == '*' && pattern_arr[i][1] == '\0'))
+		if (!(p_arr[i][0] == '*' && p_arr[i][1] == '\0'))
 		{
-			// printf("b|%s\n", pattern_arr[i]);
-			pattern_arr[i] = unwrap_quotes(pattern_arr[i]);
-			// printf("a|%s\n", pattern_arr[i]);
-			if (i == 0 && *pattern_arr[i] != *str)
+			p_arr[i] = unwrap_quotes(p_arr[i]);
+			if (i == 0 && *p_arr[i] != *str)
 				return (0);
-			if (!pattern_arr[i + 1]
-				&& pattern_arr[i][ft_strlen(pattern_arr[i]) - 1] != str[ft_strlen(str) - 1])
+			if (!p_arr[i + 1]
+				&& p_arr[i][ft_strlen(p_arr[i]) - 1] != str[ft_strlen(str) - 1])
 				return (0);
-			match = ft_strnstr(str, pattern_arr[i], -1);
+			match = ft_strnstr(str, p_arr[i], -1);
 			if (!match)
 				return (0);
-			str = match + ft_strlen(pattern_arr[i]);
+			str = match + ft_strlen(p_arr[i]);
 		}
-		i++;
 	}
 	return (1);
-
-	// input = pro_str_dup(in);
-	// while (*input == '*')
-	// 	input++;
-	// while (*str)
-	// {
-	// 	if (!*input)
-	// 		return (1);
-	// 	next_in = terminate_curr__get_next_input(input);
-	// 	match = ft_strnstr(str, input, -1);
-	// 	if (!match)
-	// 			return (0);
-	// 	if (!next_in)
-	// 		return (1);
-	// 	str = match + ft_strlen(input);
-	// 	input = next_in;
-	// }
-	// return (0);
 }
 
-// static int get_wildcard(char *str, char *in)
-// {
-// 	char *match;
-// 	char *next_in;
-// 	char *input;
-// 	char *s_pattern;
-
-// 	if (check_wildcard(str, in))
-// 		return (0);
-		
-// 	input = pro_str_dup(in);
-// 	while (*input == '*')
-// 		input++;
-// 	while (*str)
-// 	{
-// 		if (!*input)
-// 			return (1);
-// 		next_in = terminate_curr__get_next_input(input);
-// 		s_pattern = pro_str_dup(input);
-// 		match = ft_strnstr(str, input, -1);
-// 		if (!match)
-// 				return (0);
-// 		if (!next_in)
-// 			return (1);
-// 		str = match + ft_strlen(input);
-// 		input = next_in;
-// 	}
-// 	return (0);
-// }
-
-static char		**make_wildcard_arr(DIR *dir, char *pattern)
+static char	**make_wildcard_arr(DIR *dir, char *pattern)
 {
-	struct	dirent *direntf;
-	char	*new_elem;
-	char	**args;
-	int		i;
+	struct dirent	*direntf;
+	char			*new_elem;
+	char			**args;
+	int				i;
 
 	args = NULL;
 	i = 0;
@@ -184,7 +109,7 @@ static char		**make_wildcard_arr(DIR *dir, char *pattern)
 	{
 		direntf = readdir(dir);
 		if (!direntf)
-			break;
+			break ;
 		if (get_wildcard(direntf->d_name, pattern))
 		{
 			new_elem = pro_str_dup(direntf->d_name);
@@ -243,49 +168,3 @@ char	**create_wildcard_arr(char *pattern)
 	closedir(dir);
 	return (args);
 }
-
-// char	*make_wildcard_str(char *pattern)
-// {
-// 	char	*wildcard;
-// 	char	*cwd;
-// 	DIR		*dir;
-// 	struct	dirent *direntf;
-
-// 	wildcard = NULL;
-// 	cwd = getcwd(NULL, 0);
-// 	if (cwd == NULL)
-// 		exit(1);
-// 	// exit_minishell(1, "cwd error", TRUE);
-// 	dir = opendir(cwd);
-// 	free(cwd);
-// 	while (TRUE)
-// 	{
-// 		direntf = readdir(dir);
-// 		if (!direntf)
-// 			break;
-// 		if (get_wildcard(direntf->d_name, pattern))
-// 		{
-// 			if (wildcard)
-// 				wildcard = pro_strjoin(wildcard, " ");
-// 			wildcard = pro_strjoin(wildcard, direntf->d_name);
-// 		}
-// 	}
-// 	// printf("|%s|\n", wildcard);
-// 	closedir(dir);
-// 	return (0);
-// }
-// execute wwith -> ./a.out 'wildcard'
-// cc wildcard.c src/parsing/utils/strjoin.c libft/libft.a -I./libft/includes -I./includes -fsanitize=address -lreadline -lhistory -L/Users/maboulkh/.local/lib/readline/8.2.1/lib -DREADLINE_LIBRARY -I/Users/maboulkh/.local/lib/readline/8.2.1/include/readline
-// int main(int argc, char *argv[], char **envp)
-// {
-// 	// make_wildcard_str(argv[1]);
-// 	char **pattern;
-
-// 	pattern = create_pattern_arr(argv[1]);
-// 	while (pattern && *pattern)
-// 	{
-// 		printf("pattern = |%s|\n", *pattern);
-// 		pattern++;
-// 	}
-// 	return (0);
-// }

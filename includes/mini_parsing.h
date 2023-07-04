@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/23 16:10:36 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/03 11:39:10 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct s_minishell
 	t_exec_tree			*exec_root;
 	t_new_parser_helper	n_parser_helper;
 	char				**envp;
+	char				**export_data;
 	int					cmd_status;
 	int					parsing_err_code;
 	int					*stat;
