@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 19:06:57 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/24 21:22:43 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/04 13:24:46 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,4 @@ void	parse_logical_operators(t_list *logical_node, t_minishell *mini,
 	else
 		mini->parsing_err_code = return_msg(258,
 				"minishell: wrong usage of logical operators");
-	mini->n_parser_helper.parenthese_node = NULL;
 }

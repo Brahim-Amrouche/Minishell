@@ -6,11 +6,21 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:10:42 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/24 21:25:14 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/04 14:26:22 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	token_helper_error(t_list *new_tokens, t_minishell *new_mini)
+{
+	if (!*new_tokens)
+		return (new_mini->parsing_err_code = return_msg(258,
+				"minishell: syntax error empty ()"), (void)0);
+	else
+		return (new_mini->parsing_err_code = return_msg(258,
+				"minishell: syntax error uneven number of ()"), (void)0);
+}
 
 static void	parenthese_tokens_helper(t_list *parenthese_node,
 										t_list **new_tokens,
@@ -38,12 +48,8 @@ static void	parenthese_tokens_helper(t_list *parenthese_node,
 	}
 	if (parenthese_node)
 		new_mini->n_parser_helper.post_logic_token = parenthese_node->next;
-	else if (!*new_tokens)
-		return (new_mini->parsing_err_code = return_msg(258,
-				"minishell: syntax error empty ()"), (void)0);
 	else
-		return (new_mini->parsing_err_code = return_msg(258,
-				"minishell: syntax error uneven number of ()"), (void)0);
+		token_helper_error(*new_tokens, new_mini);
 }
 
 void	make_parenthese_tokens(t_list *parenthese_node, t_minishell *new_mini)
@@ -65,7 +71,7 @@ void	make_parenthese_tokens(t_list *parenthese_node, t_minishell *new_mini)
 	new_mini->tokens = new_tokens;
 }
 
-void	handle_parenthese_node(t_exec_tree *handled_parentheses,
+static void	handle_parenthese_node(t_exec_tree *handled_parentheses,
 							t_minishell *mini)
 {
 	if (mini->exec_root->type)

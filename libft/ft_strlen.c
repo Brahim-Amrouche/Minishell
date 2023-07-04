@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 18:28:42 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/05 00:16:32 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/04 15:52:54 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ size_t	ft_strlen(const char *s)
 
 	i = 0;
 	if (!s)
-		return i;
+		return (i);
 	while (s[i])
 		i++;
 	return (i);

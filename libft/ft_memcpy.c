@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 23:16:29 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/04/11 01:03:23 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/04 15:53:05 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
 	unsigned char	*c_dst;
 	unsigned char	*c_src;
-	size_t	i;
+	size_t			i;
 
 	if (!dst && !src && n)
 		return (dst);
