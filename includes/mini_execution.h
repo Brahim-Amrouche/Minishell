@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 18:11:19 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/05 12:53:02 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ char			**copy_envp(char **envp);
 char			**export_envp(t_minishell *minishell, char **envp);
 char			**add_elem_to_arr(char **arr, char *new_elem);
 char			**rm_elem_from_arr(char **arr, char **elem);
+// wildcard.c
 char			**create_wildcard_arr(char *pattern);
+char			**create_pattern_arr(char *pattern);
+
 int				read_here_docs(t_exec_tree *tree, t_minishell *minishell);
 t_stat			handle_redir_fd(int fd, t_redir_info *redir, int *std);
 t_stat			handle_heredoc(t_redir_info *redir, t_minishell *minishell,

@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 19:21:05 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/05 12:51:18 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,48 +23,6 @@ static int	check_wildcard(char *str, char *input)
 	if (!ft_strchr(input, '*'))
 		return (1);
 	return (0);
-}
-
-char	**create_pattern_arr(char *pattern)
-{
-	char	**arr;
-	char	*elem;
-	int		i;
-	int		j;
-
-	arr = NULL;
-	i = 0;
-	j = 0;
-	while (pattern[i])
-	{
-		if (pattern[i] == '\"')
-			while (pattern[++i] && pattern[i] != '\"')
-				;
-		else if (pattern[i] == '\'')
-			while (pattern[++i] && pattern[i] != '\'')
-				;
-		else if (pattern[i] == '*')
-		{
-			if (i > 0)
-			{
-				elem = protected_substr(pattern, j, i - j);
-				arr = add_element_to_array(arr, &elem, sizeof(char *));
-			}
-			while (pattern[++i] && pattern[i] == '*')
-				;
-			elem = pro_str_dup("*");
-			arr = add_element_to_array(arr, &elem, sizeof(char *));
-			j = i;
-			continue ;
-		}
-		i++;
-	}
-	if (*(pattern + j))
-	{
-		elem = pro_str_dup(pattern + j);
-		arr = add_element_to_array(arr, &elem, sizeof(char *));
-	}
-	return (arr);
 }
 
 static int	get_wildcard(char *str, char *in)
