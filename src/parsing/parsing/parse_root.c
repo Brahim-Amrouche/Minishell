@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 14:39:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/24 14:05:14 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/04 13:24:34 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ t_exec_tree	*parsing_root(t_minishell *mini)
 			handle_parenthese(mini->tokens, mini);
 		else if (!ft_strncmp(token_content, "||", 2)
 			|| !ft_strncmp(token_content, "&&", 2) || *token_content == '|')
+		{
 			parse_logical_operators(mini->tokens, mini, token_content);
+			mini->n_parser_helper.parenthese_node = NULL;
+		}
 		else if (!ft_strncmp(token_content, "<<", 2)
 			|| !ft_strncmp(token_content, ">>", 2) || *token_content == '<'
 			|| *token_content == '>')

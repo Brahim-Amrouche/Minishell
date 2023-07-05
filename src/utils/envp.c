@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:27:22 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 19:13:32 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:01:00 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,16 @@ char	*make_shell_lvl(int shell_lvl)
 	shell_lvl_str[i] = '\0';
 	res = pro_str_dup(shell_lvl_str);
 	return (res);
+}
+
+char	**add_essentiel_env(t_minishell *minishell)
+{
+	char	*var;
+
+	var = ft_strdup("_=/usr/bin/env");
+	ft_malloc(1, m_info(var, ENV_SCOPE, NULL, 0));
+	minishell->envp = add_or_replace_elem(minishell->envp, var, NULL);
+	return (minishell->envp);
 }
 
 char	*calc_new_shell_lvl(t_minishell *minishell)

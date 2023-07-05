@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/03 11:04:46 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:02:42 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	main_parsing(char *cmd, t_minishell *mini)
 {
 	tokenize(cmd, mini);
 	if (mini->parsing_err_code)
-		return;
+		return ;
 	strip_space_from_tokens(mini->tokens, mini);
 	parsing_root(mini);
 	// loop_exec_tree(mini->exec_root, mini,(void *) print_tree);
