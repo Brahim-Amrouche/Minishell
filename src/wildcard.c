@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/05 12:51:18 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/05 14:21:13 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ static int	get_wildcard(char *str, char *in)
 		if (!(p_arr[i][0] == '*' && p_arr[i][1] == '\0'))
 		{
 			p_arr[i] = unwrap_quotes(p_arr[i]);
-			if (i == 0 && *p_arr[i] != *str)
+			if (i == 0 && *p_arr[i] && *p_arr[i] != *str)
 				return (0);
-			if (!p_arr[i + 1]
+			if (!p_arr[i + 1] && *p_arr[i]
 				&& p_arr[i][ft_strlen(p_arr[i]) - 1] != str[ft_strlen(str) - 1])
 				return (0);
 			match = ft_strnstr(str, p_arr[i], -1);
