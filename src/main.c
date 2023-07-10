@@ -6,11 +6,13 @@
 /*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/10 14:21:27 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/10 16:21:07 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_signal_var sigvar;
 
 static	void	signals_init(struct termios *term)
 {
@@ -28,7 +30,9 @@ static	void	shell_execution(t_minishell *minishell, char *cmd)
 	if (!minishell->parsing_err_code)
 		main_execution(minishell);
 	ft_free(1, FALSE);
-	if ((*get_sigvar()).exec_stop)
+	if (sigvar.exec_stop && sigvar.sig_quit)
+		minishell->cmd_status = STOP_WITH_SIGQUIT;
+    else if (sigvar.exec_stop)
 		minishell->cmd_status = STOP_WITH_SIGINT;
 }
 
@@ -45,10 +49,10 @@ int	main(int argc, char *argv[], char *envp[])
 	get_minishell(&minishell);
 	while (TRUE)
 	{
-		reset_minishell(&minishell, get_sigvar());
+		reset_minishell(&minishell);
 		cmd = readline("\033[0;32mminishell$ \033[0m");
 		ft_malloc(1, m_info(cmd, 1, NULL, 0));
-		(*get_sigvar()).readline_stop = TRUE;
+		sigvar.readline_stop = TRUE;
 		exit_on_empty_line(cmd);
 		if (is_spaces_line(cmd))
 		{

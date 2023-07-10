@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:14:59 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/04 15:15:36 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:17:12 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,13 @@ t_signal_var	*get_sigvar(void)
 void	handle_sigquit(int sig)
 {
 	sig++;
-	if ((*get_sigvar()).in_child)
+	if (sigvar.in_child)
 	{
-		if ((*get_sigvar()).readline_stop)
-			(*get_sigvar()).exec_stop = TRUE;
+		if (sigvar.readline_stop)
+        {
+            sigvar.sig_quit = TRUE;
+			sigvar.exec_stop = TRUE;
+        }
 		write(1, "Quit\n", 5); // here or stderr?
 	}
 	rl_redisplay();
@@ -35,8 +38,8 @@ void	handle_sigint(int sig)
 {
 	sig++;
 	write(1, "\n", 1);
-	if ((*get_sigvar()).readline_stop)
-		(*get_sigvar()).exec_stop = TRUE;
+	if (sigvar.readline_stop)
+		sigvar.exec_stop = TRUE;
 	else
 	{
 		rl_on_new_line();

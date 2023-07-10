@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_execution.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/05 12:53:02 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:20:27 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # define ENV_SCOPE 69
 
 # define STOP_WITH_SIGINT 130
+# define STOP_WITH_SIGQUIT 131
 # define ERR_NO_F 126
 # define ERR_NO_P 127
 # define ERR_NO_RED_P 1
@@ -33,11 +34,9 @@ typedef struct s_signal_var
 {
 	t_boolean	readline_stop;
 	t_boolean	exec_stop;
-	t_boolean	in_heredoc;
+    t_boolean	sig_quit;
 	t_boolean	in_child;
 }				t_signal_var;
-
-t_signal_var	*get_sigvar(void);
 
 typedef struct s_env_var
 {

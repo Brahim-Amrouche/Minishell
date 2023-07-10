@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:28:26 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/04 15:21:16 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:43:44 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include "mini_parsing.h"
 # include "mini_execution.h"
 
+extern t_signal_var sigvar;
+
 //signals.c
 t_signal_var    *get_sigvar(void);
 void            handle_sigquit(int sig);
@@ -35,7 +37,7 @@ void            handle_sigint(int sig);
 // main_utils.c
 void        exit_on_empty_line(char *line);
 t_minishell *get_minishell(t_minishell *mini);
-void	    reset_minishell(t_minishell *minishell, t_signal_var *sigvar);
+void	    reset_minishell(t_minishell *minishell);
 t_boolean	is_spaces_line(char *line);
 
 // exit_minishel.c

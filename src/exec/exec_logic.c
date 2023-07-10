@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_logic.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:43:44 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 16:54:52 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:01:53 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	exec_parentheses(t_exec_tree *tree, t_minishell *minishell)
 	int	*stat;
 	int	id;
 
-	(*get_sigvar()).in_child = TRUE;
+	sigvar.in_child = TRUE;
 	stat = (minishell->stat);
 	if (tree->left)
 	{
@@ -48,7 +48,7 @@ void	exec_parentheses(t_exec_tree *tree, t_minishell *minishell)
 		}
 		wait_all(id, stat);
 	}
-	(*get_sigvar()).in_child = FALSE;
+	sigvar.in_child = FALSE;
 }
 
 static void	first_pipe(t_minishell *minishell, t_exec_tree *tree, int *p)
@@ -82,7 +82,7 @@ void	exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 	int	f2;
 	int	p[2];
 
-	(*get_sigvar()).in_child = TRUE;
+	sigvar.in_child = TRUE;
 	pipe(p);
 	f1 = fork();
 	if (f1 == -1)
@@ -97,5 +97,5 @@ void	exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 		second_pipe(minishell, tree, p);
 	close(p[0]);
 	wait_all(f2, minishell->stat);
-	(*get_sigvar()).in_child = FALSE;
+	sigvar.in_child = FALSE;
 }

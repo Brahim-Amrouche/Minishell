@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_execution.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:04 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/22 18:33:38 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:03:27 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	traverse_tree(t_exec_tree *tree, t_minishell *minishell)
 	ft_memset(tree_std, 255, sizeof(tree_std));
 	status = 0;
 	minishell->stat = &status;
-	if ((*get_sigvar()).exec_stop)
+	if (sigvar.exec_stop)
 		return (STOP_WITH_SIGINT);
 	if (open_all_redir(tree->redir, minishell, tree_std))
 		return (status);
@@ -75,7 +75,7 @@ int	main_execution(t_minishell *minishell)
 	if (read_here_docs(tree, minishell))
 	{
 		minishell->cmd_status = 1;
-		(*get_sigvar()).exec_stop = FALSE;
+		sigvar.exec_stop = FALSE;
 		return (0);
 	}
 	minishell->cmd_status = traverse_tree(tree, minishell);

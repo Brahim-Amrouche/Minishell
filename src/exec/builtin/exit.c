@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:07 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/22 18:35:28 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:01:53 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	exit_shell(char **args)
 	long long	status;
 	t_boolean	do_exit;
 
-	if ((*get_sigvar()).in_child == FALSE)
+	if (sigvar.in_child == FALSE)
 		printf("exit\n");
 	do_exit = TRUE;
 	if (args[1] && try_convert_strtoll(args[1], &status))

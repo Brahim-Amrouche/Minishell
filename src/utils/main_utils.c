@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:00:18 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/04 15:51:49 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:18:13 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_minishell	*get_minishell(t_minishell *mini)
 	return (minishell);
 }
 
-void	reset_minishell(t_minishell *minishell, t_signal_var *sigvar)
+void	reset_minishell(t_minishell *minishell)
 {
 	int		status;
 	char	**envp;
@@ -53,7 +53,7 @@ void	reset_minishell(t_minishell *minishell, t_signal_var *sigvar)
 	else
 		status = minishell->cmd_status;
 	ft_bzero(minishell, sizeof(t_minishell));
-	ft_bzero(sigvar, sizeof(t_signal_var));
+	ft_bzero(&sigvar, sizeof(t_signal_var));
 	minishell->envp = envp;
 	minishell->cmd_status = status;
 }
