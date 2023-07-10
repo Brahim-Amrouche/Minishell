@@ -6,7 +6,7 @@
 /*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:28:26 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/10 15:43:44 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/10 16:28:12 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 extern t_signal_var sigvar;
 
 //signals.c
-t_signal_var    *get_sigvar(void);
 void            handle_sigquit(int sig);
 void            handle_sigint(int sig);
 void            handle_sigint(int sig);

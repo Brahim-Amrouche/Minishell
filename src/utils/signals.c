@@ -6,18 +6,11 @@
 /*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:14:59 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/10 16:17:12 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/10 16:27:44 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_signal_var	*get_sigvar(void)
-{
-	static t_signal_var	sigvar;
-
-	return (&sigvar);
-}
 
 void	handle_sigquit(int sig)
 {
