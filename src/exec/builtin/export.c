@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:11 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 18:51:44 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/10 14:21:55 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,12 @@ static void	exporting(t_minishell *minishell, char *arg, char *var_name,
 {
 	char		**existing_var;
 	char		*var;
-	t_boolean	data_changed;
 
 	existing_var = get_env_var(var_name, minishell->export_data);
 	var = export_append(existing_var, arg, export_type);
 	mem_move(m_info(0, 1, var, ENV_SCOPE));
 	if (export_type == DECLARE && existing_var)
 		return ;
-	data_changed = FALSE;
 	if (ft_strncmp(var, "_=", 2))
 		minishell->export_data = add_or_replace_elem(minishell->export_data,
 				var, var_name, FALSE);

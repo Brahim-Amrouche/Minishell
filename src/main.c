@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/04 16:02:11 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/10 14:21:27 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static	void	shell_execution(t_minishell *minishell, char *cmd)
 {
 	add_history(cmd);
 	main_parsing(cmd, minishell);
-	if (!minishell.parsing_err_code)
+	if (!minishell->parsing_err_code)
 		main_execution(minishell);
 	ft_free(1, FALSE);
 	if ((*get_sigvar()).exec_stop)

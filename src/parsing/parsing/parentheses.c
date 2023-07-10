@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parentheses.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:10:42 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/04 14:26:22 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/10 14:22:16 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	token_helper_error(t_list *new_tokens, t_minishell *new_mini)
 {
-	if (!*new_tokens)
+	if (!new_tokens)
 		return (new_mini->parsing_err_code = return_msg(258,
 				"minishell: syntax error empty ()"), (void)0);
 	else

@@ -1,4 +1,49 @@
-SRC_FILES = ${wildcard ./src/**/*.c} ${wildcard ./src/*.c} ${wildcard ./src/**/**/*.c}
+SRC_FILES = 			\
+src/wildcard_utils.c	\
+src/exit_minishell.c	\
+src/wildcard.c	\
+src/main.c	\
+src/exec/handle_redir.c	\
+src/exec/main_execution.c	\
+src/exec/heredoc.c	\
+src/exec/print_utils.c	\
+src/exec/exec_cmd.c	\
+src/exec/builtin/echo.c	\
+src/exec/builtin/env.c	\
+src/exec/builtin/pwd.c	\
+src/exec/builtin/exit.c	\
+src/exec/builtin/unset.c	\
+src/exec/builtin/export_utils.c	\
+src/exec/builtin/export.c	\
+src/exec/builtin/cd.c	\
+src/exec/exec_logic.c	\
+src/exec/utils.c	\
+src/utils/signals.c	\
+src/utils/main_utils.c	\
+src/utils/envp.c	\
+src/parsing/tokenization/token.c	\
+src/parsing/tokenization/check_if_sep.c	\
+src/parsing/tokenization/str_tokinize.c	\
+src/parsing/main_parsing.c	\
+src/parsing/utils/split_util.c	\
+src/parsing/utils/strjoin.c	\
+src/parsing/utils/pro_lstnew.c	\
+src/parsing/utils/tree_utils.c	\
+src/parsing/utils/str_is_a_path.c	\
+src/parsing/utils/strdup.c	\
+src/parsing/utils/skip_quotes.c	\
+src/parsing/utils/replace_value_in_token.c	\
+src/parsing/utils/substr.c	\
+src/parsing/utils/array_utils.c	\
+src/parsing/parsing/parse_root.c	\
+src/parsing/parsing/binaries.c	\
+src/parsing/parsing/env_variables.c	\
+src/parsing/parsing/parentheses.c	\
+src/parsing/parsing/logical_operators.c	\
+src/parsing/parsing/redirs.c	\
+src/parsing/parsing/replace_args.c	\
+src/parsing/parsing/quotes.c	\
+
 
 INCLUDES = -I./includes -I./libft/includes -DREADLINE_LIBRARY -I$(HOME)/.local/lib/readline/8.2.1/include/readline
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 12:40:31 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 18:52:17 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/10 14:21:48 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,8 @@ char	**add_or_replace_elem(char **arr, char *new_elem,
 			char *var_name, t_boolean free)
 {
 	char	**old_elem;
-	char	*old_elem_val;
 
 	old_elem = get_env_var(var_name, arr);
-	old_elem_val = find_env_var(arr, var_name, FALSE);
 	if (!new_elem)
 		return (arr);
 	if (!old_elem)
