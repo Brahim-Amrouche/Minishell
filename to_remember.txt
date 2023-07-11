@@ -63,11 +63,8 @@ IFS bash env :
   then if split result has more than 1 word it's ambigious redirection
 
 
+files not found error code 1
 
-SYMBOLIC LINKS FOLLOW
-export with numbers
-export with smth not found
-"'$PATH'"
-echo -n -n -n
-&&&&
-tab in skiping
+OLD_PWD & PWD segf
+export test+=something when "test" is not already there
+"" empty string should be treated

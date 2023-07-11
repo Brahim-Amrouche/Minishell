@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/11 13:54:49 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/11 20:40:28 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int				exit_shell(char **args);
 t_stat			try_convert_strtoll(const char *str, long long *number);
 // env utils
 char			**add_elem_to_arr(char **arr, char *new_elem);
-char			**rm_elem_from_arr(char **arr, char **elem);
+char			**rm_arr_elem(char **arr, char **elem);
 char			**get_env_var(char *name, char **env);
 // utils
 void			wait_all(pid_t last_proc, int *status);
