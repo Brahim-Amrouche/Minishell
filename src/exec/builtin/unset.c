@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:20 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 18:53:06 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/11 15:19:23 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,19 @@ int	unset(t_minishell *minishell, char **args)
 {
 	char	**to_be_unset;
 	int		i;
+	int		j;
 
 	i = 1;
 	while (args[i])
 	{
+		j = 0;
+		if (args[i][j] != '_' && !ft_isalpha(args[i][j]))
+			return_msg(1, "#unset: `$': not a valid identifier", args[i]);
+		j++;
+		while (args[i][j] && (ft_isalnum(args[i][j]) || args[i][j] == '_'))
+			j++;
+		if (args[i][j] != '\0')
+			return_msg(1, "#unset: `$': not a valid identifier", args[i]);
 		to_be_unset = get_env_var(args[i], minishell->envp);
 		if (to_be_unset)
 			minishell->envp = rm_elem_from_arr(minishell->envp, to_be_unset);

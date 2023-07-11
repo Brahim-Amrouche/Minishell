@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:00:18 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/11 13:34:51 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/11 15:02:25 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,17 @@ void	reset_minishell(t_minishell *minishell)
 {
 	int		status;
 	char	**envp;
+	char	**export_data;
 
 	envp = minishell->envp;
+	export_data = minishell->export_data;
 	if (minishell->parsing_err_code)
 		status = minishell->parsing_err_code;
 	else
 		status = minishell->cmd_status;
 	ft_bzero(minishell, sizeof(t_minishell));
 	ft_bzero(&g_sigvar, sizeof(t_signal_var));
+	minishell->export_data = export_data;
 	minishell->envp = envp;
 	minishell->cmd_status = status;
 }
