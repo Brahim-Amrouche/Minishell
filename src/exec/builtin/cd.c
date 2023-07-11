@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:08 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 18:50:28 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/11 22:14:09 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 static char	*save_oldpwd(t_minishell *minishell)
 {
 	char	*old_pwd;
-	char	*env_pwd;
+	char	**env_pwd;
 	char	*pwd_value;
 	char	*temp;
 
 	pwd_value = getcwd(NULL, 0);
 	temp = pwd_value;
 	if (!pwd_value)
-		env_pwd = *get_env_var("PWD", minishell->envp);
+		env_pwd = get_env_var("PWD", minishell->envp);
 	if (!pwd_value && !env_pwd)
 	{
 		free(temp);
 		return (NULL);
 	}
 	if (!pwd_value)
-		pwd_value = env_pwd + ft_strlen("PWD=");
+		pwd_value = *env_pwd + ft_strlen("PWD=");
 	old_pwd = pro_strjoin("OLDPWD=", pwd_value);
 	free(temp);
 	return (old_pwd);
@@ -38,7 +38,7 @@ static char	*save_oldpwd(t_minishell *minishell)
 static char	*save_pwd(t_minishell *minishell, char *path)
 {
 	char	*pwd;
-	char	*env_pwd;
+	char	**env_pwd;
 	char	*pwd_value;
 	char	*temp;
 
@@ -48,14 +48,14 @@ static char	*save_pwd(t_minishell *minishell, char *path)
 	{
 		print_msg(2, "cd: error retrieving current directory: getcwd: $",
 			"cannot access parent directories: No such file or directory");
-		env_pwd = *get_env_var("PWD", minishell->envp);
+		env_pwd = get_env_var("PWD", minishell->envp);
 		if (!env_pwd)
 		{
 			free(temp);
 			return (NULL);
 		}
 		if (*path == '.')
-			pwd_value = pro_strjoin(env_pwd + ft_strlen("PWD="), path + 1);
+			pwd_value = pro_strjoin(*env_pwd + ft_strlen("PWD="), path + 1);
 		else if (*path == '/')
 			pwd_value = path;
 	}

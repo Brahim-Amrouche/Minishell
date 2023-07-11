@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:11 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/10 14:21:55 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 22:42:33 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,26 @@ char	*get_export_variable_name(char *var, t_export type)
 
 char	*export_append(char **old_var_ptr, char *var, t_export type)
 {
-	char	*old_var;
+	size_t	i;
 
-	old_var = NULL;
-	if (old_var_ptr)
-		old_var = *old_var_ptr;
+	i = 0;
 	if (!var)
 		return (NULL);
 	if (type == ASSIGN || type == DECLARE)
 		return (pro_strjoin(NULL, var));
 	else if (type == APPEND)
 	{
-		while (*var && *var != '=')
-			var++;
-		if (*var == '=' && ft_strchr(old_var, '='))
-			return (pro_strjoin(old_var, var + 1));
-		else if (*var == '=' && !ft_strchr(old_var, '='))
-			return (pro_strjoin(old_var, var));
+		while (var[i] && var[i] != '=')
+			i++;
+		if (!old_var_ptr || *(*old_var_ptr))
+		{
+			var[i - 1] = '\0';
+			return (pro_strjoin(var, var + i));
+		}
+		else if (*var == '=' && ft_strchr(*old_var_ptr, '='))
+			return (pro_strjoin(*old_var_ptr, var + 1));
+		else if (*var == '=' && !ft_strchr(*old_var_ptr, '='))
+			return (pro_strjoin(*old_var_ptr, var));
 	}
 	return (NULL);
 }

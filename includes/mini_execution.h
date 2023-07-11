@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_execution.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/11 20:40:28 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/11 22:03:05 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define STOP_WITH_SIGQUIT 131
 # define ERR_NO_F 126
 # define ERR_NO_P 127
+# define ERR_DEF 1
 # define ERR_NO_RED_P 1
 # define ERR_EXIT_OVER 255
 # define DEFAULT_FILE_PERMISSIONS 0666

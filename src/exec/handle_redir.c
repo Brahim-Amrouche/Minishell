@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:14:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/03 18:10:09 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/11 22:03:19 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static t_stat	check_redir_access(t_redirection_types redir_type,
 	}
 	else if (redir_type != OUTPUT_REDI)
 	{
-		*stat = ERR_NO_F;
+		*stat = ERR_DEF;
 		print_msg(2, "minishell: $: No such file or directory", path);
 		return (FAIL);
 	}

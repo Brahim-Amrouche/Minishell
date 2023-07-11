@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 12:40:31 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/10 14:21:48 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 22:48:38 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	mini_export(t_minishell *minishell, char *var)
 {
 	char	*cmd[3];
 
+	if (!var)
+		return (0);
 	cmd[0] = "export";
 	cmd[2] = NULL;
 	cmd[1] = var;
