@@ -6,13 +6,13 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 23:46:46 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/23 16:03:44 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/11 16:48:04 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#define TOKEN_SEPERATORS "(\n)\n&&\n||\n|\n<<\n>>\n<\n>\n \n"
+#define TOKEN_SEPERATORS "(\n)\n&&\n||\n|\n<<\n>>\n<\n>\n \n\t\n"
 
 static void	add_token_to_cmd(char *token, t_list **cmd_tokens)
 {

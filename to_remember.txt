@@ -65,3 +65,9 @@ IFS bash env :
 
 
 SYMBOLIC LINKS FOLLOW
+export with numbers
+export with smth not found
+"'$PATH'"
+echo -n -n -n
+&&&&
+tab in skiping

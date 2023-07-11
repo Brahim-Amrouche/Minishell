@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 19:06:57 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/04 13:24:46 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/11 17:03:24 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ static void	make_logical_tokens(t_list *post_logic_node, t_minishell *new_mini,
 	content = post_logic_node->content;
 	if (*content == '(' || *content == ')')
 		make_parenthese_tokens(post_logic_node, new_mini);
+	else if (*content == '&' || *content == '|')
+		return (new_mini->parsing_err_code = return_msg(258,
+				"#syntax error near unexpected token `$'", content), (void) 0);
 	else
 		logical_tokens_helper(post_logic_node, new_mini, is_pipe);
 }

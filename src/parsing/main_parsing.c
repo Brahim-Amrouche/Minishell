@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/11 13:31:32 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/11 16:50:28 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	token_space_striper_helper(t_list *root,
 	while (tokens)
 	{
 		content = tokens->content;
-		if (*content == ' ')
+		if (ft_is_space(*content))
 			;
 		else
 		{
@@ -45,7 +45,7 @@ static void	strip_space_from_tokens(t_list *tokens, t_minishell *mini)
 	while (tokens)
 	{
 		content = tokens->content;
-		if (*content != ' ')
+		if (!ft_is_space(*content))
 		{
 			root = tokens;
 			break ;
