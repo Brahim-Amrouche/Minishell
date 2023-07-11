@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 14:13:35 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/10 15:01:53 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 13:34:51 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,11 @@ int	read_here_docs(t_exec_tree *tree, t_minishell *minishell)
 	redir = tree->redir;
 	while (redir && *redir)
 	{
-		if ((*redir)->redir_type == HERE_DOC_REDI && !sigvar.exec_stop)
+		if ((*redir)->redir_type == HERE_DOC_REDI && !g_sigvar.exec_stop)
 			save_heredoc_content(*redir, minishell);
 		redir++;
 	}
-	if (sigvar.exec_stop)
+	if (g_sigvar.exec_stop)
 		return (1);
 	return (0);
 }

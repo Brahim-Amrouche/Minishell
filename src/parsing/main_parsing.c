@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:47:35 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/04 16:02:42 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:31:32 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ static void	strip_space_from_tokens(t_list *tokens, t_minishell *mini)
 // 	redir = node->redir;
 // 	while (redir && *redir)
 // 	{
-// 		printf("redir :%s, type = %d\n", (*redir)->content, (*redir)->redir_type);
+// 		printf("redir :%s, type = %d\n", (*redir)->content
+			// , (*redir)->redir_type);
 // 		redir++;
 // 	}
 // 	printf("------------------------------\n");
@@ -92,5 +93,4 @@ void	main_parsing(char *cmd, t_minishell *mini)
 		return ;
 	strip_space_from_tokens(mini->tokens, mini);
 	parsing_root(mini);
-	// loop_exec_tree(mini->exec_root, mini,(void *) print_tree);
 }

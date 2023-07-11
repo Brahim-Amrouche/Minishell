@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 14:39:21 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/04 13:24:34 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:29:33 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@ void	handle_args(char *token, t_minishell *mini)
 			&& mini->n_parser_helper.parenthese_node == NULL))
 		exec_node->type = LOGICAL_EXEC;
 	else
-		exit_minishell(-1, "dont give me args like this", TRUE);
+	{
+		mini->parsing_err_code = return_msg(258, "#$",
+				"syntax error near unexpected token");
+		return ;
+	}
 	temp = exec_node->argv;
 	exec_node->argv = add_element_to_array(temp, &token, sizeof(char *));
 	if (!exec_node->argv)

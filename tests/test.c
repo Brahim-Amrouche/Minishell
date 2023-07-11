@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 06:56:23 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/06/13 20:39:47 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:46:41 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <signal.h>
 #include <stdlib.h>
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	int	id;
 	int	id2;
@@ -35,7 +35,6 @@ int main(int argc, char *argv[])
 		fd = open("tests/std2", O_WRONLY | O_TRUNC | O_CREAT, 0777);
 		dup2(fd, STDERR_FILENO);
 		close(fd);
-
 		execlp("./minishell", "./minishell", NULL);
 	}
 	id2 = fork();
@@ -50,9 +49,7 @@ int main(int argc, char *argv[])
 		fd = open("tests/bash2", O_WRONLY | O_TRUNC | O_CREAT, 0777);
 		dup2(fd, STDERR_FILENO);
 		close(fd);
-
 		execlp("/bin/bash", "/bin/bash", NULL);
-
 	}
 	sleep(5);
 	kill(id, SIGKILL);

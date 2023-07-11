@@ -6,7 +6,6 @@ src/main.c	\
 src/exec/handle_redir.c	\
 src/exec/main_execution.c	\
 src/exec/heredoc.c	\
-src/exec/print_utils.c	\
 src/exec/exec_cmd.c	\
 src/exec/builtin/echo.c	\
 src/exec/builtin/env.c	\
@@ -18,6 +17,7 @@ src/exec/builtin/export.c	\
 src/exec/builtin/cd.c	\
 src/exec/exec_logic.c	\
 src/exec/utils.c	\
+src/exec/utils2.c	\
 src/utils/signals.c	\
 src/utils/main_utils.c	\
 src/utils/envp.c	\
@@ -81,13 +81,6 @@ $(NAME) : $(OBJ_FILES) ./libft/libft.a
 
 TEST_OBJ = tests/test
 
-test :
-	gcc tests/test.c -o tests/test
-	./tests/test
-
-ctest :
-	@cd tests && rm -rf	std1 std2 bash1 bash2 test
-
 dev : devflag $(NAME)
 
 devflag :
@@ -111,5 +104,7 @@ fclean : clean
 	@echo "$(NC_TEXT)"
 
 re : fclean all
+
+bonus : all
 
 .PHONY : clean fclean re all

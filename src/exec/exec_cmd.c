@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/10 15:01:53 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 13:34:51 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ static void	lunch_bin_wraper(char **args, t_minishell *mini, int *status)
 	int		id;
 
 	id = lunch_bin(args, mini);
-	sigvar.in_child = TRUE;
+	g_sigvar.in_child = TRUE;
 	wait_all(id, status);
-	sigvar.in_child = FALSE;
+	g_sigvar.in_child = FALSE;
 }
 
 static void	update_underscore(t_minishell *minishell, char **args)

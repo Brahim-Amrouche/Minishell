@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_execution.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/10 16:20:27 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 13:54:49 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,14 @@
 # define ERR_NO_F 126
 # define ERR_NO_P 127
 # define ERR_NO_RED_P 1
+# define ERR_EXIT_OVER 255
+# define DEFAULT_FILE_PERMISSIONS 0666
 
 typedef struct s_signal_var
 {
 	t_boolean	readline_stop;
 	t_boolean	exec_stop;
-    t_boolean	sig_quit;
+	t_boolean	sig_quit;
 	t_boolean	in_child;
 }				t_signal_var;
 
@@ -58,49 +60,54 @@ typedef enum e_stat
 	FAIL = 1,
 }				t_stat;
 
-char			**copy_envp(char **envp);
+// cd
+int				change_dir(t_minishell *minishell, char **args);
+// echo
+int				echo(char **args);
+// env
+int				env(t_minishell *minishell);
+// pwd
+int				get_dir(t_minishell *minishell);
+// export
+int				export(t_minishell *minishell, char **args);
+// envp
 char			**export_envp(t_minishell *minishell, char **envp);
+char			***fetch_export_data(void);
+// unset
+int				unset(t_minishell *minishell, char **args);
+// exit
+int				exit_shell(char **args);
+t_stat			try_convert_strtoll(const char *str, long long *number);
+// env utils
 char			**add_elem_to_arr(char **arr, char *new_elem);
 char			**rm_elem_from_arr(char **arr, char **elem);
+char			**get_env_var(char *name, char **env);
+// utils
+void			wait_all(pid_t last_proc, int *status);
+t_boolean		match_str(const char *s1, const char *s2);
+t_boolean		has_quotes(char *str);
+t_boolean		is_directory(char *path);
+void			check_parentises_syntax(t_exec_tree *tree);
 // wildcard.c
 char			**create_wildcard_arr(char *pattern);
 char			**create_pattern_arr(char *pattern);
-
+// redirection
 int				read_here_docs(t_exec_tree *tree, t_minishell *minishell);
 t_stat			handle_redir_fd(int fd, t_redir_info *redir, int *std);
 t_stat			handle_heredoc(t_redir_info *redir, t_minishell *minishell,
 					int *tree_std);
 t_stat			handle_redirection(t_redir_info *redir, t_minishell *minishell,
 					int *tree_std);
-void			wait_all(pid_t last_proc, int *status);
-t_boolean		match_str(const char *s1, const char *s2);
-t_boolean		has_quotes(char *str);
-t_boolean		is_directory(char *path);
+// execute tree
+int				main_execution(t_minishell *minishell);
 int				traverse_tree(t_exec_tree *tree, t_minishell *minishell);
 void			exec_cmd(t_exec_tree *tree, t_minishell *minishell);
 void			exec_and_or(t_exec_tree *tree, t_minishell *minishell);
 void			exec_parentheses(t_exec_tree *tree, t_minishell *minishell);
 void			exec_pipe(t_exec_tree *tree, t_minishell *minishell);
-
-
-int				main_execution(t_minishell *minishell);
-
-# define DEFAULT_FILE_PERMISSIONS 0666
-
-
-char			**get_env_var(char *name, char **env);
-t_stat			try_convert_strtoll(const char *str, long long *number);
-
-int				change_dir(t_minishell *minishell, char **args);
-int				echo(char **args);
-int				env(t_minishell *minishell);
-int				get_dir(t_minishell *minishell);
-char			***fetch_export_data(void);
-int				exit_shell(char **args);
-int				unset(t_minishell *minishell, char **args);
-int				export(t_minishell *minishell, char **args);
 // export_utils.c
-char			**add_or_replace_elem(char **arr, char *new_elem, char *var_name, t_boolean free);
+char			**add_or_replace_elem(char **arr, char *new_elem,
+					char *var_name, t_boolean free);
 int				mini_export(t_minishell *minishell, char *var);
 int				print_export_data(t_minishell *minishell);
 

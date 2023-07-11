@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/03 11:39:10 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:41:51 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_new_parser_helper
 {
 	t_list				*post_logic_token;
 	t_exec_tree			*parenthese_node;
+	int					subshell_lvl;
 	t_boolean			arg_replacing;
 }						t_new_parser_helper;
 
@@ -103,18 +104,18 @@ void					tokenize(char *input, t_minishell *mini);
 t_exec_tree				*parsing_root(t_minishell *mini);
 
 // parentheses.c
-void	handle_parenthese(t_list *token_node,
-						t_minishell *mini);
-void	make_parenthese_tokens(t_list *parenthese_node,
+void					handle_parenthese(t_list *token_node,
+							t_minishell *mini);
+void					make_parenthese_tokens(t_list *parenthese_node,
 							t_minishell *new_mini);
 // redirs.c
 void					parse_redirections(t_list *redir_node,
 							t_minishell *mini);
 
 // logical_operators.c
-void	parse_logical_operators(t_list *logical_node,
-								t_minishell *mini,
-								char *token_content);
+void					parse_logical_operators(t_list *logical_node,
+							t_minishell *mini,
+							char *token_content);
 // quotes.c
 char					*unwrap_quotes(char *arg);
 
@@ -142,7 +143,7 @@ char					*protected_substr(char const *s, unsigned int start,
 							size_t len);
 
 // split_util.c
-char	**ft_split_multi_sep(char *s,
+char					**ft_split_multi_sep(char *s,
 							t_boolean (*sep_checker)(char));
 // strdup.c
 char					*pro_str_dup(char *str);

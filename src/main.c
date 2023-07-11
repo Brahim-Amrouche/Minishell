@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/10 16:21:07 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 13:36:38 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_signal_var sigvar;
+t_signal_var	g_sigvar;
 
 static	void	signals_init(struct termios *term)
 {
@@ -26,13 +26,16 @@ static	void	signals_init(struct termios *term)
 static	void	shell_execution(t_minishell *minishell, char *cmd)
 {
 	add_history(cmd);
-	main_parsing(cmd, minishell);
-	if (!minishell->parsing_err_code)
-		main_execution(minishell);
+	if (!is_spaces_line(cmd))
+	{
+		main_parsing(cmd, minishell);
+		if (!minishell->parsing_err_code)
+			main_execution(minishell);
+	}
 	ft_free(1, FALSE);
-	if (sigvar.exec_stop && sigvar.sig_quit)
+	if (g_sigvar.exec_stop && g_sigvar.sig_quit)
 		minishell->cmd_status = STOP_WITH_SIGQUIT;
-    else if (sigvar.exec_stop)
+	else if (g_sigvar.exec_stop)
 		minishell->cmd_status = STOP_WITH_SIGINT;
 }
 
@@ -52,15 +55,10 @@ int	main(int argc, char *argv[], char *envp[])
 		reset_minishell(&minishell);
 		cmd = readline("\033[0;32mminishell$ \033[0m");
 		ft_malloc(1, m_info(cmd, 1, NULL, 0));
-		sigvar.readline_stop = TRUE;
+		g_sigvar.readline_stop = TRUE;
 		exit_on_empty_line(cmd);
-		if (is_spaces_line(cmd))
-		{
-			minishell.cmd_status = 0; // mr new parser is this really needed ??;
-			continue ;
-		}
 		shell_execution(&minishell, cmd);
 	}
-	rl_clear_history();// is this mandatory to replicate in other places too??
+	rl_clear_history();
 	return (0);
 }

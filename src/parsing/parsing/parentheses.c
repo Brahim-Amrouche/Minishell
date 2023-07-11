@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parentheses.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:10:42 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/10 14:22:16 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 13:30:42 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 static void	token_helper_error(t_list *new_tokens, t_minishell *new_mini)
 {
-	if (!new_tokens)
+	if (!new_tokens && new_mini->n_parser_helper.subshell_lvl < 2)
 		return (new_mini->parsing_err_code = return_msg(258,
 				"minishell: syntax error empty ()"), (void)0);
-	else
+	else if (new_mini->n_parser_helper.subshell_lvl < 2)
 		return (new_mini->parsing_err_code = return_msg(258,
 				"minishell: syntax error uneven number of ()"), (void)0);
 }
@@ -46,7 +46,7 @@ static void	parenthese_tokens_helper(t_list *parenthese_node,
 		ft_lstadd_back(new_tokens, new_node);
 		parenthese_node = parenthese_node->next;
 	}
-	if (parenthese_node)
+	if (parenthese_node && *new_tokens)
 		new_mini->n_parser_helper.post_logic_token = parenthese_node->next;
 	else
 		token_helper_error(*new_tokens, new_mini);
@@ -98,6 +98,8 @@ void	handle_parenthese(t_list *token_node, t_minishell *mini)
 		return (mini->parsing_err_code = return_msg(258,
 				"minishell: syntax error near unexpected token `()`"), (void)0);
 	ft_bzero(&new_mini, sizeof(t_minishell));
+	new_mini.n_parser_helper.subshell_lvl = mini->n_parser_helper.subshell_lvl
+		+ 1;
 	make_parenthese_tokens(token_node, &new_mini);
 	if (new_mini.parsing_err_code)
 		return (mini->parsing_err_code = new_mini.parsing_err_code, (void)0);

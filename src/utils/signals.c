@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:14:59 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/10 16:27:44 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 13:34:51 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,30 @@
 void	handle_sigquit(int sig)
 {
 	sig++;
-	if (sigvar.in_child)
+	if (g_sigvar.in_child)
 	{
-		if (sigvar.readline_stop)
-        {
-            sigvar.sig_quit = TRUE;
-			sigvar.exec_stop = TRUE;
-        }
-		write(1, "Quit\n", 5); // here or stderr?
+		if (g_sigvar.readline_stop)
+		{
+			g_sigvar.sig_quit = TRUE;
+			g_sigvar.exec_stop = TRUE;
+		}
+		write(2, "Quit\n", 5);
+		rl_on_new_line();
+		rl_replace_line("", 0);
 	}
-	rl_redisplay();
+	else
+	{
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
 
 void	handle_sigint(int sig)
 {
 	sig++;
 	write(1, "\n", 1);
-	if (sigvar.readline_stop)
-		sigvar.exec_stop = TRUE;
+	if (g_sigvar.readline_stop)
+		g_sigvar.exec_stop = TRUE;
 	else
 	{
 		rl_on_new_line();

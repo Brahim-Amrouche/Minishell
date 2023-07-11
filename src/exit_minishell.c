@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:23:48 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/03 18:50:05 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/11 11:26:30 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,6 @@ void	exit_minishell(int err_n, char *message, t_boolean purge)
 	if (message)
 		ft_putstr_fd(message, STDERR_FILENO);
 	ft_putchar_fd('\n', STDERR_FILENO);
+	rl_clear_history();
 	exit(1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:00:18 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/10 16:18:13 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 13:34:51 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	exit_on_empty_line(char *line)
 	{
 		printf("exit\n");
 		ft_free(0, TRUE);
+		rl_clear_history();
 		exit(0);
 	}
 }
@@ -53,7 +54,7 @@ void	reset_minishell(t_minishell *minishell)
 	else
 		status = minishell->cmd_status;
 	ft_bzero(minishell, sizeof(t_minishell));
-	ft_bzero(&sigvar, sizeof(t_signal_var));
+	ft_bzero(&g_sigvar, sizeof(t_signal_var));
 	minishell->envp = envp;
 	minishell->cmd_status = status;
 }

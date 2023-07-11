@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:28:26 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/10 16:28:12 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 13:43:50 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,21 @@
 # include "mini_parsing.h"
 # include "mini_execution.h"
 
-extern t_signal_var sigvar;
+extern t_signal_var	g_sigvar;
 
 //signals.c
-void            handle_sigquit(int sig);
-void            handle_sigint(int sig);
-void            handle_sigint(int sig);
+void			handle_sigquit(int sig);
+void			handle_sigint(int sig);
 
 // main_utils.c
-void        exit_on_empty_line(char *line);
-t_minishell *get_minishell(t_minishell *mini);
-void	    reset_minishell(t_minishell *minishell);
-t_boolean	is_spaces_line(char *line);
+void			exit_on_empty_line(char *line);
+t_minishell		*get_minishell(t_minishell *mini);
+void			reset_minishell(t_minishell *minishell);
+t_boolean		is_spaces_line(char *line);
 
 // exit_minishel.c
-int			return_msg(int stat, char *msg, ...);
-void		print_msg(int fd, char *msg, ...);
-void		exit_minishell(int err_n, char *message, t_boolean purge);
+int				return_msg(int stat, char *msg, ...);
+void			print_msg(int fd, char *msg, ...);
+void			exit_minishell(int err_n, char *message, t_boolean purge);
 
 #endif

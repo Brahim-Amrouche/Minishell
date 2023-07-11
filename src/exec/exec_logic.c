@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_logic.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:43:44 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/10 15:01:53 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 13:34:51 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,16 @@ void	exec_parentheses(t_exec_tree *tree, t_minishell *minishell)
 	int	*stat;
 	int	id;
 
-	sigvar.in_child = TRUE;
+	g_sigvar.in_child = TRUE;
 	stat = (minishell->stat);
 	if (tree->left)
 	{
 		id = fork();
 		if (id == 0)
 		{
+			if (tree->left->type == LOGICAL_PARENTHESE && !tree->redir
+				&& tree->left->left)
+				check_parentises_syntax(tree->left->left);
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
 			*stat = traverse_tree(tree->left, minishell);
@@ -48,7 +51,7 @@ void	exec_parentheses(t_exec_tree *tree, t_minishell *minishell)
 		}
 		wait_all(id, stat);
 	}
-	sigvar.in_child = FALSE;
+	g_sigvar.in_child = FALSE;
 }
 
 static void	first_pipe(t_minishell *minishell, t_exec_tree *tree, int *p)
@@ -82,7 +85,7 @@ void	exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 	int	f2;
 	int	p[2];
 
-	sigvar.in_child = TRUE;
+	g_sigvar.in_child = TRUE;
 	pipe(p);
 	f1 = fork();
 	if (f1 == -1)
@@ -97,5 +100,5 @@ void	exec_pipe(t_exec_tree *tree, t_minishell *minishell)
 		second_pipe(minishell, tree, p);
 	close(p[0]);
 	wait_all(f2, minishell->stat);
-	sigvar.in_child = FALSE;
+	g_sigvar.in_child = FALSE;
 }

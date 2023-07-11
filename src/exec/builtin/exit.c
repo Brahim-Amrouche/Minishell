@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:07 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/10 15:01:53 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/11 13:34:51 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,20 @@ int	exit_shell(char **args)
 	long long	status;
 	t_boolean	do_exit;
 
-	if (sigvar.in_child == FALSE)
+	if (g_sigvar.in_child == FALSE)
 		printf("exit\n");
 	do_exit = TRUE;
 	if (args[1] && try_convert_strtoll(args[1], &status))
 	{
 		print_msg(2, "exit: $: numeric argument required", args[1]);
-		status = 2;
+		status = ERR_EXIT_OVER;
 	}
 	else if (args[1] && args[2])
 		do_exit = FALSE;
 	if (do_exit)
 	{
 		ft_free(0, TRUE);
+		rl_clear_history();
 		exit(status % 256);
 	}
 	else
