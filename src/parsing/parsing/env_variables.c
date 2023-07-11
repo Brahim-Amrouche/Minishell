@@ -6,18 +6,11 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/22 16:12:03 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/11 19:37:03 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_boolean	ft_is_space(char c)
-{
-	if (c == ' ' || c == '\t' || c == '\n')
-		return (TRUE);
-	return (FALSE);
-}
 
 char	*find_env_var(char **envp, char *needle, t_boolean get_og)
 {
@@ -68,36 +61,45 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 	return (new_arg);
 }
 
-static t_boolean	is_dollar_breaker(char c)
+static t_boolean	is_dollar_char(char c)
 {
-	if (c == DOLLAR_SIGN || ft_is_space(c) || c == DOUBLE_QUOTE
-		|| c == SINGLE_QUOTE)
+	if (ft_isalpha(c) || c == '_')
 		return (TRUE);
 	return (FALSE);
+}
+
+static	void	quotes_logic(char *arg, size_t *i, t_boolean skip,
+	t_boolean *inside_quote)
+{
+	if (skip && *(arg + *i) == DOUBLE_QUOTE)
+		*inside_quote = !(*inside_quote);
+	if (skip && !(*inside_quote) && *(arg + *i) == SINGLE_QUOTE)
+		skip_quotes(arg, i);
 }
 
 char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
 {
 	size_t		i;
 	size_t		j;
-	t_boolean	replace;
+	t_boolean	inside_quote;
 
 	i = 0;
-	while (*(arg + i))
+	inside_quote = FALSE;
+	while (arg[i])
 	{
-		if (skip && *(arg + i) == SINGLE_QUOTE)
-			skip_quotes(arg, &i);
+		quotes_logic(arg, &i, skip, &inside_quote);
 		j = i + 1;
-		replace = FALSE;
-		while (*(arg + i) == DOLLAR_SIGN && *(arg + j) && (j != i + 1
-				|| !is_dollar_breaker(*(arg + j))))
+		if (arg[i] == DOLLAR_SIGN
+			&& !ft_isdigit(arg[j]) && arg[j] != '?'
+			&& is_dollar_char(arg[j]) && j++)
 		{
-			replace = TRUE;
-			if (is_dollar_breaker(*(arg + j + 1)))
-				break ;
-			j++;
+			while (arg[j] && (is_dollar_char(arg[j]) || ft_isdigit(arg[j])))
+				j++;
+			j--;
+			arg = replace_env_var(arg, mini, &i, j);
 		}
-		if (replace)
+		else if (arg[i] == DOLLAR_SIGN
+			&& (ft_isdigit(arg[j]) || arg[j] == '?'))
 			arg = replace_env_var(arg, mini, &i, j);
 		i++;
 	}

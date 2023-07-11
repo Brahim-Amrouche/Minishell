@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   replace_args.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/23 18:40:22 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/11 19:30:48 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// char	*replace_arg(char *arg, t_minishell *mini)
-// {
-// 	arg = get_var(arg, mini);
-// 	arg = unwrap_quotes(arg, mini);
-// 	return (arg);
-// }
+t_boolean	ft_is_space(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\n')
+		return (TRUE);
+	return (FALSE);
+}
 
 static char	**replace_argv(char *argv, size_t *i, size_t *j)
 {

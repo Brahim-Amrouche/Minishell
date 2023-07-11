@@ -6,13 +6,13 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:01:55 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/11 17:22:18 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/11 19:02:57 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_boolean check_param(char **args, int *i)
+static t_boolean	check_param(char **args, int *i)
 {
 	t_boolean	new_line;
 	int			j;
@@ -24,7 +24,7 @@ static t_boolean check_param(char **args, int *i)
 		while (args[*i][j] && args[*i][j] == 'n')
 			j++;
 		if (args[*i][j])
-			break;
+			break ;
 		new_line = FALSE;
 		(*i)++;
 	}
