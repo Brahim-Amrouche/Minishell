@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:00:18 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/11 15:02:25 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/12 08:27:48 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,5 @@ void	reset_minishell(t_minishell *minishell)
 	minishell->export_data = export_data;
 	minishell->envp = envp;
 	minishell->cmd_status = status;
+	g_sigvar.stat = &(minishell->cmd_status);
 }

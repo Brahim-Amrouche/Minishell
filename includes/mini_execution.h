@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/11 22:03:05 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/12 08:25:57 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_signal_var
 	t_boolean	exec_stop;
 	t_boolean	sig_quit;
 	t_boolean	in_child;
+	int			*stat;
 }				t_signal_var;
 
 typedef struct s_env_var
