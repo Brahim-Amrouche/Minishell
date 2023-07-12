@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/12 18:59:04 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/12 20:01:12 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ static char	**split_argv_if_space(char *argv, t_minishell *mini)
 	quote_indexes = mini->n_parser_helper.quote_indexes;
 	while (argv[i])
 	{
-		if (quote_indexes && *quote_indexes
-			&& i == (*quote_indexes)[0])
+		if (quote_indexes && *quote_indexes && i == (*quote_indexes)[0])
 			i = (*(quote_indexes++))[1];
 		else if (ft_is_space(argv[i]))
 			add_argv(argv, &args, &i, &j);
@@ -82,8 +81,7 @@ char	**replace_args(char **args, t_minishell *mini)
 		*args = get_var(*args, mini, TRUE);
 		temp_args = new_args;
 		splited_args = split_argv_if_space(*args, mini);
-		new_args = add_arr_to_array(temp_args, splited_args,
-				sizeof(char *));
+		new_args = add_arr_to_array(temp_args, splited_args, sizeof(char *));
 		ft_free_node(1, temp_args);
 		args++;
 	}

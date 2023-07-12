@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/12 18:24:05 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/12 19:21:59 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void	exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 	if (!tree->argv)
 		return ;
 	args = replace_args(tree->argv, minishell);
+	//////check this
 	if (match_str(args[0], ""))
 		*(minishell->stat) = return_msg(127, "#: command not found");
 	else

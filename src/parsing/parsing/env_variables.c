@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/12 18:48:55 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/12 19:30:03 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,16 +116,16 @@ char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
 		quotes_logic(&arg, &i, skip, &inside_quote);
 		j = i + 1;
 		if (arg[i] == DOLLAR_SIGN
-			&& !ft_isdigit(arg[j]) && arg[j] != '?'
-			&& is_dollar_char(arg[j]) && j++)
+			&& !ft_isdigit(arg[j]) && arg[j] != '\"' && arg[j] != '\''
+			&& arg[j] != '?' && is_dollar_char(arg[j]) && j++)
 		{
 			while (arg[j] && (is_dollar_char(arg[j]) || ft_isdigit(arg[j])))
 				j++;
 			j--;
 			arg = replace_env_var(arg, mini, &i, j);
 		}
-		else if (arg[i] == DOLLAR_SIGN
-			&& (ft_isdigit(arg[j]) || arg[j] == '?'))
+		else if (arg[i] == DOLLAR_SIGN && (ft_isdigit(arg[j]) 
+			|| arg[j] == '?' || arg[j] == '\"' || arg[j] == '\''))
 			arg = replace_env_var(arg, mini, &i, j);
 		i++;
 	}
