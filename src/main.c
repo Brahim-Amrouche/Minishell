@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/12 09:17:56 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/12 18:11:35 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static	void	signals_init(struct termios *term)
 
 static	void	shell_execution(t_minishell *minishell, char *cmd)
 {
-	if (*cmd  != '\0')
+	if (*cmd != '\0')
 		add_history(cmd);
 	if (!is_spaces_line(cmd))
 	{

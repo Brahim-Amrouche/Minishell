@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/12 17:25:34 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/12 18:20:19 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ typedef struct s_new_parser_helper
 	t_exec_tree			*parenthese_node;
 	int					subshell_lvl;
 	t_boolean			arg_replacing;
-    t_boolean           remove_quotes;
-    size_t              **quote_indexes;
+	t_boolean			remove_quotes;
+	size_t				**quote_indexes;
 }						t_new_parser_helper;
 
 typedef struct s_minishell
@@ -119,7 +119,8 @@ void					parse_logical_operators(t_list *logical_node,
 							t_minishell *mini,
 							char *token_content);
 // quotes.c
-char	                *remove_quotes(char *arg, size_t *i, size_t *j, t_boolean get_env);
+char					*remove_quotes(char *arg, size_t *i, size_t *j,
+							t_boolean get_env);
 char					*unwrap_quotes(char *arg);
 
 // replace_args.c

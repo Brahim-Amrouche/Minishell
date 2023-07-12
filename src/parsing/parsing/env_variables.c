@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/12 17:32:56 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/12 18:48:55 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,33 +68,36 @@ static t_boolean	is_dollar_char(char c)
 	return (FALSE);
 }
 
-static	void	quotes_logic(char **arg, size_t *i, t_boolean skip,
-	t_boolean *inside_quote, t_minishell *mini)
+void static quote_logic_helper(char **arg, t_minishell *mini, size_t *i, t_boolean is_single)
 {
-    size_t  *quote_indexes;
-    size_t  **temp;
-    size_t  j;
+	size_t		*quote_indexes;
+	size_t		**temp;
 
-    if(mini->n_parser_helper.remove_quotes && *((*arg) + *i) == DOUBLE_QUOTE)
-    {
-        quote_indexes = ft_malloc(2 * sizeof(size_t), m_info(NULL, 1, NULL, 0));
-        if (!quote_indexes)
-            exit_minishell(ENOMEM, "couldnt malloc quote index", TRUE);
-        quote_indexes[0] = *i;
-        quote_indexes[1] = *i;
-        skip_quotes(*arg, &quote_indexes[1]);
-        *arg = remove_quotes(*arg, i, &quote_indexes[1], TRUE);
-        temp =  mini->n_parser_helper.quote_indexes ;
-        mini->n_parser_helper.quote_indexes = add_element_to_array(temp, &quote_indexes, sizeof(size_t *));
-        ft_free_node(1, temp);
-    }
-    else if (mini->n_parser_helper.remove_quotes && *((*arg) + *i) == SINGLE_QUOTE)
-    {
-        j = *i;
-        skip_quotes(*arg, &j);
-        *arg = remove_quotes(*arg, i, &j, FALSE);
-    }
-    else if (skip && *((*arg) + *i) == DOUBLE_QUOTE)
+	quote_indexes = ft_malloc(2 * sizeof(size_t), m_info(NULL, 1, NULL, 0));
+	if (!quote_indexes)
+		exit_minishell(ENOMEM, "couldnt malloc quote index", TRUE);
+	quote_indexes[0] = *i;
+	quote_indexes[1] = *i;
+	skip_quotes(*arg, &quote_indexes[1]);
+	*arg = remove_quotes(*arg, i, &quote_indexes[1], is_single);
+	temp = mini->n_parser_helper.quote_indexes ;
+	mini->n_parser_helper.quote_indexes
+		= add_element_to_array(temp, &quote_indexes, sizeof(size_t *));
+	ft_free_node(1, temp);
+}
+
+static	void	quotes_logic(char **arg, size_t *i, t_boolean skip,
+	t_boolean *inside_quote)
+{
+	t_minishell	*mini;
+
+	mini = get_minishell(NULL);
+	if (mini->n_parser_helper.remove_quotes && *((*arg) + *i) == DOUBLE_QUOTE)
+		quote_logic_helper(arg, mini, i, TRUE);
+	else if (mini->n_parser_helper.remove_quotes
+		&& *((*arg) + *i) == SINGLE_QUOTE)
+		quote_logic_helper(arg, mini, i, FALSE);
+	else if (skip && *((*arg) + *i) == DOUBLE_QUOTE)
 		*inside_quote = !(*inside_quote);
 	else if (skip && !(*inside_quote) && *((*arg) + *i) == SINGLE_QUOTE)
 		skip_quotes(*arg, i);
@@ -110,7 +113,7 @@ char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
 	inside_quote = FALSE;
 	while (arg[i])
 	{
-		quotes_logic(&arg, &i, skip, &inside_quote, mini);
+		quotes_logic(&arg, &i, skip, &inside_quote);
 		j = i + 1;
 		if (arg[i] == DOLLAR_SIGN
 			&& !ft_isdigit(arg[j]) && arg[j] != '?'
