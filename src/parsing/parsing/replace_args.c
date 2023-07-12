@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replace_args.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/12 14:19:39 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/12 17:17:36 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ static char	**replace_argv(char *argv, size_t *i, size_t *j)
 
 	new_arg = protected_substr(argv, *j, *i);
 	new_args = create_wildcard_arr(new_arg);
-	n = 0;
-	while (new_args[n])
-	{
-		new_args[n] = unwrap_quotes(new_args[n]);
-		n++;
-	}
+	// n = 0;
+	// while (new_args[n])
+	// {
+	// 	new_args[n] = unwrap_quotes(new_args[n]);
+	// 	n++;
+	// }
 	*j = *i;
 	while (ft_is_space(argv[*j]))
 		(*j)++;
@@ -51,24 +51,35 @@ static void	add_argv(char *argv, char ***args, size_t *i, size_t *j)
 	ft_free_node(1, temp);
 }
 
-static char	**split_argv_if_space(char *argv)
+static char	**split_argv_if_space(char *argv, t_minishell *mini)
 {
 	size_t	i;
 	size_t	j;
 	char	**args;
+    size_t  **quote_indexes;
 
 	i = 0;
 	args = NULL;
 	j = 0;
+    quote_indexes = mini->n_parser_helper.quote_indexes;
 	while (argv[i])
 	{
-		if (ft_is_space(argv[i]))
+        if (quote_indexes && *quote_indexes 
+            && i == (*quote_indexes)[0])
+        {
+            printf("indexes to skip %zu %zu\n", (*quote_indexes)[0]
+                ,(*quote_indexes)[1]);
+            i = (*quote_indexes)[1];
+            quote_indexes++;
+            continue;
+        }
+		else if (ft_is_space(argv[i]))
 		{
 			add_argv(argv, &args, &i, &j);
 			continue ;
 		}
-		else if (argv[i])
-			skip_quotes(argv, &i);
+		// else if (argv[i])
+		// 	skip_quotes(argv, &i);
 		i++;
 	}
 	add_argv(argv, &args, &i, &j);
@@ -143,17 +154,19 @@ char	**replace_args(char **args, t_minishell *mini)
 	char	**splited_args;
 
 	new_args = NULL;
+    mini->n_parser_helper.remove_quotes = TRUE;
 	while (*args)
 	{
 		*args = get_var(*args, mini, TRUE);
-
+        printf("the arg after |%s|\n", *args);
 		temp_args = new_args;
-		splited_args = split_argv_if_space(*args);
+		splited_args = split_argv_if_space(*args, mini);
 		new_args = add_arr_to_array(temp_args, splited_args,
 				sizeof(char *));
 		ft_free_node(1, temp_args);
 		args++;
 	}
+    mini->n_parser_helper.remove_quotes = FALSE;
 	ft_free_node(1, args);
 	return (new_args);
 }

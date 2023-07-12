@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/11 19:37:03 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/12 17:32:56 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,36 @@ static t_boolean	is_dollar_char(char c)
 	return (FALSE);
 }
 
-static	void	quotes_logic(char *arg, size_t *i, t_boolean skip,
-	t_boolean *inside_quote)
+static	void	quotes_logic(char **arg, size_t *i, t_boolean skip,
+	t_boolean *inside_quote, t_minishell *mini)
 {
-	if (skip && *(arg + *i) == DOUBLE_QUOTE)
+    size_t  *quote_indexes;
+    size_t  **temp;
+    size_t  j;
+
+    if(mini->n_parser_helper.remove_quotes && *((*arg) + *i) == DOUBLE_QUOTE)
+    {
+        quote_indexes = ft_malloc(2 * sizeof(size_t), m_info(NULL, 1, NULL, 0));
+        if (!quote_indexes)
+            exit_minishell(ENOMEM, "couldnt malloc quote index", TRUE);
+        quote_indexes[0] = *i;
+        quote_indexes[1] = *i;
+        skip_quotes(*arg, &quote_indexes[1]);
+        *arg = remove_quotes(*arg, i, &quote_indexes[1], TRUE);
+        temp =  mini->n_parser_helper.quote_indexes ;
+        mini->n_parser_helper.quote_indexes = add_element_to_array(temp, &quote_indexes, sizeof(size_t *));
+        ft_free_node(1, temp);
+    }
+    else if (mini->n_parser_helper.remove_quotes && *((*arg) + *i) == SINGLE_QUOTE)
+    {
+        j = *i;
+        skip_quotes(*arg, &j);
+        *arg = remove_quotes(*arg, i, &j, FALSE);
+    }
+    else if (skip && *((*arg) + *i) == DOUBLE_QUOTE)
 		*inside_quote = !(*inside_quote);
-	if (skip && !(*inside_quote) && *(arg + *i) == SINGLE_QUOTE)
-		skip_quotes(arg, i);
+	else if (skip && !(*inside_quote) && *((*arg) + *i) == SINGLE_QUOTE)
+		skip_quotes(*arg, i);
 }
 
 char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
@@ -87,7 +110,7 @@ char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
 	inside_quote = FALSE;
 	while (arg[i])
 	{
-		quotes_logic(arg, &i, skip, &inside_quote);
+		quotes_logic(&arg, &i, skip, &inside_quote, mini);
 		j = i + 1;
 		if (arg[i] == DOLLAR_SIGN
 			&& !ft_isdigit(arg[j]) && arg[j] != '?'
