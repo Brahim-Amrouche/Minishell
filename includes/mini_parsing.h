@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/11 13:41:51 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/12 11:17:52 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ void					parse_logical_operators(t_list *logical_node,
 							t_minishell *mini,
 							char *token_content);
 // quotes.c
+char					**unwrap_double_quotes(char *args, t_minishell *mini);
 char					*unwrap_quotes(char *arg);
 
 // replace_args.c

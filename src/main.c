@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:22:56 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/11 16:05:45 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/12 09:17:56 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ static	void	signals_init(struct termios *term)
 
 static	void	shell_execution(t_minishell *minishell, char *cmd)
 {
-	add_history(cmd);
+	if (*cmd  != '\0')
+		add_history(cmd);
 	if (!is_spaces_line(cmd))
 	{
 		main_parsing(cmd, minishell);

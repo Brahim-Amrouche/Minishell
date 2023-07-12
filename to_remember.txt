@@ -68,3 +68,7 @@ files not found error code 1
 OLD_PWD & PWD segf
 export test+=something when "test" is not already there
 "" empty string should be treated
+
+here doc signal ctnrl + \
+$a = ""
+empty line in history

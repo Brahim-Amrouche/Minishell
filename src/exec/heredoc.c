@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 14:13:35 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/11 13:34:51 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/12 09:08:48 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,9 @@ static t_stat	save_heredoc_content(t_redir_info *redir,
 	redir->has_quotes = has_quotes(redir->content);
 	if (pipe(p) == -1)
 		exit_minishell(1, "couldnt open pipe", TRUE);
+	signal(SIGQUIT, SIG_IGN);
 	waitpid(open_heredoc(redir->content, p), minishell->stat, 0);
+	signal(SIGQUIT, &handle_sigquit);
 	if (close(p[1]))
 		print_msg(2, "minishell: $: can't be closed", redir->content);
 	redir->heredoc_content = NULL;

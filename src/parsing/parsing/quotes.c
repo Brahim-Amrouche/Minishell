@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:27:20 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/06/16 16:35:43 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/12 12:08:27 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,70 @@ static char	*remove_quotes(char *arg, size_t *i, size_t j)
 	ft_free_node(1, arg);
 	*i += removed_quotes_len - 1;
 	return (new_arg);
+}
+
+
+
+// char	**unwrap_double_quotes(char *args, t_minishell *mini)
+// {
+// 	size_t	i;
+// 	size_t	j;
+// 	char	*quoted_arg;
+// 	char	**arg_table;
+
+// 	i = 0;
+// 	while (args[i])
+// 	{
+// 		j = 0;
+// 		if (args[i] == DOUBLE_QUOTE)
+// 		{
+// 			j = i + 1;
+// 			while (args[j] && args[j] != DOUBLE_QUOTE)
+// 				j++;
+// 			quoted_arg = protected_substr(args, i + 1, j - i - 1);
+// 			if (!quoted_arg)
+// 				exit_minishell(ENOMEM, "couldnt unwrap double quotes", TRUE);
+// 			quoted_arg = get_var(arg, mini, TRUE);
+// 			args = replace_value_in_arg(args, i, j, quoted_arg);
+// 			i += ft_strlen(quoted_arg) - 1;
+// 		}
+// 		else
+// 		i++;
+// 	}
+// 	args = get_var(args, mini, TRUE);
+// 	arg_table = add_element_to_array(NULL, &args,sizeof(char *));
+// 	return (arg_table);
+// }
+
+char	**unwrap_double_quotes(char *args, t_minishell *mini)
+{
+	size_t	i;
+	size_t	j;
+	char	*quoted_arg;
+	char	**arg_table;
+
+	i = 0;
+	while (args[i])
+	{
+		j = 0;
+		if (args[i] == DOUBLE_QUOTE)
+		{
+			j = i + 1;
+			while (args[j] && args[j] != DOUBLE_QUOTE)
+				j++;
+			quoted_arg = protected_substr(args, i + 1, j - i - 1);
+			if (!quoted_arg)
+				exit_minishell(ENOMEM, "couldnt unwrap double quotes", TRUE);
+			quoted_arg = get_var(arg, mini, TRUE);
+			args = replace_value_in_arg(args, i, j, quoted_arg);
+			i += ft_strlen(quoted_arg) - 1;
+		}
+		else
+		i++;
+	}
+	args = get_var(args, mini, TRUE);
+	arg_table = add_element_to_array(NULL, &args,sizeof(char *));
+	return (arg_table);
 }
 
 char	*unwrap_quotes(char *arg)

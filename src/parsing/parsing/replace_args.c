@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/11 19:30:48 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/12 14:19:39 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,67 @@ static char	**split_argv_if_space(char *argv)
 	return (args);
 }
 
+
+// char	**unwrap_double_quotes(char *args, t_minishell *mini)
+// {
+// 	size_t		i;
+// 	size_t		j;
+// 	size_t		n;
+// 	char		*quoted_arg;
+// 	char		**splited_arg;
+// 	char		**arr_table;
+// 	t_boolean	split;
+
+// 	arr_table = NULL;
+// 	i = 0;
+// 	j = 0;
+// 	while (TRUE)
+// 	{
+// 		j = i;
+// 		while (args[i] != DOUBLE_QUOTE || args[i] == SINGLE_QUOTE || !args[i])
+// 			i++;
+// 		if (i > j)
+// 		{
+// 			quoted_arg = get_var(protected_substr(args, i, j));
+// 			splited_arg = ft_split_multi_sep(quoted_arg, ft_is_space);
+// 			n = 0;
+// 			while (splited_arg && splited_arg[n])
+// 				n++;
+// 			args = splited_arg[n - 1];
+// 			splited_arg[n - 1] = NULL;
+// 			arr_table = add_arr_to_array(arr_table, splited_arg)
+			
+// 			args = replace_value_in_arg(args, i, j, quoted_arg);
+// 			i = j + ft_strlen(quoted_arg);
+// 			j = i;
+// 		}
+// 		if (!args[i])
+// 			break ;
+// 		if (args[i] == DOUBLE_QUOTE)
+// 		{
+// 			skip_quotes(args, &i);
+// 			quoted_arg = get_var(protected_substr(args, i + 1, j - i - 1));
+// 			args = replace_value_in_arg(args, i, j, quoted_arg);
+// 			i = j + ft_strlen(quoted_arg) - 1;
+// 		}
+// 		else if (args[i] == SINGLE_QUOTE)
+// 		{
+// 			skip_quotes(args, &i);
+// 			quoted_arg = protected_substr(args, i + 1, j - i - 1);
+// 			args = replace_value_in_arg(args, i, j, quoted_arg);
+// 			i = j + ft_strlen(quoted_arg) - 1;
+// 		}
+// 	}
+// 	return (args);
+// }
+
+// char	**remove_double_quotes(char	*args,char	**splited_args, t_minishell *mini)
+// {
+// 	size_t	i;
+// 	size_t	j;
+// 	char	*quoted_args;
+
+
 char	**replace_args(char **args, t_minishell *mini)
 {
 	char	**new_args;
@@ -85,6 +146,7 @@ char	**replace_args(char **args, t_minishell *mini)
 	while (*args)
 	{
 		*args = get_var(*args, mini, TRUE);
+
 		temp_args = new_args;
 		splited_args = split_argv_if_space(*args);
 		new_args = add_arr_to_array(temp_args, splited_args,
