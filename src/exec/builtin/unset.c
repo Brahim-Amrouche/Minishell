@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:20 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/11 20:40:28 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/13 05:21:31 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ static t_boolean	check_unset_syntax(char **args, int i, int *old_err)
 	err = 0;
 	if (args[i][j] != '_' && !ft_isalpha(args[i][j]))
 		err = return_msg(1, "#unset: `$': not a valid identifier", args[i]);
-	j++;
+	if (args[i][j])
+		j++;
 	while (args[i][j] && (ft_isalnum(args[i][j]) || args[i][j] == '_'))
 		j++;
 	if (!err && args[i][j] != '\0')

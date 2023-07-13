@@ -3,33 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 12:17:29 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/05 12:56:48 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/13 01:58:48 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static t_stat	set_up_disection(size_t *i, size_t *k,
+			size_t	***wildcard_index)
+{
+	*wildcard_index = (get_minishell(NULL))->n_parser_helper.wildcard_indexes;
+	if (!(*wildcard_index))
+		return (FAIL);
+	*i = 0;
+	*k = 0;
+	return (SUCCESS);
+}
+
 static char	**disect_pattern(char *pattern, char **arr, char *elem, int *j)
 {
+	size_t	**wildcard_index;
 	size_t	i;
+	size_t	k;
 
-	i = 0;
+	if (set_up_disection(&i, &k, &wildcard_index) == FAIL)
+		return (add_elem_to_arr(NULL, pattern));
 	while (pattern[i])
 	{
-		skip_quotes(pattern, &i);
-		if (pattern[i] == '*')
+		if (wildcard_index[k] && i == *(wildcard_index[k]))
 		{
 			if (i > 0)
 			{
 				elem = protected_substr(pattern, *j, i - *j);
 				arr = add_element_to_array(arr, &elem, sizeof(char *));
 			}
-			while (pattern[++i] && pattern[i] == '*')
+			while (wildcard_index[k] && i == *(wildcard_index[k]) && ++i && ++k)
 				;
-			elem = pro_str_dup("*");
+			elem = pro_str_dup("");
 			arr = add_element_to_array(arr, &elem, sizeof(char *));
 			*j = i;
 			continue ;

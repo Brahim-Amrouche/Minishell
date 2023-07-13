@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/05 14:21:13 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/13 01:49:52 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,8 @@ static int	get_wildcard(char *str, char *in)
 	i = -1;
 	while (p_arr[++i])
 	{
-		if (!(p_arr[i][0] == '*' && p_arr[i][1] == '\0'))
+		if (!(p_arr[i][0] == '\0'))
 		{
-			p_arr[i] = unwrap_quotes(p_arr[i]);
 			if (i == 0 && *p_arr[i] && *p_arr[i] != *str)
 				return (0);
 			if (!p_arr[i + 1] && *p_arr[i]

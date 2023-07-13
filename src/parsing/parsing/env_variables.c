@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/12 19:30:03 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/13 06:21:13 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,28 +61,23 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 	return (new_arg);
 }
 
-static t_boolean	is_dollar_char(char c)
-{
-	if (ft_isalpha(c) || c == '_')
-		return (TRUE);
-	return (FALSE);
-}
-
-void static quote_logic_helper(char **arg, t_minishell *mini, size_t *i, t_boolean is_single)
+void static	quote_logic_helper(char **arg, t_minishell *mini,
+				size_t *i, t_boolean is_single)
 {
 	size_t		*quote_indexes;
 	size_t		**temp;
 
+	mini->n_parser_helper.quote_indexes = NULL;
 	quote_indexes = ft_malloc(2 * sizeof(size_t), m_info(NULL, 1, NULL, 0));
 	if (!quote_indexes)
 		exit_minishell(ENOMEM, "couldnt malloc quote index", TRUE);
 	quote_indexes[0] = *i;
 	quote_indexes[1] = *i;
 	skip_quotes(*arg, &quote_indexes[1]);
-	*arg = remove_quotes(*arg, i, &quote_indexes[1], is_single);
+	*arg = remove_quotes(*arg, i, quote_indexes[1], is_single);
+	quote_indexes[1] = (*i) + 1;
 	temp = mini->n_parser_helper.quote_indexes ;
-	mini->n_parser_helper.quote_indexes
-		= add_element_to_array(temp, &quote_indexes, sizeof(size_t *));
+	mini->n_parser_helper.quote_indexes = add_element_to_array(temp, &quote_indexes, sizeof(size_t *));
 	ft_free_node(1, temp);
 }
 
@@ -114,18 +109,17 @@ char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
 	while (arg[i])
 	{
 		quotes_logic(&arg, &i, skip, &inside_quote);
+		if (i >= ft_strlen(arg))
+			break ;
 		j = i + 1;
-		if (arg[i] == DOLLAR_SIGN
-			&& !ft_isdigit(arg[j]) && arg[j] != '\"' && arg[j] != '\''
-			&& arg[j] != '?' && is_dollar_char(arg[j]) && j++)
+		if (check_if_var(arg, i, j) && j++)
 		{
 			while (arg[j] && (is_dollar_char(arg[j]) || ft_isdigit(arg[j])))
 				j++;
 			j--;
 			arg = replace_env_var(arg, mini, &i, j);
 		}
-		else if (arg[i] == DOLLAR_SIGN && (ft_isdigit(arg[j]) 
-			|| arg[j] == '?' || arg[j] == '\"' || arg[j] == '\''))
+		else if (check_if_special_var(arg, i, j))
 			arg = replace_env_var(arg, mini, &i, j);
 		i++;
 	}

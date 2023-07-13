@@ -72,3 +72,9 @@ export test+=something when "test" is not already there
 here doc signal ctnrl + \
 $a = ""
 empty line in history
+
+
+in env_variables.c line 111 skip quotes go outside range
+
+echo "amine" > ---'$p'---
+echo "amine" > '---'$p'---'

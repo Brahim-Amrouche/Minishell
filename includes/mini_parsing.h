@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/12 18:20:19 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/13 04:38:20 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ typedef struct s_new_parser_helper
 	t_boolean			arg_replacing;
 	t_boolean			remove_quotes;
 	size_t				**quote_indexes;
+	size_t				**wildcard_indexes;
 }						t_new_parser_helper;
 
 typedef struct s_minishell
@@ -119,7 +120,7 @@ void					parse_logical_operators(t_list *logical_node,
 							t_minishell *mini,
 							char *token_content);
 // quotes.c
-char					*remove_quotes(char *arg, size_t *i, size_t *j,
+char					*remove_quotes(char *arg, size_t *i, size_t j,
 							t_boolean get_env);
 char					*unwrap_quotes(char *arg);
 
@@ -175,5 +176,10 @@ void					*add_arr_to_array(void *dest_arr, void *src_arr,
 t_exec_tree				*exec_tree_node(int params_num, ...);
 void					loop_exec_tree(t_exec_tree *root, t_minishell *mini,
 							void (*exec)(t_exec_tree *, t_minishell *));
+// quote_utils.c
+t_boolean				is_dollar_char(char c);
+void					get_wildcard_indexes(char *args, t_minishell *mini);
+t_boolean				check_if_var(char *arg, size_t i, size_t j);
+t_boolean				check_if_special_var(char *arg, size_t i, size_t j);
 
 #endif

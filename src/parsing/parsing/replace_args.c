@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replace_args.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/12 20:01:12 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/13 06:31:50 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,9 @@ static char	**split_argv_if_space(char *argv, t_minishell *mini)
 	args = NULL;
 	j = 0;
 	quote_indexes = mini->n_parser_helper.quote_indexes;
-	while (argv[i])
+	while (argv && argv[i])
 	{
+		printf("in here argv_space %s\n", argv + i);
 		if (quote_indexes && *quote_indexes && i == (*quote_indexes)[0])
 			i = (*(quote_indexes++))[1];
 		else if (ft_is_space(argv[i]))
@@ -64,6 +65,7 @@ static char	**split_argv_if_space(char *argv, t_minishell *mini)
 		else
 			i++;
 	}
+	printf("this is the char again %c\n", argv[i]);
 	add_argv(argv, &args, &i, &j);
 	return (args);
 }
@@ -79,6 +81,7 @@ char	**replace_args(char **args, t_minishell *mini)
 	while (*args)
 	{
 		*args = get_var(*args, mini, TRUE);
+		get_wildcard_indexes(*args, mini);
 		temp_args = new_args;
 		splited_args = split_argv_if_space(*args, mini);
 		new_args = add_arr_to_array(temp_args, splited_args, sizeof(char *));
