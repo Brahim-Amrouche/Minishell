@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/13 02:00:48 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/13 06:33:29 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/13 06:59:22 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,14 @@ void	get_wildcard_indexes(char *args, t_minishell *mini)
 	size_t	i;
 	size_t	j;
 	size_t	**quotes_indexes;
+	size_t	len;
 
-	printf("hello function\n");
 	mini->n_parser_helper.wildcard_indexes = NULL;
 	quotes_indexes = mini->n_parser_helper.quote_indexes;
 	i = 0;
 	j = 0;
-	while (args && args[i])
+	len = ft_strlen(args);
+	while (i < len && args && args[i])
 	{
 		if (quotes_indexes && quotes_indexes[j] && i == quotes_indexes[j][0])
 		{
@@ -70,10 +71,7 @@ void	get_wildcard_indexes(char *args, t_minishell *mini)
 			continue ;
 		}
 		else if (args[i] == '*')
-		{
 			add_wildcard_index(mini, i);
-		}
 		i++;
 	}
-	printf("is j %c \n",args[i]);
 }

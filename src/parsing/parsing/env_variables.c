@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/13 06:21:13 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/13 07:02:34 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 	return (new_arg);
 }
 
-void static	quote_logic_helper(char **arg, t_minishell *mini,
+static void	quote_logic_helper(char **arg, t_minishell *mini,
 				size_t *i, t_boolean is_single)
 {
 	size_t		*quote_indexes;
@@ -77,7 +77,8 @@ void static	quote_logic_helper(char **arg, t_minishell *mini,
 	*arg = remove_quotes(*arg, i, quote_indexes[1], is_single);
 	quote_indexes[1] = (*i) + 1;
 	temp = mini->n_parser_helper.quote_indexes ;
-	mini->n_parser_helper.quote_indexes = add_element_to_array(temp, &quote_indexes, sizeof(size_t *));
+	mini->n_parser_helper.quote_indexes
+		= add_element_to_array(temp, &quote_indexes, sizeof(size_t *));
 	ft_free_node(1, temp);
 }
 

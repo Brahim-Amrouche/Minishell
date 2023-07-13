@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/13 06:31:50 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/13 07:01:40 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,13 @@ static char	**replace_argv(char *argv, size_t *i, size_t *j)
 {
 	char	*new_arg;
 	char	**new_args;
+	size_t	len;
 
 	new_arg = protected_substr(argv, *j, *i);
 	new_args = create_wildcard_arr(new_arg);
 	*j = *i;
-	while (ft_is_space(argv[*j]))
+	len = ft_strlen(argv);
+	while (*j < len && ft_is_space(argv[*j]))
 		(*j)++;
 	*i = *j;
 	return (new_args);
@@ -50,14 +52,15 @@ static char	**split_argv_if_space(char *argv, t_minishell *mini)
 	size_t	j;
 	char	**args;
 	size_t	**quote_indexes;
+	size_t	len;
 
 	i = 0;
 	args = NULL;
 	j = 0;
 	quote_indexes = mini->n_parser_helper.quote_indexes;
-	while (argv && argv[i])
+	len = ft_strlen(argv);
+	while (i < len && argv && argv[i])
 	{
-		printf("in here argv_space %s\n", argv + i);
 		if (quote_indexes && *quote_indexes && i == (*quote_indexes)[0])
 			i = (*(quote_indexes++))[1];
 		else if (ft_is_space(argv[i]))
@@ -65,7 +68,6 @@ static char	**split_argv_if_space(char *argv, t_minishell *mini)
 		else
 			i++;
 	}
-	printf("this is the char again %c\n", argv[i]);
 	add_argv(argv, &args, &i, &j);
 	return (args);
 }
