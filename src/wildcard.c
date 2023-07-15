@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/13 01:49:52 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/15 03:46:25 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ static int	check_wildcard(char *str, char *input)
 	return (0);
 }
 
-static int	get_wildcard(char *str, char *in)
+static int	get_wildcard(char *str, char *in, char *map)
 {
 	char	*match;
 	char	**p_arr;
 	int		i;
 
-	p_arr = create_pattern_arr(in);
+	p_arr = create_pattern_arr(in, map);
 	if (!p_arr || check_wildcard(str, in))
 		return (0);
 	i = -1;
@@ -53,31 +53,23 @@ static int	get_wildcard(char *str, char *in)
 	return (1);
 }
 
-static char	**make_wildcard_arr(DIR *dir, char *pattern)
+static char	**make_wildcard_arr(DIR *dir, char *pattern, char *map)
 {
 	struct dirent	*direntf;
 	char			*new_elem;
 	char			**args;
-	int				i;
 
 	args = NULL;
-	i = 0;
 	while (TRUE)
 	{
 		direntf = readdir(dir);
 		if (!direntf)
 			break ;
-		if (get_wildcard(direntf->d_name, pattern))
+		if (get_wildcard(direntf->d_name, pattern, map))
 		{
 			new_elem = pro_str_dup(direntf->d_name);
 			args = add_element_to_array(args, &new_elem, sizeof(new_elem));
-			i++;
 		}
-	}
-	if (i == 0)
-	{
-		new_elem = pro_str_dup(pattern);
-		args = add_element_to_array(args, &new_elem, sizeof(new_elem));
 	}
 	return (args);
 }
@@ -109,18 +101,20 @@ void	sort_wildcard(char **wildcard)
 	return ;
 }
 
-char	**create_wildcard_arr(char *pattern)
+char	**create_wildcard_arr(char *pattern, char **map_ptr)
 {
 	char	**args;
 	char	*cwd;
+	char	*map;
 	DIR		*dir;
 
 	cwd = getcwd(NULL, 0);
-	if (cwd == NULL)
+	if (cwd == NULL || !map_ptr || !(*map_ptr))
 		return (add_element_to_array(NULL, &pattern, sizeof(char *)));
 	dir = opendir(cwd);
 	free(cwd);
-	args = make_wildcard_arr(dir, pattern);
+	map = *map_ptr;
+	args = make_wildcard_arr(dir, pattern, map);
 	sort_wildcard(args);
 	closedir(dir);
 	return (args);
