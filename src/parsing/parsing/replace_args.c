@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/15 21:24:43 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 00:23:30 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,38 @@ static void	split_argv_quotes_logic(char **argv, size_t *i, t_minishell *mini, c
 	else
 		inside_quote = pro_str_dup("");
 	if ((*argv)[*i] == DOUBLE_QUOTE)
-		inside_quote = get_var2(inside_quote, mini);
+		inside_quote = get_var(inside_quote, mini, FALSE);
 	len = ft_strlen(inside_quote);
 	*argv = replace_value_in_arg(*argv, (*i), k + 1, inside_quote);
 	ft_memset(inside_quote, '-', len);
 	*map = replace_value_in_arg(*map, (*i), k + 1, inside_quote);
 	(*i) += ft_strlen(inside_quote);
+}
+
+static char	*split_by_spaces_and_join(char *str, size_t starting_space)
+{
+	char	*res;
+	char	**split;
+	int		i;
+
+	split = ft_split_multi_sep(str, ft_is_space);
+	if (!split)
+		return (NULL);
+	res = NULL;
+	i = 0;
+	if (str && ft_is_space(str[0]) && starting_space)
+		res = pro_strjoin(NULL, " ");
+	if (split[i])
+		res = pro_strjoin(res, split[i++]);
+	while (split[i])
+	{
+		res = pro_strjoin(res, " ");
+		res = pro_strjoin(res, split[i]);
+		i++;
+	}
+	if (str && ft_is_space(str[ft_strlen(str) - 1]) && ft_strlen(str) != 1)
+		res = pro_strjoin(res, " ");
+	return (res);
 }
 
 static void	expend_outside_qoute(char **argv, t_minishell *mini,
@@ -87,7 +113,8 @@ static void	expend_outside_qoute(char **argv, t_minishell *mini,
         i++;
 	len = i - *from;
     new_argv = protected_substr(*argv, *from, len);
-    new_argv = get_var2(new_argv, mini);
+    new_argv = get_var(new_argv, mini, FALSE);
+	new_argv = split_by_spaces_and_join(new_argv, *from);
 	len = ft_strlen(new_argv);
 	*argv = replace_value_in_arg(*argv, (*from), i , new_argv);
 	n = -1;
@@ -157,7 +184,6 @@ char	**replace_args(char **args, t_minishell *mini)
 	new_args = NULL;
 	while (*args)
 	{
-		*args = get_var(*args, mini, TRUE);
 		temp_args = new_args;
 		splited_args = split_argv(*args, mini);
 		new_args = add_arr_to_array(temp_args, splited_args,

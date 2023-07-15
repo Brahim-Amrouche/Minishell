@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/15 21:25:09 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/15 22:01:27 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 	char	*env_name;
 	char	*env_val;
 	char	*new_arg;
+	size_t	arg_len;
 
 	env_name = protected_substr(arg, (*i) + 1, j - (*i));
 	if (!env_name)
@@ -55,7 +56,9 @@ static char	*replace_env_var(char *arg, t_minishell *mini, size_t *i, size_t j)
 		env_val = find_env_var(mini->envp, env_name, FALSE);
 	ft_free_node(1, env_name);
 	new_arg = replace_value_in_arg(arg, *i, j + 1, env_val);
-	*i += ft_strlen(env_val) - 1;
+	arg_len = ft_strlen(env_val);
+	if (arg_len > 0)
+		*i += arg_len - 1;
 	ft_free_node(1, arg);
 	ft_free_node(1, env_val);
 	return (new_arg);
@@ -70,56 +73,57 @@ static	void	quotes_logic(char *arg, size_t *i, t_boolean skip,
 		skip_quotes(arg, i);
 }
 
-static char	*replace_env_var2(char *arg, t_minishell *mini, size_t *i, size_t j)
-{
-	char	*env_name;
-	char	*env_val;
-	char	*new_arg;
+// static char	*replace_env_var2(char *arg, t_minishell *mini, size_t *i, size_t j)
+// {
+// 	char	*env_name;
+// 	char	*env_val;
+// 	char	*new_arg;
 
-	env_name = protected_substr(arg, (*i) + 1, j - (*i));
-	if (!env_name)
-		exit_minishell(ENOMEM, "could't malloc env_name", TRUE);
-	if (match_str("?", env_name))
-	{
-		env_val = ft_itoa(mini->cmd_status);
-		ft_malloc(1, m_info(env_val, 1, NULL, 0));
-	}
-	else
-		env_val = find_env_var(mini->envp, env_name, FALSE);
-	ft_free_node(1, env_name);
-	new_arg = replace_value_in_arg(arg, *i, j + 1, env_val);
-	*i += ft_strlen(env_val) - 1;
-	ft_free_node(1, arg);
-	ft_free_node(1, env_val);
-	return (new_arg);
-}
 
-char	*get_var2(char *arg, t_minishell *mini)
-{
-    size_t k;
-    size_t i;
+// 	env_name = protected_substr(arg, (*i) + 1, j - (*i));
+// 	if (!env_name)
+// 		exit_minishell(ENOMEM, "could't malloc env_name", TRUE);
+// 	if (match_str("?", env_name))
+// 	{
+// 		env_val = ft_itoa(mini->cmd_status);
+// 		ft_malloc(1, m_info(env_val, 1, NULL, 0));
+// 	}
+// 	else
+// 		env_val = find_env_var(mini->envp, env_name, FALSE);
+// 	ft_free_node(1, env_name);
+// 	new_arg = replace_value_in_arg(arg, *i, j + 1, env_val);
+// 	*i += ft_strlen(env_val) - 1;
+// 	ft_free_node(1, arg);
+// 	ft_free_node(1, env_val);
+// 	return (new_arg);
+// }
 
-    i = 0;
-	while (arg[i])
-	{
-		k = i + 1;
-		if (arg[i] == DOLLAR_SIGN
-			&& !ft_isdigit(arg[k]) && arg[k] != '?'
-			&& is_dollar_char(arg[k]) && k++)
-		{
-			while (arg[k]
-                && (is_dollar_char(arg[k]) || ft_isdigit(arg[k])))
-				k++;
-			k--;
-			arg = replace_env_var2(arg, mini, &i, k);
-		}
-		else if (arg[i] == DOLLAR_SIGN
-			&& (ft_isdigit(arg[k]) || arg[k] == '?'))
-			arg = replace_env_var2(arg, mini, &i, k);
-		i++;
-	}
-	return (arg);
-}
+// char	*get_var2(char *arg, t_minishell *mini)
+// {
+//     size_t k;
+//     size_t i;
+
+//     i = 0;
+// 	while (arg[i])
+// 	{
+// 		k = i + 1;
+// 		if (arg[i] == DOLLAR_SIGN
+// 			&& !ft_isdigit(arg[k]) && arg[k] != '?'
+// 			&& is_dollar_char(arg[k]) && k++)
+// 		{
+// 			while (arg[k]
+//                 && (is_dollar_char(arg[k]) || ft_isdigit(arg[k])))
+// 				k++;
+// 			k--;
+// 			arg = replace_env_var2(arg, mini, &i, k);
+// 		}
+// 		else if (arg[i] == DOLLAR_SIGN
+// 			&& (ft_isdigit(arg[k]) || arg[k] == '?'))
+// 			arg = replace_env_var2(arg, mini, &i, k);
+// 		i++;
+// 	}
+// 	return (arg);
+// }
 
 char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
 {
