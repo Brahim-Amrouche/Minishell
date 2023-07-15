@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:57:10 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/05 14:21:13 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/14 19:49:12 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,8 @@ static char	**make_wildcard_arr(DIR *dir, char *pattern)
 	struct dirent	*direntf;
 	char			*new_elem;
 	char			**args;
-	int				i;
 
 	args = NULL;
-	i = 0;
 	while (TRUE)
 	{
 		direntf = readdir(dir);
@@ -72,13 +70,7 @@ static char	**make_wildcard_arr(DIR *dir, char *pattern)
 		{
 			new_elem = pro_str_dup(direntf->d_name);
 			args = add_element_to_array(args, &new_elem, sizeof(new_elem));
-			i++;
 		}
-	}
-	if (i == 0)
-	{
-		new_elem = pro_str_dup(pattern);
-		args = add_element_to_array(args, &new_elem, sizeof(new_elem));
 	}
 	return (args);
 }

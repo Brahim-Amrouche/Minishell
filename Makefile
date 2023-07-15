@@ -89,7 +89,7 @@ devflag :
 lin : linuxflag $(NAME)
 
 linuxflag :
-	$(eval FLAGS := -Wall -Wextra -fsanitize=address -DLINUX $(INCLUDES))
+	$(eval FLAGS := -Wall -Wextra -fsanitize=address -g -DLINUX $(INCLUDES))
 
 clean :
 	@echo "$(RED_TEXT)Cleaning $(NAME) Object Files"

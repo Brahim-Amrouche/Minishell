@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:28:26 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/11 13:43:50 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/14 17:09:31 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,6 @@ t_boolean		is_spaces_line(char *line);
 int				return_msg(int stat, char *msg, ...);
 void			print_msg(int fd, char *msg, ...);
 void			exit_minishell(int err_n, char *message, t_boolean purge);
+char            *get_var2(char *arg, t_minishell *mini, size_t *i, size_t j);
 
 #endif
