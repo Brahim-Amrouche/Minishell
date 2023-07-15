@@ -6,7 +6,7 @@
 /*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/15 03:18:10 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/15 17:26:11 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,18 @@ static char	**replace_argv2(char **argv, size_t *i, char **map)
 	char	**new_args;
 
 	new_arg = protected_substr(*argv, 0, *i);
-	printf("arg is |%s|\n", new_arg);
-	printf("map is |%s|\n", *map);
+	// printf("arg is |%s|\n", new_arg);
+	// printf("map is |%s|\n", *map);
 	new_args = create_wildcard_arr(new_arg, map);
 	if (!new_args)
 		new_args = add_element_to_array(new_args, &new_arg, sizeof(char *));
 	while (ft_is_space((*argv)[*i]))
 		(*i)++;
+    // printf("argv before = |%s|\n", *argv);
 	*argv += (*i);
 	*map += (*i);
 	*i = 0;
+    // printf("argv after  = |%s|\n", *argv);
 	return (new_args);
 }
 
@@ -162,6 +164,8 @@ static char	**split_argv(char *argv, t_minishell *mini)
 	size_t	i;
 	size_t	i_copy;
 	size_t	expend_start;
+	size_t	last_space;
+	t_boolean has_space;
 	// size_t	j;
 	char	**args;
 	char	*map;
@@ -176,18 +180,23 @@ static char	**split_argv(char *argv, t_minishell *mini)
             i++;
 		if (i != i_copy)
 		{
+			has_space = FALSE;
 			expend_start = i_copy;
-			expend_outside_qoute(&argv, mini, &i_copy, &map);// wild card on this range
+			expend_outside_qoute(&argv, mini, &i_copy, &map);
 			i = expend_start;
 			while (i < i_copy && argv[i])
 			{
 				if (ft_is_space(argv[i]))
 				{
+					has_space = TRUE;
+					last_space = i;
 					add_argv2(&argv, &args, &i, &map);// incrementing argv and i = 0
 					continue ;
 				}
 				i++;
 			}
+			if (has_space)
+				i = last_space;
 			continue ;
 		}
 		else if (argv[i] == DOUBLE_QUOTE || argv[i] == SINGLE_QUOTE)
