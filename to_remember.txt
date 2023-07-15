@@ -72,3 +72,5 @@ export test+=something when "test" is not already there
 here doc signal ctnrl + \
 $a = ""
 empty line in history
+
+export x="ls -a" then $x"" output is |ls -a""|

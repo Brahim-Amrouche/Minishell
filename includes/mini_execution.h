@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_execution.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:57:26 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/12 09:07:59 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/15 03:26:53 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ t_boolean		has_quotes(char *str);
 t_boolean		is_directory(char *path);
 void			check_parentises_syntax(t_exec_tree *tree);
 // wildcard.c
-char			**create_wildcard_arr(char *pattern);
-char			**create_pattern_arr(char *pattern);
+char			**create_wildcard_arr(char *pattern, char **map_ptr);
+char			**create_pattern_arr(char *pattern, char *map);
 // redirection
 int				read_here_docs(t_exec_tree *tree, t_minishell *minishell);
 t_stat			handle_redir_fd(int fd, t_redir_info *redir, int *std);

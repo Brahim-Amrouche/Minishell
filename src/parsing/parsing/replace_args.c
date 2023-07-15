@@ -6,7 +6,7 @@
 /*   By: elasce <elasce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/15 03:10:06 by elasce           ###   ########.fr       */
+/*   Updated: 2023/07/15 03:18:10 by elasce           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static char	**replace_argv2(char **argv, size_t *i, char **map)
 	new_arg = protected_substr(*argv, 0, *i);
 	printf("arg is |%s|\n", new_arg);
 	printf("map is |%s|\n", *map);
-	new_args = create_wildcard_arr(new_arg);
+	new_args = create_wildcard_arr(new_arg, map);
 	if (!new_args)
 		new_args = add_element_to_array(new_args, &new_arg, sizeof(char *));
 	while (ft_is_space((*argv)[*i]))
