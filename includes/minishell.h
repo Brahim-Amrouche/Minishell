@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:28:26 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/15 21:24:01 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 04:42:03 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,5 @@ t_boolean		is_spaces_line(char *line);
 int				return_msg(int stat, char *msg, ...);
 void			print_msg(int fd, char *msg, ...);
 void			exit_minishell(int err_n, char *message, t_boolean purge);
-char            *get_var2(char *arg, t_minishell *mini);
 
 #endif

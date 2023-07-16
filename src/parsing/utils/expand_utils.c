@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 02:37:25 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/16 03:40:12 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 04:46:10 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	expand_quotes(char **argv, size_t *i, t_minishell *mini)
 	*argv = replace_value_in_arg(*argv, (*i), k + 1, inside_quote);
 	ft_memset(inside_quote, '-', len);
 	mini->n_parser_helper.map = replace_value_in_arg(mini->n_parser_helper.map,
-									(*i), k + 1, inside_quote);
+			(*i), k + 1, inside_quote);
 	(*i) += ft_strlen(inside_quote);
 }
 
@@ -61,42 +61,43 @@ static char	*trim_arg(char *str, size_t starting_space)
 	return (res);
 }
 
-static void	expend_outside_quote(char **argv, t_minishell *mini,
-            size_t *from, size_t *i)
+static void	expend_outside_quote(char **argv, t_minishell *mini, size_t *from,
+		size_t *i)
 {
-    char    *new_argv;
+	char	*new_argv;
 	size_t	len;
 	size_t	n;
 
-    if (!argv || !(*argv))
-        return ;
+	if (!argv || !(*argv))
+		return ;
 	len = *i - *from;
-    new_argv = protected_substr(*argv, *from, len);
-    new_argv = get_var(new_argv, mini, FALSE);
-	printf("argv = %s|, new_arg = %s|\n", *argv, new_argv);
+	new_argv = protected_substr(*argv, *from, len);
+	new_argv = get_var(new_argv, mini, FALSE);
 	new_argv = trim_arg(new_argv, *from);
 	len = ft_strlen(new_argv);
-	*argv = replace_value_in_arg(*argv, (*from), *i , new_argv);
+	*argv = replace_value_in_arg(*argv, (*from), *i, new_argv);
 	n = -1;
 	while (new_argv[++n])
 		if (new_argv[n] != '*')
 			new_argv[n] = '-';
 	mini->n_parser_helper.map = replace_value_in_arg(mini->n_parser_helper.map,
-									(*from), *i , new_argv);
+			(*from), *i, new_argv);
 	*i = *from;
 	(*from) += len;
 }
 
-static t_boolean expand_args(char **argv, size_t *i, t_minishell *mini, char ***args)
+static t_boolean	expand_args(char **argv, size_t *i, t_minishell *mini,
+		char ***args)
 {
 	size_t	last_space;
 	size_t	i_copy;
 
 	i_copy = *i;
-	while ((*argv)[*i] && (*argv)[*i] != DOUBLE_QUOTE && (*argv)[*i] != SINGLE_QUOTE)
+	while ((*argv)[*i] && (*argv)[*i] != DOUBLE_QUOTE
+		&& (*argv)[*i] != SINGLE_QUOTE)
 		(*i)++;
 	if (*i == i_copy)
-		return FALSE;
+		return (FALSE);
 	expend_outside_quote(argv, mini, &i_copy, i);
 	while (*i < i_copy && (*argv)[*i])
 	{
@@ -112,14 +113,12 @@ static t_boolean expand_args(char **argv, size_t *i, t_minishell *mini, char ***
 		}
 		(*i)++;
 	}
-	return TRUE;
+	return (TRUE);
 }
-
 
 char	**expand_argv(char *argv, t_minishell *mini)
 {
 	size_t	i;
-
 	char	**args;
 
 	args = NULL;

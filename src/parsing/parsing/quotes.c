@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:27:20 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/16 00:35:10 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 04:34:46 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ char	*unwrap_quotes(char *arg)
 			while (*(arg + j) && *(arg + j) != *(arg + i))
 				j++;
 			if (*(arg + j) != '\0')
+			{
 				arg = remove_quotes(arg, &i, j, FALSE);
+				continue ;
+			}
 		}
 		i++;
 	}
