@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 02:37:25 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/16 04:46:10 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 07:52:36 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,21 @@ static void	expand_quotes(char **argv, size_t *i, t_minishell *mini)
 	mini->n_parser_helper.map = replace_value_in_arg(mini->n_parser_helper.map,
 			(*i), k + 1, inside_quote);
 	(*i) += ft_strlen(inside_quote);
+	(mini->n_parser_helper.flager)++;
 }
 
-static char	*trim_arg(char *str, size_t starting_space)
+static char	*trim_arg(char *str, t_boolean starting_space)
 {
 	char	*res;
 	char	**split;
 	int		i;
 
 	res = pro_str_dup("");
-	if (str && ft_is_space(str[0]) && starting_space)
+	if (str && ft_is_space(str[0]) && (starting_space))
 		res = pro_strjoin(res, " ");
 	split = ft_split_multi_sep(str, ft_is_space);
 	if (!split || !(*split))
 		return (res);
-	res = NULL;
 	i = 0;
 	if (split[i])
 		res = pro_strjoin(res, split[i++]);
@@ -64,16 +64,16 @@ static char	*trim_arg(char *str, size_t starting_space)
 static void	expend_outside_quote(char **argv, t_minishell *mini, size_t *from,
 		size_t *i)
 {
-	char	*new_argv;
-	size_t	len;
-	size_t	n;
+	char		*new_argv;
+	size_t		len;
+	size_t		n;
 
 	if (!argv || !(*argv))
 		return ;
 	len = *i - *from;
 	new_argv = protected_substr(*argv, *from, len);
 	new_argv = get_var(new_argv, mini, FALSE);
-	new_argv = trim_arg(new_argv, *from);
+	new_argv = trim_arg(new_argv, (*from) > 0);
 	len = ft_strlen(new_argv);
 	*argv = replace_value_in_arg(*argv, (*from), *i, new_argv);
 	n = -1;
@@ -124,6 +124,7 @@ char	**expand_argv(char *argv, t_minishell *mini)
 	args = NULL;
 	i = 0;
 	mini->n_parser_helper.map = pro_str_dup(argv);
+	mini->n_parser_helper.flager = 0;
 	while (argv[i])
 	{
 		if (expand_args(&argv, &i, mini, &args))
@@ -135,7 +136,7 @@ char	**expand_argv(char *argv, t_minishell *mini)
 		}
 		i++;
 	}
-	if (!(!*argv && i == 0))
+	if (*argv || (!*argv && mini->n_parser_helper.flager))
 		add_argv(&argv, &args, &i);
 	return (args);
 }

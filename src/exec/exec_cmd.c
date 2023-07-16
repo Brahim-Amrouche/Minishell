@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/16 04:35:31 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 08:49:22 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,27 +98,15 @@ int	call_cmd(t_minishell *minishell, char **args)
 void	exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {
 	char		**args;
-	char		*temp;
-	int			i;
 
 	if (!tree->argv || !tree->argv[0])
 		return ;
-	temp = pro_str_dup(tree->argv[0]);
-	temp = get_var(temp, minishell, TRUE);
 	args = replace_args(tree->argv, minishell);
-	i = 0;
-	if (!args[0] || match_str(args[0], ""))
+	if ((*args) && !(**args))
 	{
-		if (temp[i] == '\"' || temp[i] == '\'')
-		{
-			temp = unwrap_quotes(temp);
 			*(minishell->stat) = return_msg(127, "#$: command not found",
-					temp);
-			return ;
-		}
+				*args);
 		return ;
 	}
-	while (match_str(*args, ""))
-		args++;
 	*(minishell->stat) = call_cmd(minishell, args);
 }

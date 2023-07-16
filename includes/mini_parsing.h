@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/16 03:29:21 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 06:45:36 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct s_new_parser_helper
 	size_t				**quote_indexes;
 	size_t				**wildcard_indexes;
 	char				*map;
+	int					flager;
 }						t_new_parser_helper;
 
 typedef struct s_minishell

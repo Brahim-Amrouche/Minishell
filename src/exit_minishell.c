@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 15:23:48 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/11 11:26:30 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/16 05:10:00 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	print_msg(int fd, char *msg, ...)
 			ft_putnbr_fd(va_arg(ap, int), fd);
 		else if (*msg == '$')
 			ft_putstr_fd(va_arg(ap, char *), fd);
+		else if (*msg == '#')
+			ft_putstr_fd("minishell: ", 2);
 		else
 			ft_putchar_fd(*msg, fd);
 		msg++;
