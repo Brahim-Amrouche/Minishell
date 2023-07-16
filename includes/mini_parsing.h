@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_parsing.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 15:19:41 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/13 04:38:20 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/16 03:29:21 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ typedef struct s_new_parser_helper
 	t_boolean			remove_quotes;
 	size_t				**quote_indexes;
 	size_t				**wildcard_indexes;
+	char				*map;
 }						t_new_parser_helper;
 
 typedef struct s_minishell
@@ -127,6 +128,7 @@ char					*unwrap_quotes(char *arg);
 // replace_args.c
 // char					*replace_args(char *arg, t_minishell *mini);
 char					**replace_args(char **args, t_minishell *mini);
+void					add_argv(char **argv, char ***args, size_t *i);
 
 //	main_parsing.c
 void					main_parsing(char *cmd, t_minishell *mini);
@@ -181,5 +183,8 @@ t_boolean				is_dollar_char(char c);
 void					get_wildcard_indexes(char *args, t_minishell *mini);
 t_boolean				check_if_var(char *arg, size_t i, size_t j);
 t_boolean				check_if_special_var(char *arg, size_t i, size_t j);
+
+// expand_utils.c
+char					**expand_argv(char *argv, t_minishell *mini);
 
 #endif

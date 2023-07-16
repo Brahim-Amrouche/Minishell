@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/16 00:43:14 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 03:30:25 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,8 @@ int	call_cmd(t_minishell *minishell, char **args)
 void	exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 {
 	char		**args;
-	char		*temp;
-	int			i;
+	// char		*temp;
+	// int			i;
 
 	if (!tree->argv || !tree->argv[0])
 		return ;

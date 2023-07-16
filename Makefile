@@ -27,6 +27,7 @@ src/parsing/tokenization/str_tokinize.c	\
 src/parsing/main_parsing.c	\
 src/parsing/utils/quotes_utils.c\
 src/parsing/utils/split_util.c	\
+src/parsing/utils/expand_utils.c	\
 src/parsing/utils/strjoin.c	\
 src/parsing/utils/pro_lstnew.c	\
 src/parsing/utils/tree_utils.c	\
