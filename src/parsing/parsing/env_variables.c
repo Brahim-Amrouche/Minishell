@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 13:40:43 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/15 22:01:27 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 00:49:38 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,8 @@ char	*get_var(char *arg, t_minishell *mini, t_boolean skip)
 		else if (arg[i] == DOLLAR_SIGN
 			&& (ft_isdigit(arg[j]) || arg[j] == '?'))
 			arg = replace_env_var(arg, mini, &i, j);
+		if (!arg[i])
+			break ;
 		i++;
 	}
 	return (arg);

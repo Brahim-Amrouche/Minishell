@@ -78,3 +78,6 @@ in env_variables.c line 111 skip quotes go outside range
 
 echo "amine" > ---'$p'---
 echo "amine" > '---'$p'---'
+
+
+export x="  ls    " => ls: : No such file or directory | expected : ls

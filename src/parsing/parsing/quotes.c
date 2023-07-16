@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:27:20 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/15 22:03:05 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 00:35:10 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ char	*remove_quotes(char *arg, size_t *i, size_t j, t_boolean get_env)
 	size_t		removed_quotes_len;
 	char		*new_arg;
 	t_minishell	*mini;
-	size_t		new_arg_len;
 
 	mini = get_minishell(NULL);
 	removed_quotes = protected_substr(arg, (*i) + 1, j - (*i) - 1);
@@ -31,8 +30,7 @@ char	*remove_quotes(char *arg, size_t *i, size_t j, t_boolean get_env)
 	removed_quotes_len = ft_strlen(removed_quotes);
 	new_arg = replace_value_in_arg(arg, *i, j + 1, removed_quotes);
 	ft_free_node(1, arg);
-	new_arg_len = ft_strlen(new_arg);
-	if (new_arg_len)
+	if (removed_quotes_len)
 		*i += removed_quotes_len - 1;
 	return (new_arg);
 }

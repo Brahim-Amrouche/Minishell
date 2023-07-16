@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 15:32:24 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/13 05:15:40 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/07/16 00:43:14 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,22 +103,22 @@ void	exec_cmd(t_exec_tree *tree, t_minishell *minishell)
 
 	if (!tree->argv || !tree->argv[0])
 		return ;
-	temp = pro_str_dup(tree->argv[0]);
-	temp = get_var(temp, minishell, TRUE);
+	// temp = pro_str_dup(tree->argv[0]);
+	// temp = get_var(temp, minishell, TRUE);
 	args = replace_args(tree->argv, minishell);
-	i = 0;
-	if (match_str(args[0], ""))
-	{
-		if (temp[i] == '\"' || temp[i] == '\'')
-		{
-			temp = unwrap_quotes(temp);
-			*(minishell->stat) = return_msg(127, "#$: command not found",
-					temp);
-			return ;
-		}
-		return ;
-	}
-	while (match_str(*args, ""))
-		args++;
+	// i = 0;
+	// if (match_str(args[0], ""))
+	// {
+	// 	if (temp[i] == '\"' || temp[i] == '\'')
+	// 	{
+	// 		temp = unwrap_quotes(temp);
+	// 		*(minishell->stat) = return_msg(127, "#$: command not found",
+	// 				temp);
+	// 		return ;
+	// 	}
+	// 	return ;
+	// }
+	// while (match_str(*args, ""))
+	// 	args++;
 	*(minishell->stat) = call_cmd(minishell, args);
 }

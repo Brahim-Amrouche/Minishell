@@ -6,7 +6,7 @@
 /*   By: maboulkh <maboulkh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:29:11 by bamrouch          #+#    #+#             */
-/*   Updated: 2023/07/16 00:23:30 by maboulkh         ###   ########.fr       */
+/*   Updated: 2023/07/16 02:33:09 by maboulkh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,14 @@ static char	*split_by_spaces_and_join(char *str, size_t starting_space)
 	char	**split;
 	int		i;
 
+	res = pro_str_dup("");
+	if (str && ft_is_space(str[0]) && starting_space)
+		res = pro_strjoin(res, " ");
 	split = ft_split_multi_sep(str, ft_is_space);
-	if (!split)
-		return (NULL);
+	if (!split || !(*split))
+		return (res);
 	res = NULL;
 	i = 0;
-	if (str && ft_is_space(str[0]) && starting_space)
-		res = pro_strjoin(NULL, " ");
 	if (split[i])
 		res = pro_strjoin(res, split[i++]);
 	while (split[i])
@@ -153,15 +154,15 @@ static char	**split_argv(char *argv, t_minishell *mini)
 			{
 				if (ft_is_space(argv[i]))
 				{
-					has_space = TRUE;
 					last_space = i;
 					add_argv2(&argv, &args, &i, &map);// incrementing argv and i = 0
-					continue ;
+					if (ft_strnstr(argv, " ", i_copy - last_space) || ft_strnstr(argv, "\t", i_copy - last_space))
+						continue ;
+					else
+						break ;
 				}
 				i++;
 			}
-			if (has_space)
-				i = last_space;
 			continue ;
 		}
 		else if (argv[i] == DOUBLE_QUOTE || argv[i] == SINGLE_QUOTE)
@@ -171,7 +172,8 @@ static char	**split_argv(char *argv, t_minishell *mini)
 		}
 		i++;
 	}
-	add_argv2(&argv, &args, &i, &map);
+	if (!(!*argv && i == 0))
+		add_argv2(&argv, &args, &i, &map);
 	return (args);
 }
 
