@@ -6,7 +6,7 @@
 /*   By: bamrouch <bamrouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 03:02:07 by maboulkh          #+#    #+#             */
-/*   Updated: 2023/07/11 13:34:51 by bamrouch         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:52:55 by bamrouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	exit_shell(char **args)
 	long long	status;
 	t_boolean	do_exit;
 
+	status = 0;
 	if (g_sigvar.in_child == FALSE)
 		printf("exit\n");
 	do_exit = TRUE;
